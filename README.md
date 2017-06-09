@@ -1,8 +1,14 @@
 ## Installation
-go get github.com/zmb3/spotify
-go get github.com/chosenken/twitch2go
+
+Make sure you install the necessary libraries for JARVIS to do his thing.
+```bash
+go get github.com/zmb3/spotify  
+go get github.com/chosenken/twitch2go  
+```
 
 ## Configuration File
+The configuration file needs to be in the same directory as the executable, and named `jarvis.toml`
+  
 >[Spotify]  
 > ClientID = "SPOTIFY CLIENT ID"  
 > ClientSecret = "SPOTIFY SECRET"  
