@@ -47,4 +47,6 @@ func TwitchPoll(client *twitch2go.Client, config *Core.TwitchConfig) {
 		Core.Log("Twitch", buffer.String())
 
 	}
+
+	// TODO: To add Subscribers need to add OAUTH to config
 }
