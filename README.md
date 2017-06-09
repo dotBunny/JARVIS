@@ -22,4 +22,6 @@ The configuration file needs to be in the same directory as the executable, and 
 > LatestFollowerPath = "/path/to/where/you/want/this/stored.txt"  
   
 ## Help
-CTRL-C to Exit
+Once you have managed to wrangle [GO](https://golang.org/) into compiling the source, you simply need to run the executable.
+
+`CTRL-C` to Exit
