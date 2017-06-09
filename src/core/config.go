@@ -20,9 +20,20 @@ type SpotifyConfig struct {
 	LastImageData []byte
 }
 
+// TwitchConfig elements
+type TwitchConfig struct {
+	ClientID           string
+	ClientSecret       string
+	ChannelID          string
+	LatestFollowerPath string
+
+	LastFollower string
+}
+
 // Config is an external config type
 type Config struct {
 	Spotify SpotifyConfig
+	Twitch  TwitchConfig
 }
 
 // ReadConfig gets the local config file

@@ -31,13 +31,13 @@ func SpotifyLogin(config *Core.SpotifyConfig) *spotify.Client {
 	http.HandleFunc("/callback", completeAuth)
 	http.HandleFunc("/",
 		func(w http.ResponseWriter, r *http.Request) {
-			log.Println("Got request for:", r.URL.String())
+			Core.Log("Spotify", "Got request for: "+r.URL.String())
 		})
 
 	go http.ListenAndServe(":8080", nil)
 
 	url := auth.AuthURL(state)
-	Core.Log2("Please log in to Spotify by visiting the following page in your browser:\n\n", url)
+	Core.Log("Spotify", "Please log in to Spotify by visiting the following page in your browser:\n"+url)
 
 	// wait for auth to complete
 	client := <-ch
@@ -47,7 +47,7 @@ func SpotifyLogin(config *Core.SpotifyConfig) *spotify.Client {
 	if err != nil {
 		log.Fatal(err)
 	}
-	Core.Log2("You are logged in as:", user.ID)
+	Core.Log("Spotify", "You are logged in as: "+user.ID)
 
 	// Pathing Check
 	os.MkdirAll(filepath.Dir(config.CurrentInfoPath), 0755)
@@ -87,7 +87,7 @@ func SpotifyPoll(client *spotify.Client, config *Core.SpotifyConfig) {
 	state, err := client.PlayerCurrentlyPlaying()
 
 	if err != nil {
-		Core.Log("Unable to retrieve currently playing song")
+		Core.Log("Spotify", "Unable to retrieve currently playing song")
 	} else {
 
 		// Handle Basic Track Information
@@ -104,7 +104,7 @@ func SpotifyPoll(client *spotify.Client, config *Core.SpotifyConfig) {
 
 		if !bytes.Equal(buffer.Bytes(), config.LastInfoData) {
 
-			Core.Log(buffer.String())
+			Core.Log("Spotify", buffer.String())
 
 			Core.SaveFile(buffer.Bytes(), config.CurrentInfoPath)
 			config.LastInfoData = buffer.Bytes()

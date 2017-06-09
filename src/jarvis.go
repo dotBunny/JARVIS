@@ -8,18 +8,19 @@ import (
 
 	Core "./core"
 	Modules "./modules"
+	"github.com/chosenken/twitch2go"
 	"github.com/zmb3/spotify"
 )
 
 var (
 	spotifyClient *spotify.Client
+	twitchClient  *twitch2go.Client
 )
 
 func main() {
 
 	// Load Config
 	var config = Core.ReadConfig()
-
 	c := make(chan os.Signal, 2)
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 	go func() {
@@ -28,14 +29,20 @@ func main() {
 		os.Exit(1)
 	}()
 
-	Core.Log("Active")
+	Core.Log("System", "Active")
 
+	// Login to Spotify (Requires User Interaction)
 	spotifyClient = Modules.SpotifyLogin(&config.Spotify)
+
+	// Initialize Twitch
+	twitchClient = twitch2go.NewClient(config.Twitch.ClientID)
+	Modules.TwitchInit(&config.Twitch)
 
 	for {
 
-		// Poll Spotify
+		// Poll
 		Modules.SpotifyPoll(spotifyClient, &config.Spotify)
+		Modules.TwitchPoll(twitchClient, &config.Twitch)
 
 		// Our polling rate
 		time.Sleep(5 * time.Second)
@@ -43,5 +50,5 @@ func main() {
 }
 
 func shutdown() {
-	Core.Log("Shutting Down")
+	Core.Log("System", "Shutting Down")
 }

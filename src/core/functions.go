@@ -35,20 +35,15 @@ func GetFiles(basePath string, extensions []string) []string {
 }
 
 // Log message as Jarvis
-func Log(message string) {
-	fmt.Println("[JARVIS]\t", message)
-}
-
-// Log2 message as Jarvis
-func Log2(message string, message2 string) {
-	fmt.Println("[JARVIS]\t", message, message2)
+func Log(channel string, message string) {
+	fmt.Println("[JARVIS]\t", "(", channel, ")\t", message)
 }
 
 // ReadLines grabs the contents of a text file, and allows conditional includes
 func ReadLines(filePath string, parse func(string) (string, bool)) ([]string, error) {
 	inputFile, err := os.Open(filePath)
 	if err != nil {
-		fmt.Println("Error opening file: ", filePath)
+		Log("System", "Error opening file: "+filePath)
 		return nil, err
 	}
 	defer inputFile.Close()
@@ -85,7 +80,7 @@ func WriteLines(lines []string, path string) error {
 	// Make file
 	file, err := os.Create(path)
 	if err != nil {
-		fmt.Println("Error occured when making file ", err)
+		Log("System", "Error occured when making file "+err.Error())
 		return err
 	}
 	defer file.Close()
@@ -102,7 +97,7 @@ func SyncFile(data []byte, path string) bool {
 	buffer, error := ioutil.ReadFile(path)
 
 	if error != nil {
-		Log(error.Error())
+		Log("System", error.Error())
 	} else {
 		if !bytes.Equal(buffer, data) {
 			ioutil.WriteFile(path, data, 0755)
