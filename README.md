@@ -17,7 +17,7 @@ The configuration file needs to be in the same directory as the executable, and 
 >  
 >[Twitch]  
 > ClientID = "TWITCH CLIENT ID"  
-> ClientSecret = "TWITCH SECRET" 
+> ClientSecret = "TWITCH SECRET"  
 > ChannelID = "YOUR CHANNEL ID"  
 > LatestFollowerPath = "/path/to/where/you/want/this/stored.txt"  
   
