@@ -17,6 +17,12 @@ A console application comprised of features from a streamer's wishlist.
 
 ## Installation
 
+### Prebuilt Version
+While not always the latest and greatest, occasionally we will update the "easy mode".
+![Current Build](https://github.com/dotBunny/JARVIS/releases/download/0.1/JARVIS-0.1.zip)
+
+### Compile From Source
+
 Make sure you install the necessary libraries for JARVIS to do his thing.
 ```bash
 go get github.com/zmb3/spotify  
@@ -24,6 +30,8 @@ go get github.com/chosenken/twitch2go
 go get github.com/andygrunwald/go-jira
 go get github.com/fatih/color
 ```
+
+Depending on your platform you may need to adjust the build scripts, they work on macOS and Linux varieties. We just haven't made the windows equivalents. If someone would be so kind? 
 
 ## Configuration File
 The configuration file needs to be in the same directory as the executable, and named `jarvis.toml`
