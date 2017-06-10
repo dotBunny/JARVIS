@@ -12,7 +12,7 @@ func InitializeWebServer(listeningPort string) {
 
 	http.HandleFunc("/",
 		func(w http.ResponseWriter, r *http.Request) {
-			Log("Webserver", "Got request for: "+r.URL.String())
+			Log("SYSTEM", "LOG", "Got request for: "+r.URL.String())
 		})
 
 	go http.ListenAndServe(":"+listeningPort, nil)
@@ -22,7 +22,3 @@ func InitializeWebServer(listeningPort string) {
 func AddEndpoint(endpoint string, function http.HandlerFunc) {
 	http.HandleFunc(endpoint, function)
 }
-
-// func WebserverStart(port string) {
-// 	go http.ListenAndServe(":"+port, nil)
-// }

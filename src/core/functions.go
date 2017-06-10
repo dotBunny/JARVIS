@@ -7,6 +7,10 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+
+	"log"
+
+	"github.com/fatih/color"
 )
 
 // GetFiles returns a list of all files under the basePath (recursively) that have the passed extensions
@@ -35,15 +39,47 @@ func GetFiles(basePath string, extensions []string) []string {
 }
 
 // Log message as Jarvis
-func Log(channel string, message string) {
-	fmt.Println("[JARVIS]\t", "(", channel, ")\t", message)
+func Log(channel string, class string, message string) {
+	switch class {
+	case "ERROR":
+		// Full Message Background Color
+		color.Set(color.FgHiRed, color.Bold)
+		log.Println(channel + "\t" + message)
+		break
+
+	case "IMPORTANT":
+		// Full Message Colored Text
+		if channel == "SPOTIFY" {
+			color.Set(color.FgGreen)
+		} else if channel == "TWITCH" {
+			color.Set(color.FgMagenta)
+		} else if channel == "SYSTEM" {
+			color.Set(color.FgBlue)
+		}
+		log.Println(channel + "\t" + message)
+		break
+	default:
+		if channel == "SPOTIFY" {
+			channel = color.GreenString(channel)
+		} else if channel == "TWITCH" {
+			channel = color.MagentaString(channel)
+		} else if channel == "SYSTEM" {
+			channel = color.BlueString(channel)
+		}
+
+		// Normal (Just Channel Color)
+		log.Println(channel + "\t" + message)
+		break
+	}
+	// Reset Coloring
+	color.Unset()
 }
 
 // ReadLines grabs the contents of a text file, and allows conditional includes
 func ReadLines(filePath string, parse func(string) (string, bool)) ([]string, error) {
 	inputFile, err := os.Open(filePath)
 	if err != nil {
-		Log("System", "Error opening file: "+filePath)
+		Log("SYSTEM", "ERROR", "Error opening file: "+filePath)
 		return nil, err
 	}
 	defer inputFile.Close()
@@ -80,7 +116,7 @@ func WriteLines(lines []string, path string) error {
 	// Make file
 	file, err := os.Create(path)
 	if err != nil {
-		Log("System", "Error occured when making file "+err.Error())
+		Log("SYSTEM", "ERROR", "Error occured when making file "+err.Error())
 		return err
 	}
 	defer file.Close()
@@ -97,7 +133,7 @@ func SyncFile(data []byte, path string) bool {
 	buffer, error := ioutil.ReadFile(path)
 
 	if error != nil {
-		Log("System", error.Error())
+		Log("SYSTEM", "ERROR", error.Error())
 	} else {
 		if !bytes.Equal(buffer, data) {
 			ioutil.WriteFile(path, data, 0755)

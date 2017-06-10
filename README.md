@@ -5,6 +5,7 @@ Make sure you install the necessary libraries for JARVIS to do his thing.
 go get github.com/zmb3/spotify  
 go get github.com/chosenken/twitch2go  
 go get github.com/andygrunwald/go-jira
+go get github.com/fatih/color
 ```
 
 ## Configuration File

@@ -59,7 +59,7 @@ func twitchFollowers(client *twitch2go.Client, config *Core.Config) bool {
 
 	followers, error := client.GetChannelFollows(config.Twitch.ChannelID, "", 1, "DESC")
 	if error != nil {
-		Core.Log("Twitch", error.Error())
+		Core.Log("TWITCH", "ERROR", error.Error())
 		return false
 	}
 
@@ -71,7 +71,7 @@ func twitchFollowers(client *twitch2go.Client, config *Core.Config) bool {
 			twitchData.LastFollower = followers.Follows[0].User.DisplayName
 
 			// Alert
-			Core.Log("Twitch", "New Follower "+followers.Follows[0].User.DisplayName)
+			Core.Log("TWITCH", "IMPORTANT", "New Follower "+followers.Follows[0].User.DisplayName)
 		}
 	}
 
@@ -82,7 +82,7 @@ func twitchSubscribers(client *twitch2go.Client, config *Core.Config) bool {
 
 	subscribers, error := client.GetChannelSubscribers(config.Twitch.ChannelID, config.Twitch.OAuth, 1, 0, "DESC")
 	if error != nil {
-		Core.Log("Twitch", error.Error())
+		Core.Log("TWITCH", "ERROR", error.Error())
 		return false
 	}
 
@@ -95,7 +95,7 @@ func twitchSubscribers(client *twitch2go.Client, config *Core.Config) bool {
 			twitchData.LastSubscriber = subscribers.Subscriptions[0].User.Name
 
 			// Alert
-			Core.Log("Twitch", "New SUBSCRIBER "+subscribers.Subscriptions[0].User.Name)
+			Core.Log("TWITCH", "IMPORTANT", "New Subscriber "+subscribers.Subscriptions[0].User.Name)
 		}
 	}
 

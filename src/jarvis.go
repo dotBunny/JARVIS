@@ -1,11 +1,15 @@
 package main
 
 import (
+	"io"
+	"log"
 	"os"
 	"os/signal"
 	"path/filepath"
 	"syscall"
 	"time"
+
+	"fmt"
 
 	Core "./core"
 	Modules "./modules"
@@ -16,9 +20,18 @@ import (
 var (
 	spotifyClient *spotify.Client
 	twitchClient  *twitch2go.Client
+	logFile       *os.File
 )
 
 func main() {
+
+	// Start Logging
+	logFile, err := os.OpenFile("jarvis.log", os.O_CREATE|os.O_TRUNC|os.O_RDWR, 0666)
+	if err != nil {
+		panic(err)
+	}
+	multiWriter := io.MultiWriter(os.Stdout, logFile)
+	log.SetOutput(multiWriter)
 
 	// Load Config
 	var config = Core.ReadConfig()
@@ -34,7 +47,7 @@ func main() {
 		os.Exit(1)
 	}()
 
-	Core.Log("System", "Active")
+	Core.Log("SYSTEM", "LOG", "Active")
 
 	// Initialize Webserver
 	Core.InitializeWebServer(config.General.ServerPort)
@@ -52,5 +65,6 @@ func main() {
 }
 
 func shutdown() {
-	Core.Log("System", "Shutting Down")
+	fmt.Println("")
+	Core.Log("SYSTEM", "LOG", "Shutting Down")
 }

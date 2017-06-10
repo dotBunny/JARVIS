@@ -64,7 +64,7 @@ func InitializeSpotify(config *Core.Config) *spotify.Client {
 	Core.AddEndpoint(config.Spotify.Callback, spotifyCompleteAuthentication)
 
 	url := auth.AuthURL(state)
-	Core.Log("Spotify", "Please log in to Spotify by visiting the following page in your browser:\n"+url)
+	Core.Log("SPOTIFY", "IMPORTANT", "Please log in to Spotify by visiting the following page in your browser:\n\n"+url+"\n")
 
 	// wait for auth to complete
 	client := <-ch
@@ -74,7 +74,7 @@ func InitializeSpotify(config *Core.Config) *spotify.Client {
 	if err != nil {
 		log.Fatal(err)
 	}
-	Core.Log("Spotify", "You are logged in as: "+user.ID)
+	Core.Log("SPOTIFY", "LOG", "You are logged in as: "+user.ID)
 
 	return client
 }
@@ -104,7 +104,7 @@ func spotifyGetCurrentlyPlaying(client *spotify.Client, config *Core.Config) {
 	state, err := client.PlayerCurrentlyPlaying()
 
 	if err != nil {
-		Core.Log("Spotify", "Unable to retrieve currently playing song")
+		Core.Log("SPOTIFY", "ERROR", "Unable to retrieve currently playing song")
 	} else {
 
 		// Handle Basic Track Information
@@ -121,7 +121,7 @@ func spotifyGetCurrentlyPlaying(client *spotify.Client, config *Core.Config) {
 
 		if !bytes.Equal(buffer.Bytes(), spotifyData.LastInfoData) {
 
-			Core.Log("Spotify", buffer.String())
+			Core.Log("SPOTIFY", "LOG", buffer.String())
 
 			Core.SaveFile(buffer.Bytes(), spotifyLatestSongPath)
 
