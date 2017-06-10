@@ -34,6 +34,16 @@ go get github.com/fatih/color
 
 Depending on your platform you may need to adjust the build scripts, they work on macOS and Linux varieties. We just haven't made the windows equivalents. If someone would be so kind? 
 
+#### RSRC
+
+In order to make the windows application have an icon, we need to embed some resources to do that, thankfully there is a tool for that.
+
+```bash
+go get github.com/akavel/rsrc
+```
+
+It's important that GO's bin is in your path for the build scripts to work with this tool.
+
 ## Configuration File
 The configuration file needs to be in the same directory as the executable, and named `jarvis.toml`
 
