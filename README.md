@@ -18,8 +18,9 @@ A console application comprised of features from a streamer's wishlist.
 ## Installation
 
 ### Prebuilt Version
-While not always the latest and greatest, occasionally we will update the "easy mode".
-![Current Build](https://github.com/dotBunny/JARVIS/releases/download/0.1/JARVIS-0.1.zip)
+While not always the latest and greatest, occasionally we will update the "easy mode".  
+
+[JARVIS-0.1.zip](https://github.com/dotBunny/JARVIS/releases/download/0.1/JARVIS-0.1.zip)
 
 ### Compile From Source
 
