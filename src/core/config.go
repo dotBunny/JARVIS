@@ -16,18 +16,28 @@ type SpotifyConfig struct {
 	CurrentInfoPath  string
 	CurrentImagePath string
 
+	// Ignore these
 	LastInfoData  []byte
 	LastImageData []byte
 }
 
 // TwitchConfig elements
 type TwitchConfig struct {
-	ClientID           string
-	ClientSecret       string
-	ChannelID          string
-	LatestFollowerPath string
+	ClientID             string
+	ClientSecret         string
+	OAuth                string
+	ChannelID            string
+	LatestFollowerPath   string
+	LatestSubscriberPath string
 
-	LastFollower string
+	// Ignore these
+	LastFollower   string
+	LastSubscriber string
+}
+
+// JIRAConfig elements
+type JIRAConfig struct {
+	URI string
 }
 
 // Config is an external config type

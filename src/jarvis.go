@@ -35,8 +35,7 @@ func main() {
 	spotifyClient = Modules.SpotifyLogin(&config.Spotify)
 
 	// Initialize Twitch
-	twitchClient = twitch2go.NewClient(config.Twitch.ClientID)
-	Modules.TwitchInit(&config.Twitch)
+	twitchClient = Modules.TwitchLogin(&config.Twitch)
 
 	for {
 
