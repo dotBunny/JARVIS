@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 
 	"io/ioutil"
 
@@ -51,7 +52,7 @@ func InitializeSpotify(config *Core.Config) *spotify.Client {
 	}
 
 	// Create new authenticator with permissions
-	auth = spotify.NewAuthenticator("http://localhost:"+config.General.ServerPort+config.Spotify.Callback,
+	auth = spotify.NewAuthenticator("http://localhost:"+strconv.Itoa(config.General.ServerPort)+config.Spotify.Callback,
 		spotify.ScopeUserReadCurrentlyPlaying,
 		spotify.ScopeUserReadRecentlyPlayed)
 
@@ -118,6 +119,11 @@ func spotifyGetCurrentlyPlaying(client *spotify.Client, config *Core.Config) {
 		}
 		buffer.WriteString(" - ")
 		buffer.WriteString(state.Item.Name)
+
+		if buffer.Len() > config.Spotify.TruncateTrackLength {
+			buffer.Truncate(config.Spotify.TruncateTrackLength)
+			buffer.WriteString(config.Spotify.TruncateTrackRunes)
+		}
 
 		if !bytes.Equal(buffer.Bytes(), spotifyData.LastInfoData) {
 

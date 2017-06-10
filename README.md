@@ -55,6 +55,8 @@ The configuration file needs to be in the same directory as the executable, and 
 >ClientID = "SPOTIFY CLIENT ID"  
 >ClientSecret = "SPOTIFY SECRET"  
 >Callback = "/callbackEndpoint"  
+>TruncateTrackLength = 85  
+>TruncateTrackRunes = "..."  
 >  
 >[Twitch]  
 >ClientID = "TWITCH CLIENT ID"  

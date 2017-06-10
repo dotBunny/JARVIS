@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strconv"
 
 	Core "../core"
 	"github.com/chosenken/twitch2go"
@@ -57,7 +58,7 @@ func PollTwitch(client *twitch2go.Client, config *Core.Config) {
 
 func twitchFollowers(client *twitch2go.Client, config *Core.Config) bool {
 
-	followers, error := client.GetChannelFollows(config.Twitch.ChannelID, "", 1, "DESC")
+	followers, error := client.GetChannelFollows(strconv.Itoa(config.Twitch.ChannelID), "", 1, "DESC")
 	if error != nil {
 		Core.Log("TWITCH", "ERROR", error.Error())
 		return false
@@ -80,7 +81,7 @@ func twitchFollowers(client *twitch2go.Client, config *Core.Config) bool {
 
 func twitchSubscribers(client *twitch2go.Client, config *Core.Config) bool {
 
-	subscribers, error := client.GetChannelSubscribers(config.Twitch.ChannelID, config.Twitch.OAuth, 1, 0, "DESC")
+	subscribers, error := client.GetChannelSubscribers(strconv.Itoa(config.Twitch.ChannelID), config.Twitch.OAuth, 1, 0, "DESC")
 	if error != nil {
 		Core.Log("TWITCH", "ERROR", error.Error())
 		return false

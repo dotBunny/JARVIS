@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"path"
 	"path/filepath"
 	"syscall"
 	"time"
@@ -26,10 +27,16 @@ var (
 func main() {
 
 	// Start Logging
-	logFile, err := os.OpenFile("jarvis.log", os.O_CREATE|os.O_TRUNC|os.O_RDWR, 0666)
+	dir, pathError := filepath.Abs(filepath.Dir(os.Args[0]))
+	if pathError != nil {
+		log.Fatal("Unable to determine path of application")
+	}
+	logPath := path.Join(dir, "jarvis.log")
+	logFile, err := os.OpenFile(logPath, os.O_CREATE|os.O_TRUNC|os.O_RDWR, 0666)
 	if err != nil {
 		panic(err)
 	}
+
 	multiWriter := io.MultiWriter(os.Stdout, logFile)
 	log.SetOutput(multiWriter)
 

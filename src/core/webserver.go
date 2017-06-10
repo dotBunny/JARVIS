@@ -1,13 +1,16 @@
 package core
 
-import "net/http"
+import (
+	"net/http"
+	"strconv"
+)
 
 var (
-	port string
+	port int
 )
 
 // InitializeWebServer for callbacks
-func InitializeWebServer(listeningPort string) {
+func InitializeWebServer(listeningPort int) {
 	port = listeningPort
 
 	http.HandleFunc("/",
@@ -15,7 +18,7 @@ func InitializeWebServer(listeningPort string) {
 			Log("SYSTEM", "LOG", "Got request for: "+r.URL.String())
 		})
 
-	go http.ListenAndServe(":"+listeningPort, nil)
+	go http.ListenAndServe(":"+strconv.Itoa(listeningPort), nil)
 }
 
 // AddEndpoint to webserver

@@ -8,6 +8,8 @@ ServerPort = "<SERVER_PORT_FOR_CALLBACKS>"
 ClientID = "<SPOTIFY_CLIENT_ID>"
 ClientSecret = "<SPOTIFY_CLIENT_SECRET>"
 Callback = "/callbackSpotify"
+TruncateTrackLength = 85
+TruncateTrackRunes = "..."
 
 [Twitch]
 ClientID = "<TWITCH_CLIENT_ID>"

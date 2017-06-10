@@ -12,14 +12,16 @@ import (
 //GeneralConfig elements
 type GeneralConfig struct {
 	OutputPath string
-	ServerPort string
+	ServerPort int
 }
 
 // SpotifyConfig elements
 type SpotifyConfig struct {
-	ClientID     string
-	ClientSecret string
-	Callback     string
+	ClientID            string
+	ClientSecret        string
+	Callback            string
+	TruncateTrackLength int
+	TruncateTrackRunes  string
 }
 
 // TwitchConfig elements
@@ -27,7 +29,7 @@ type TwitchConfig struct {
 	ClientID     string
 	ClientSecret string
 	OAuth        string
-	ChannelID    string
+	ChannelID    int
 	Callback     string
 }
 
