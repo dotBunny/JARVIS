@@ -1,3 +1,20 @@
+# JARVIS: Streamer's Butler
+A console application comprised of features from a streamer's wishlist.
+
+* Simple Notifications
+
+![Console](https://dl.dropboxusercontent.com/u/118962/JARVIS/console.png)
+
+* Text File Data
+    * Spotify Latest Song
+    * Twitch Latest Follower
+    * Twitch Latest Subscriber (Not Fully Finished)
+* Image File Data
+    * Spotify Latest Song Album Cover
+
+![Outputs](https://dl.dropboxusercontent.com/u/118962/JARVIS/outputs.png)
+
+
 ## Installation
 
 Make sure you install the necessary libraries for JARVIS to do his thing.
