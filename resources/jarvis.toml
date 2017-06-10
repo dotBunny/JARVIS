@@ -1,0 +1,16 @@
+# JARVIS Configuration
+
+[General]
+OutputPath = "<ABSOLUTE_OUTPUT_PATH>"
+ServerPort = "<SERVER_PORT_FOR_CALLBACKS>"
+
+[Spotify]
+ClientID = "<SPOTIFY_CLIENT_ID>"
+ClientSecret = "<SPOTIFY_CLIENT_SECRET>"
+Callback = "/callbackSpotify"
+
+[Twitch]
+ClientID = "<TWITCH_CLIENT_ID>"
+ClientSecret = "<TWITCH_CLIENT_SECRET>"
+OAuth = "<TWITCH_OAUTH_TOKEN>"
+ChannelID = "<TWITCH_CHANNEL_ID>"
