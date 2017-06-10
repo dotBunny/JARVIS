@@ -9,30 +9,24 @@ import (
 	"github.com/BurntSushi/toml"
 )
 
+//GeneralConfig elements
+type GeneralConfig struct {
+	OutputPath string
+	ServerPort string
+}
+
 // SpotifyConfig elements
 type SpotifyConfig struct {
-	ClientID         string
-	ClientSecret     string
-	CurrentInfoPath  string
-	CurrentImagePath string
-
-	// Ignore these
-	LastInfoData  []byte
-	LastImageData []byte
+	ClientID     string
+	ClientSecret string
 }
 
 // TwitchConfig elements
 type TwitchConfig struct {
-	ClientID             string
-	ClientSecret         string
-	OAuth                string
-	ChannelID            string
-	LatestFollowerPath   string
-	LatestSubscriberPath string
-
-	// Ignore these
-	LastFollower   string
-	LastSubscriber string
+	ClientID     string
+	ClientSecret string
+	OAuth        string
+	ChannelID    string
 }
 
 // JIRAConfig elements
@@ -42,6 +36,7 @@ type JIRAConfig struct {
 
 // Config is an external config type
 type Config struct {
+	General GeneralConfig
 	Spotify SpotifyConfig
 	Twitch  TwitchConfig
 }

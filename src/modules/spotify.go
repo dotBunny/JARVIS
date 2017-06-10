@@ -17,24 +17,48 @@ import (
 
 const redirectURI = "http://localhost:8080/callback"
 
+// SpotifyData contains the live data we compare against
+type SpotifyData struct {
+	LastInfoData  []byte
+	LastImageData []byte
+	DurationMS    int
+	PlayedMS      int
+}
+
 var (
+	spotifyData            SpotifyData
+	spotifyLatestSongPath  string
+	spotifyLatestImagePath string
+
 	auth  = spotify.NewAuthenticator(redirectURI, spotify.ScopeUserReadCurrentlyPlaying, spotify.ScopeUserReadRecentlyPlayed)
 	ch    = make(chan *spotify.Client)
 	state = "abc123"
 )
 
-// SpotifyLogin authenticates with spotify
-func SpotifyLogin(config *Core.SpotifyConfig) *spotify.Client {
+// InitializeSpotify Module
+func InitializeSpotify(config *Core.Config) *spotify.Client {
 
-	auth.SetAuthInfo(config.ClientID, config.ClientSecret)
-	// first start an HTTP server
-	http.HandleFunc("/callback", completeAuth)
-	http.HandleFunc("/",
-		func(w http.ResponseWriter, r *http.Request) {
-			Core.Log("Spotify", "Got request for: "+r.URL.String())
-		})
+	// Create our output paths
+	spotifyLatestSongPath = filepath.Join(config.General.OutputPath, "Spotify_LatestSong.txt")
+	spotifyLatestImagePath = filepath.Join(config.General.OutputPath, "Spotify_LatestImage.jpg")
 
-	go http.ListenAndServe(":8080", nil)
+	// Check twitchLatestFollowerPath
+	if _, err := os.Stat(spotifyLatestSongPath); os.IsNotExist(err) {
+		ioutil.WriteFile(spotifyLatestSongPath, nil, 0755)
+	}
+
+	// Check twitchLatestFollowerPath
+	if _, err := os.Stat(spotifyLatestImagePath); os.IsNotExist(err) {
+		ioutil.WriteFile(spotifyLatestImagePath, nil, 0755)
+	}
+
+	// Start Login AUTH Procedures
+	auth.SetAuthInfo(config.Spotify.ClientID, config.Spotify.ClientSecret)
+
+	// TODO: Add something to retain login info?
+
+	// Add Endpoint for Callbac
+	Core.AddEndpoint("/callbackSpotify", spotifyCompleteAuthentication)
 
 	url := auth.AuthURL(state)
 	Core.Log("Spotify", "Please log in to Spotify by visiting the following page in your browser:\n"+url)
@@ -49,23 +73,15 @@ func SpotifyLogin(config *Core.SpotifyConfig) *spotify.Client {
 	}
 	Core.Log("Spotify", "You are logged in as: "+user.ID)
 
-	// Pathing Check
-	os.MkdirAll(filepath.Dir(config.CurrentInfoPath), 0755)
-
-	// Info Path
-	if _, err := os.Stat(config.CurrentInfoPath); os.IsNotExist(err) {
-		ioutil.WriteFile(config.CurrentInfoPath, nil, 0755)
-	}
-
-	// Image Path
-	if _, err := os.Stat(config.CurrentImagePath); os.IsNotExist(err) {
-		ioutil.WriteFile(config.CurrentImagePath, nil, 0755)
-	}
-
 	return client
 }
 
-func completeAuth(w http.ResponseWriter, r *http.Request) {
+// PollSpotify For Updates
+func PollSpotify(client *spotify.Client, config *Core.Config) {
+	spotifyGetCurrentlyPlaying(client, config)
+}
+
+func spotifyCompleteAuthentication(w http.ResponseWriter, r *http.Request) {
 	tok, err := auth.Token(state, r)
 	if err != nil {
 		http.Error(w, "Couldn't get token", http.StatusForbidden)
@@ -81,9 +97,7 @@ func completeAuth(w http.ResponseWriter, r *http.Request) {
 	ch <- &client
 }
 
-// SpotifyPoll For Current Playing
-func SpotifyPoll(client *spotify.Client, config *Core.SpotifyConfig) {
-
+func spotifyGetCurrentlyPlaying(client *spotify.Client, config *Core.Config) {
 	state, err := client.PlayerCurrentlyPlaying()
 
 	if err != nil {
@@ -102,12 +116,15 @@ func SpotifyPoll(client *spotify.Client, config *Core.SpotifyConfig) {
 		buffer.WriteString(" - ")
 		buffer.WriteString(state.Item.Name)
 
-		if !bytes.Equal(buffer.Bytes(), config.LastInfoData) {
+		if !bytes.Equal(buffer.Bytes(), spotifyData.LastInfoData) {
 
 			Core.Log("Spotify", buffer.String())
 
-			Core.SaveFile(buffer.Bytes(), config.CurrentInfoPath)
-			config.LastInfoData = buffer.Bytes()
+			Core.SaveFile(buffer.Bytes(), spotifyLatestSongPath)
+
+			spotifyData.LastInfoData = buffer.Bytes()
+			spotifyData.DurationMS = state.Item.Duration
+			spotifyData.PlayedMS = state.Progress
 
 			// Clear buffer
 			buffer.Reset()
@@ -118,12 +135,17 @@ func SpotifyPoll(client *spotify.Client, config *Core.SpotifyConfig) {
 				writer := bufio.NewWriter(&buffer)
 				state.Item.Album.Images[0].Download(writer)
 
-				if !bytes.Equal(buffer.Bytes(), config.LastImageData) {
+				if !bytes.Equal(buffer.Bytes(), spotifyData.LastImageData) {
 
-					Core.SaveFile(buffer.Bytes(), config.CurrentImagePath)
-					config.LastImageData = buffer.Bytes()
+					Core.SaveFile(buffer.Bytes(), spotifyLatestImagePath)
+					spotifyData.LastImageData = buffer.Bytes()
 				}
 			}
 		}
 	}
+}
+
+// SpotifyRender UI component
+func SpotifyRender(config *Core.Config) {
+
 }

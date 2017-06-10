@@ -9,20 +9,20 @@ go get github.com/andygrunwald/go-jira
 
 ## Configuration File
 The configuration file needs to be in the same directory as the executable, and named `jarvis.toml`
-  
+
+>[General]  
+>OutputPath = "/path/where/to/save/files/"  
+>ServerPort = "8080"
+>  
 >[Spotify]  
-> ClientID = "SPOTIFY CLIENT ID"  
-> ClientSecret = "SPOTIFY SECRET"  
-> CurrentInfoPath = "/path/to/where/you/want/the/txt/file.txt"  
-> CurrentImagePath = "/path/to/where/you/want/album/art.jpg"   
+>ClientID = "SPOTIFY CLIENT ID"  
+>ClientSecret = "SPOTIFY SECRET"   
 >  
 >[Twitch]  
-> ClientID = "TWITCH CLIENT ID"  
-> ClientSecret = "TWITCH SECRET"  
-> OAuth = "TWITCH OAUTH STRING"
-> ChannelID = "YOUR CHANNEL ID"  
-> LatestFollowerPath = "/path/to/where/you/want/this/stored.txt"  
-> LatestSubscriberPath = "/path/to/where/you/want/this/stored.txt"  
+>ClientID = "TWITCH CLIENT ID"  
+>ClientSecret = "TWITCH SECRET"  
+>OAuth = "TWITCH OAUTH STRING"  
+>ChannelID = "YOUR CHANNEL ID"   
   
 ## Help
 Once you have managed to wrangle [GO](https://golang.org/) into compiling the source, you simply need to run the executable.

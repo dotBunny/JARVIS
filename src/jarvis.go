@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"os/signal"
+	"path/filepath"
 	"syscall"
 	"time"
 
@@ -21,6 +22,10 @@ func main() {
 
 	// Load Config
 	var config = Core.ReadConfig()
+
+	// Pathing Check
+	os.MkdirAll(filepath.Dir(config.General.OutputPath), 0755)
+
 	c := make(chan os.Signal, 2)
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 	go func() {
@@ -31,17 +36,18 @@ func main() {
 
 	Core.Log("System", "Active")
 
-	// Login to Spotify (Requires User Interaction)
-	spotifyClient = Modules.SpotifyLogin(&config.Spotify)
+	// Initialize Webserver
+	Core.InitializeWebServer(config.General.ServerPort)
 
-	// Initialize Twitch
-	twitchClient = Modules.TwitchLogin(&config.Twitch)
+	// Initialize Modules
+	spotifyClient = Modules.InitializeSpotify(&config)
+	twitchClient = Modules.InitializeTwitch(&config)
 
 	for {
 
 		// Poll
-		Modules.SpotifyPoll(spotifyClient, &config.Spotify)
-		Modules.TwitchPoll(twitchClient, &config.Twitch)
+		Modules.PollSpotify(spotifyClient, &config)
+		Modules.PollTwitch(twitchClient, &config)
 
 		// Our polling rate
 		time.Sleep(5 * time.Second)

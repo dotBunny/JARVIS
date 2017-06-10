@@ -4,82 +4,104 @@ package modules
 // curl -H 'Accept: application/vnd.twitchtv.v5+json' -H 'Client-ID: <CLIENT ID>' -X GET https://api.twitch.tv/kraken/users?login=<USERNAME>
 
 import (
+	"bytes"
 	"io/ioutil"
 	"os"
 	"path/filepath"
-
-	"bytes"
 
 	Core "../core"
 	"github.com/chosenken/twitch2go"
 )
 
-// TwitchLogin initilizas twitch configuration
-func TwitchLogin(config *Core.TwitchConfig) *twitch2go.Client {
+// TwitchData contains the live data we compare against
+type TwitchData struct {
+	LastFollower   string
+	LastSubscriber string
+}
 
+var (
+	twitchData                 TwitchData
+	twitchLatestFollowerPath   string
+	twitchLatestSubscriberPath string
+)
+
+// InitializeTwitch Module
+func InitializeTwitch(config *Core.Config) *twitch2go.Client {
+
+	// Create our output paths
+	twitchLatestFollowerPath = filepath.Join(config.General.OutputPath, "Twitch_LatestFollower.txt")
+	twitchLatestSubscriberPath = filepath.Join(config.General.OutputPath, "Twitch_LatestSubscriber.txt")
+
+	// Check twitchLatestFollowerPath
+	if _, err := os.Stat(twitchLatestFollowerPath); os.IsNotExist(err) {
+		ioutil.WriteFile(twitchLatestFollowerPath, nil, 0755)
+	}
+
+	// Check twitchLatestFollowerPath
+	if _, err := os.Stat(twitchLatestSubscriberPath); os.IsNotExist(err) {
+		ioutil.WriteFile(twitchLatestSubscriberPath, nil, 0755)
+	}
+
+	// TODO: Need to auth with scope for subscribers to work
 	// channel_commercial, channel_editor, channel_subscriptions,
 	// &scope=user_read+channel_read
-
-	client := twitch2go.NewClient(config.ClientID) //, "channel_commercial+channel_editor+channel_subscriptions")
-
-	// Pathing Check
-	os.MkdirAll(filepath.Dir(config.LatestFollowerPath), 0755)
-
-	// Info Path
-	if _, err := os.Stat(config.LatestFollowerPath); os.IsNotExist(err) {
-		ioutil.WriteFile(config.LatestFollowerPath, nil, 0755)
-	}
+	client := twitch2go.NewClient(config.Twitch.ClientID)
 
 	return client
 }
 
-// TwitchPoll For Current Playing
-func TwitchPoll(client *twitch2go.Client, config *Core.TwitchConfig) {
-	var buffer bytes.Buffer
+// PollTwitch For Updates
+func PollTwitch(client *twitch2go.Client, config *Core.Config) {
+	twitchFollowers(client, config)
+}
 
-	followers, error := client.GetChannelFollows(config.ChannelID, "", 1, "DESC")
+func twitchFollowers(client *twitch2go.Client, config *Core.Config) bool {
+
+	followers, error := client.GetChannelFollows(config.Twitch.ChannelID, "", 1, "DESC")
 	if error != nil {
 		Core.Log("Twitch", error.Error())
-		return
+		return false
 	}
 
 	if followers.Total > 0 {
-		if followers.Follows[0].User.DisplayName != config.LastFollower {
-
+		if followers.Follows[0].User.DisplayName != twitchData.LastFollower {
+			var buffer bytes.Buffer
 			buffer.WriteString(followers.Follows[0].User.DisplayName)
-			Core.SaveFile(buffer.Bytes(), config.LatestFollowerPath)
-			config.LastFollower = buffer.String()
-			buffer.Reset()
+			Core.SaveFile(buffer.Bytes(), twitchLatestFollowerPath)
+			twitchData.LastFollower = followers.Follows[0].User.DisplayName
 
-			buffer.WriteString("New Follower ")
-			buffer.WriteString(followers.Follows[0].User.DisplayName)
-			Core.Log("Twitch", buffer.String())
+			// Alert
+			Core.Log("Twitch", "New Follower "+followers.Follows[0].User.DisplayName)
 		}
 	}
 
-	// ** The logic is sound to do subscribers, but without oauth it wont work for now
-	// TODO: ADD OAUTH FIX
+	return true
+}
 
-	// subscribers, error := client.GetChannelSubscribers(config.ChannelID, config.OAuth, 1, 0, "DESC")
+func twitchSubscribers(client *twitch2go.Client, config *Core.Config) bool {
 
-	// if error != nil {
-	// 	Core.Log("Twitch", error.Error())
-	// 	return
-	// }
+	subscribers, error := client.GetChannelSubscribers(config.Twitch.ChannelID, config.Twitch.OAuth, 1, 0, "DESC")
+	if error != nil {
+		Core.Log("Twitch", error.Error())
+		return false
+	}
 
-	// if subscribers.Total > 0 {
-	// 	if subscribers.Subscriptions[0].User.Name != config.LastSubscriber {
+	if subscribers.Total > 0 {
+		if subscribers.Subscriptions[0].User.Name != twitchData.LastSubscriber {
 
-	// 		buffer.Reset()
+			var buffer bytes.Buffer
+			buffer.WriteString(subscribers.Subscriptions[0].User.Name)
+			Core.SaveFile(buffer.Bytes(), twitchLatestSubscriberPath)
+			twitchData.LastSubscriber = subscribers.Subscriptions[0].User.Name
 
-	// 		buffer.WriteString(subscribers.Subscriptions[0].User.Name)
-	// 		Core.SaveFile(buffer.Bytes(), config.LatestSubscriberPath)
-	// 		config.LastSubscriber = buffer.String()
-	// 		buffer.Reset()
+			// Alert
+			Core.Log("Twitch", "New SUBSCRIBER "+subscribers.Subscriptions[0].User.Name)
+		}
+	}
 
-	// 		buffer.WriteString("New SUBSCRIBER ")
-	// 		buffer.WriteString(subscribers.Subscriptions[0].User.Name)
-	// 		Core.Log("Twitch", buffer.String())
-	// 	}
-	// }
+	return true
+}
+
+// TwitchRender component
+func TwitchRender() {
 }
