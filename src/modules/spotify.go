@@ -15,8 +15,6 @@ import (
 	"github.com/zmb3/spotify"
 )
 
-const redirectURI = "http://localhost:8080/callback"
-
 // SpotifyData contains the live data we compare against
 type SpotifyData struct {
 	LastInfoData  []byte
@@ -29,10 +27,10 @@ var (
 	spotifyData            SpotifyData
 	spotifyLatestSongPath  string
 	spotifyLatestImagePath string
+	auth                   spotify.Authenticator
 
-	auth  = spotify.NewAuthenticator(redirectURI, spotify.ScopeUserReadCurrentlyPlaying, spotify.ScopeUserReadRecentlyPlayed)
 	ch    = make(chan *spotify.Client)
-	state = "abc123"
+	state = "JARVIS"
 )
 
 // InitializeSpotify Module
@@ -52,13 +50,18 @@ func InitializeSpotify(config *Core.Config) *spotify.Client {
 		ioutil.WriteFile(spotifyLatestImagePath, nil, 0755)
 	}
 
+	// Create new authenticator with permissions
+	auth = spotify.NewAuthenticator("http://localhost:"+config.General.ServerPort+config.Spotify.Callback,
+		spotify.ScopeUserReadCurrentlyPlaying,
+		spotify.ScopeUserReadRecentlyPlayed)
+
 	// Start Login AUTH Procedures
 	auth.SetAuthInfo(config.Spotify.ClientID, config.Spotify.ClientSecret)
 
 	// TODO: Add something to retain login info?
 
 	// Add Endpoint for Callbac
-	Core.AddEndpoint("/callbackSpotify", spotifyCompleteAuthentication)
+	Core.AddEndpoint(config.Spotify.Callback, spotifyCompleteAuthentication)
 
 	url := auth.AuthURL(state)
 	Core.Log("Spotify", "Please log in to Spotify by visiting the following page in your browser:\n"+url)

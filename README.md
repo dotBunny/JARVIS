@@ -16,7 +16,8 @@ The configuration file needs to be in the same directory as the executable, and 
 >  
 >[Spotify]  
 >ClientID = "SPOTIFY CLIENT ID"  
->ClientSecret = "SPOTIFY SECRET"   
+>ClientSecret = "SPOTIFY SECRET" 
+>Callback = "/callbackEndpoint"  
 >  
 >[Twitch]  
 >ClientID = "TWITCH CLIENT ID"  

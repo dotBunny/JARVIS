@@ -19,6 +19,7 @@ type GeneralConfig struct {
 type SpotifyConfig struct {
 	ClientID     string
 	ClientSecret string
+	Callback     string
 }
 
 // TwitchConfig elements
@@ -27,6 +28,7 @@ type TwitchConfig struct {
 	ClientSecret string
 	OAuth        string
 	ChannelID    string
+	Callback     string
 }
 
 // JIRAConfig elements
