@@ -44,12 +44,9 @@ func main() {
 	twitchClient = Modules.InitializeTwitch(&config)
 
 	for {
-
-		// Poll
+		// TODO: Make these agnostic of each other and have configurable polling rates
 		Modules.PollSpotify(spotifyClient, &config)
 		Modules.PollTwitch(twitchClient, &config)
-
-		// Our polling rate
 		time.Sleep(5 * time.Second)
 	}
 }
