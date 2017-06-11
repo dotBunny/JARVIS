@@ -15,6 +15,7 @@ import (
 	Core "./core"
 	Modules "./modules"
 	"github.com/chosenken/twitch2go"
+	"github.com/fatih/color"
 	"github.com/zmb3/spotify"
 )
 
@@ -26,6 +27,9 @@ var (
 	spotifyTicker *time.Ticker
 	twitchTicker  *time.Ticker
 )
+
+// Version Number
+const Version string = "0.1.1"
 
 func main() {
 
@@ -43,6 +47,9 @@ func main() {
 	multiWriter := io.MultiWriter(os.Stdout, logFile)
 	log.SetOutput(multiWriter)
 
+	// Startup
+	Core.Log("SYSTEM", "LOG", "Just A Rather Very Intelligent System "+color.BlueString("v"+Version))
+
 	// Load Config
 	var config = Core.ReadConfig()
 
@@ -55,7 +62,7 @@ func main() {
 	go func() {
 		<-quit
 		fmt.Println("")
-		Core.Log("SYSTEM", "LOG", "Shutting Down")
+		Core.Log("SYSTEM", "LOG", "Shutting Down ...")
 		if spotifyTicker != nil {
 			spotifyTicker.Stop()
 		}
