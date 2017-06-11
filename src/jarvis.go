@@ -22,6 +22,9 @@ var (
 	spotifyClient *spotify.Client
 	twitchClient  *twitch2go.Client
 	logFile       *os.File
+
+	spotifyTicker *time.Ticker
+	twitchTicker  *time.Ticker
 )
 
 func main() {
@@ -46,15 +49,25 @@ func main() {
 	// Pathing Check
 	os.MkdirAll(filepath.Dir(config.General.OutputPath), 0755)
 
-	c := make(chan os.Signal, 2)
-	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+	// Quit Routine
+	quit := make(chan os.Signal, 2)
+	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
 	go func() {
-		<-c
-		shutdown()
+		<-quit
+		fmt.Println("")
+		Core.Log("SYSTEM", "LOG", "Shutting Down")
+		if spotifyTicker != nil {
+			spotifyTicker.Stop()
+		}
+		if twitchTicker != nil {
+			twitchTicker.Stop()
+		}
+		close(quit)
 		os.Exit(1)
 	}()
+	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
 
-	Core.Log("SYSTEM", "LOG", "Active")
+	Core.Log("SYSTEM", "LOG", "Starting Up ...")
 
 	// Initialize Webserver
 	Core.InitializeWebServer(config.General.ServerPort)
@@ -63,15 +76,33 @@ func main() {
 	spotifyClient = Modules.InitializeSpotify(&config)
 	twitchClient = Modules.InitializeTwitch(&config)
 
-	for {
-		// TODO: Make these agnostic of each other and have configurable polling rates
-		Modules.PollSpotify(spotifyClient, &config)
-		Modules.PollTwitch(twitchClient, &config)
-		time.Sleep(5 * time.Second)
+	// Create Our Tickers (for Channeling)
+	spotifyPollingFrequency, spotifyPollingError := time.ParseDuration(config.Spotify.PollingFrequency)
+	if spotifyPollingError != nil {
+		spotifyPollingFrequency, _ = time.ParseDuration("5s")
 	}
-}
+	spotifyTicker := time.NewTicker(spotifyPollingFrequency)
 
-func shutdown() {
-	fmt.Println("")
-	Core.Log("SYSTEM", "LOG", "Shutting Down")
+	twitchPollingFrequency, twitchPollingError := time.ParseDuration(config.Twitch.PollingFrequency)
+	if twitchPollingError == nil {
+		twitchPollingFrequency, _ = time.ParseDuration("10s")
+	}
+	twitchTicker := time.NewTicker(twitchPollingFrequency)
+
+	// Get Initial Values
+	Modules.PollSpotify(spotifyClient, &config)
+	Modules.PollTwitch(twitchClient, &config)
+
+	// Lets do this!
+	Core.Log("SYSTEM", "LOG", "Ready")
+
+	// Infinite Loop
+	for {
+		select {
+		case <-spotifyTicker.C:
+			Modules.PollSpotify(spotifyClient, &config)
+		case <-twitchTicker.C:
+			Modules.PollTwitch(twitchClient, &config)
+		}
+	}
 }
