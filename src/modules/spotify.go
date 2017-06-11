@@ -170,8 +170,3 @@ func spotifyWebGetImage(w http.ResponseWriter, r *http.Request) {
 		Core.Log("SPOTIFY", "ERROR", "Unable to write image")
 	}
 }
-
-// SpotifyRender UI component
-func SpotifyRender(config *Core.Config) {
-
-}

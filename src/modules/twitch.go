@@ -111,7 +111,3 @@ func twitchSubscribers(client *twitch2go.Client, config *Core.Config) bool {
 func twitchWebGetLastFollower(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(twitchData.LastFollower))
 }
-
-// TwitchRender component
-func TwitchRender() {
-}
