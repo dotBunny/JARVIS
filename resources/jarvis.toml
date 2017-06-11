@@ -5,6 +5,7 @@ OutputPath = "<ABSOLUTE_OUTPUT_PATH>"
 ServerPort = "<SERVER_PORT_FOR_CALLBACKS>"
 
 [Spotify]
+PollingFrequency = "5s"
 ClientID = "<SPOTIFY_CLIENT_ID>"
 ClientSecret = "<SPOTIFY_CLIENT_SECRET>"
 Callback = "/callbackSpotify"
@@ -12,6 +13,7 @@ TruncateTrackLength = 85
 TruncateTrackRunes = "..."
 
 [Twitch]
+PollingFrequency = "10s"
 ClientID = "<TWITCH_CLIENT_ID>"
 ClientSecret = "<TWITCH_CLIENT_SECRET>"
 OAuth = "<TWITCH_OAUTH_TOKEN>"

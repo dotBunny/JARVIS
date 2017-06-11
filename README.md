@@ -49,9 +49,10 @@ The configuration file needs to be in the same directory as the executable, and 
 
 >[General]  
 >OutputPath = "/path/where/to/save/files/"  
->ServerPort = "8080"
+>ServerPort = 8080
 >  
->[Spotify]  
+>[Spotify] 
+>PollingFrequency = "5s" 
 >ClientID = "SPOTIFY CLIENT ID"  
 >ClientSecret = "SPOTIFY SECRET"  
 >Callback = "/callbackEndpoint"  
@@ -59,10 +60,11 @@ The configuration file needs to be in the same directory as the executable, and 
 >TruncateTrackRunes = "..."  
 >  
 >[Twitch]  
->ClientID = "TWITCH CLIENT ID"  
+>PollingFrequency = "10s"
+>ClientID = "TWITCH CLIENT ID"
 >ClientSecret = "TWITCH SECRET"  
 >OAuth = "TWITCH OAUTH STRING" #Not Used Currently  
->ChannelID = "YOUR CHANNEL ID"   
+>ChannelID = YOUR CHANNEL ID  
   
 ## Help
 Once you have managed to wrangle [GO](https://golang.org/) into compiling the source, you simply need to run the executable.
