@@ -13,11 +13,10 @@ import (
 )
 
 var (
-	baseDir        string
-	basePage       string
-	basePath       string
-	basePageCached bool
-	resourceBase   string
+	baseDir      string
+	basePage     string
+	basePath     string
+	resourceBase string
 )
 
 // InitializeOverlay Module
@@ -26,27 +25,9 @@ func InitializeOverlay(config *Core.Config) {
 	Core.AddEndpoint("/overlay", overlayRender)
 	Core.AddEndpoint("/overlay/resource", overlayGetResource)
 
-	// Cache HTML
 	baseDir = config.AppDir
 	basePath = path.Join(config.AppDir, "resources", "overlay", "index.html")
 	resourceBase = path.Join(config.AppDir, "resources", "overlay", "content")
-
-	if config.Overlay.CacheIndex {
-		Core.Log("OVERLAY", "LOG", "Caching Overlay HTML")
-		basePageData, error := ioutil.ReadFile(basePath)
-
-		if error != nil {
-			Core.Log("OVERLAY", "ERROR", "Unable to read base HTML page ("+basePath+") from resources folder.")
-		} else {
-			basePage = string(basePageData)
-		}
-
-		if len(basePage) <= 0 {
-			Core.Log("OVERLAY", "ERROR", "No data to serve for overlay.")
-		} else {
-			basePageCached = true
-		}
-	}
 }
 
 func overlayGetResource(w http.ResponseWriter, r *http.Request) {
@@ -104,23 +85,19 @@ func overlayGetResource(w http.ResponseWriter, r *http.Request) {
 }
 
 func overlayRender(w http.ResponseWriter, r *http.Request) {
-	if basePageCached {
-		fmt.Fprintf(w, basePage)
+
+	// Server Page Per Time
+	basePageData, error := ioutil.ReadFile(basePath)
+	if error != nil {
+		Core.Log("OVERLAY", "ERROR", "Unable to read base HTML page ("+basePath+") from resources folder.")
 	} else {
+		basePage = string(basePageData)
+	}
 
-		// Server Page Per Time
-		basePageData, error := ioutil.ReadFile(basePath)
-		if error != nil {
-			Core.Log("OVERLAY", "ERROR", "Unable to read base HTML page ("+basePath+") from resources folder.")
-		} else {
-			basePage = string(basePageData)
-		}
-
-		if len(basePage) <= 0 {
-			Core.Log("OVERLAY", "ERROR", "No data to serve for overlay.")
-			fmt.Fprintf(w, "No Overlay Found")
-		} else {
-			fmt.Fprintf(w, basePage)
-		}
+	if len(basePage) <= 0 {
+		Core.Log("OVERLAY", "ERROR", "No data to serve for overlay.")
+		fmt.Fprintf(w, "No Overlay Found")
+	} else {
+		fmt.Fprintf(w, basePage)
 	}
 }

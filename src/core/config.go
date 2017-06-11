@@ -36,13 +36,8 @@ type TwitchConfig struct {
 	PollingFrequency string
 	ClientID         string
 	ClientSecret     string
-	OAuth            string
 	ChannelID        int
 	Callback         string
-}
-
-type OverlayConfig struct {
-	CacheIndex bool
 }
 
 // JIRAConfig elements
@@ -56,7 +51,6 @@ type Config struct {
 	General GeneralConfig
 	Spotify SpotifyConfig
 	Twitch  TwitchConfig
-	Overlay OverlayConfig
 }
 
 // ReadConfig gets the local config file

@@ -20,6 +20,7 @@ import (
 type TwitchData struct {
 	LastFollower   string
 	LastSubscriber string
+	OAuth          string
 }
 
 var (
@@ -92,7 +93,7 @@ func twitchFollowers(client *twitch2go.Client, config *Core.Config) bool {
 
 func twitchSubscribers(client *twitch2go.Client, config *Core.Config) bool {
 
-	subscribers, error := client.GetChannelSubscribers(strconv.Itoa(config.Twitch.ChannelID), config.Twitch.OAuth, 1, 0, "DESC")
+	subscribers, error := client.GetChannelSubscribers(strconv.Itoa(config.Twitch.ChannelID), twitchData.OAuth, 1, 0, "DESC")
 	if error != nil {
 		Core.Log("TWITCH", "ERROR", error.Error())
 		return false
