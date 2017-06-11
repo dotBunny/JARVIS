@@ -17,6 +17,9 @@ type GeneralConfig struct {
 
 // SpotifyConfig elements
 type SpotifyConfig struct {
+	Enabled bool
+	Output  bool
+
 	PollingFrequency    string
 	ClientID            string
 	ClientSecret        string
@@ -27,6 +30,9 @@ type SpotifyConfig struct {
 
 // TwitchConfig elements
 type TwitchConfig struct {
+	Enabled bool
+	Output  bool
+
 	PollingFrequency string
 	ClientID         string
 	ClientSecret     string

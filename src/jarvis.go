@@ -81,25 +81,32 @@ func main() {
 
 	// Initialize Modules
 	Modules.InitializeOverlay(&config)
-	spotifyClient = Modules.InitializeSpotify(&config)
-	twitchClient = Modules.InitializeTwitch(&config)
 
-	// Create Our Tickers (for Channeling)
-	spotifyPollingFrequency, spotifyPollingError := time.ParseDuration(config.Spotify.PollingFrequency)
-	if spotifyPollingError != nil {
-		spotifyPollingFrequency, _ = time.ParseDuration("5s")
+	// Initialize Spotify
+	if config.Spotify.Enabled {
+		spotifyClient = Modules.InitializeSpotify(&config)
+		spotifyPollingFrequency, spotifyPollingError := time.ParseDuration(config.Spotify.PollingFrequency)
+		if spotifyPollingError != nil {
+			spotifyPollingFrequency, _ = time.ParseDuration("5s")
+		}
+		spotifyTicker = time.NewTicker(spotifyPollingFrequency)
+
+		// Get Initial Value
+		Modules.PollSpotify(spotifyClient, &config)
 	}
-	spotifyTicker := time.NewTicker(spotifyPollingFrequency)
 
-	twitchPollingFrequency, twitchPollingError := time.ParseDuration(config.Twitch.PollingFrequency)
-	if twitchPollingError == nil {
-		twitchPollingFrequency, _ = time.ParseDuration("10s")
+	// Initialize Twitch
+	if config.Twitch.Enabled {
+		twitchClient = Modules.InitializeTwitch(&config)
+		twitchPollingFrequency, twitchPollingError := time.ParseDuration(config.Twitch.PollingFrequency)
+		if twitchPollingError == nil {
+			twitchPollingFrequency, _ = time.ParseDuration("10s")
+		}
+		twitchTicker = time.NewTicker(twitchPollingFrequency)
+
+		// Get Initial Value
+		Modules.PollTwitch(twitchClient, &config)
 	}
-	twitchTicker := time.NewTicker(twitchPollingFrequency)
-
-	// Get Initial Values
-	Modules.PollSpotify(spotifyClient, &config)
-	Modules.PollTwitch(twitchClient, &config)
 
 	// Lets do this!
 	Core.Log("SYSTEM", "LOG", "Ready")

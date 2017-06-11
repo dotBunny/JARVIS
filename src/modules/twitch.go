@@ -31,18 +31,22 @@ var (
 // InitializeTwitch Module
 func InitializeTwitch(config *Core.Config) *twitch2go.Client {
 
-	// Create our output paths
-	twitchLatestFollowerPath = filepath.Join(config.General.OutputPath, "Twitch_LatestFollower.txt")
-	twitchLatestSubscriberPath = filepath.Join(config.General.OutputPath, "Twitch_LatestSubscriber.txt")
+	// Only do this if we are going to write files
+	if config.Twitch.Output {
 
-	// Check twitchLatestFollowerPath
-	if _, err := os.Stat(twitchLatestFollowerPath); os.IsNotExist(err) {
-		ioutil.WriteFile(twitchLatestFollowerPath, nil, 0755)
-	}
+		// Create our output paths
+		twitchLatestFollowerPath = filepath.Join(config.General.OutputPath, "Twitch_LatestFollower.txt")
+		twitchLatestSubscriberPath = filepath.Join(config.General.OutputPath, "Twitch_LatestSubscriber.txt")
 
-	// Check twitchLatestFollowerPath
-	if _, err := os.Stat(twitchLatestSubscriberPath); os.IsNotExist(err) {
-		ioutil.WriteFile(twitchLatestSubscriberPath, nil, 0755)
+		// Check twitchLatestFollowerPath
+		if _, err := os.Stat(twitchLatestFollowerPath); os.IsNotExist(err) {
+			ioutil.WriteFile(twitchLatestFollowerPath, nil, 0755)
+		}
+
+		// Check twitchLatestFollowerPath
+		if _, err := os.Stat(twitchLatestSubscriberPath); os.IsNotExist(err) {
+			ioutil.WriteFile(twitchLatestSubscriberPath, nil, 0755)
+		}
 	}
 
 	// TODO: Need to auth with scope for subscribers to work
@@ -71,12 +75,14 @@ func twitchFollowers(client *twitch2go.Client, config *Core.Config) bool {
 
 	if followers.Total > 0 {
 		if followers.Follows[0].User.DisplayName != twitchData.LastFollower {
-			var buffer bytes.Buffer
-			buffer.WriteString(followers.Follows[0].User.DisplayName)
-			Core.SaveFile(buffer.Bytes(), twitchLatestFollowerPath)
-			twitchData.LastFollower = followers.Follows[0].User.DisplayName
 
-			// Alert
+			if config.Twitch.Output {
+				var buffer bytes.Buffer
+				buffer.WriteString(followers.Follows[0].User.DisplayName)
+				Core.SaveFile(buffer.Bytes(), twitchLatestFollowerPath)
+			}
+
+			twitchData.LastFollower = followers.Follows[0].User.DisplayName
 			Core.Log("TWITCH", "IMPORTANT", "New Follower "+followers.Follows[0].User.DisplayName)
 		}
 	}
@@ -95,12 +101,13 @@ func twitchSubscribers(client *twitch2go.Client, config *Core.Config) bool {
 	if subscribers.Total > 0 {
 		if subscribers.Subscriptions[0].User.Name != twitchData.LastSubscriber {
 
-			var buffer bytes.Buffer
-			buffer.WriteString(subscribers.Subscriptions[0].User.Name)
-			Core.SaveFile(buffer.Bytes(), twitchLatestSubscriberPath)
-			twitchData.LastSubscriber = subscribers.Subscriptions[0].User.Name
+			if config.Twitch.Output {
+				var buffer bytes.Buffer
+				buffer.WriteString(subscribers.Subscriptions[0].User.Name)
+				Core.SaveFile(buffer.Bytes(), twitchLatestSubscriberPath)
+			}
 
-			// Alert
+			twitchData.LastSubscriber = subscribers.Subscriptions[0].User.Name
 			Core.Log("TWITCH", "IMPORTANT", "New Subscriber "+subscribers.Subscriptions[0].User.Name)
 		}
 	}
