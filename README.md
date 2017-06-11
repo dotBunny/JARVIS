@@ -95,3 +95,5 @@ While JARVIS is running, there are numerous endpoints available for extraction d
 >http://localhost:[ServerPort]/spotify/image  
 >http://localhost:[ServerPort]/twitch/follower/last  
 
+## Feature Requests
+Drop them in the [Issues](https://github.com/dotBunny/JARVIS/issues) section, and mark them as an enhancement (label). Please understand that this is just a side project, resulting from not liking what was currently available.
