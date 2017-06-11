@@ -6,14 +6,13 @@ A console application comprised of features from a streamer's wishlist.
 ![Console](https://dl.dropboxusercontent.com/u/118962/JARVIS/console.png)
 
 * Text File Data
-    * Spotify Latest Song
+    * Spotify Latest Song w/ Truncation
     * Twitch Latest Follower
     * Twitch Latest Subscriber (Not Fully Finished)
 * Image File Data
     * Spotify Latest Song Album Cover
 
 ![Outputs](https://dl.dropboxusercontent.com/u/118962/JARVIS/outputs.png)
-
 
 ## Installation
 
@@ -68,7 +67,7 @@ The configuration file needs to be in the same directory as the executable, and 
 >ChannelID = YOUR CHANNEL ID  
   
 ## Help
-Once you have managed to wrangle [GO](https://golang.org/) into compiling the source, you simply need to run the executable.
+Once you have managed to wrangle [GO](https://golang.org/) into compiling the source, you simply need to run the executable. You will be prompted to login to Spotify (to provide a token for the app). You will need to do this every time the app stars, thus, the URL needed is copied to your clipboard for a quick paste into your nearest local browser.
 
 `CTRL-C` to Exit
 
