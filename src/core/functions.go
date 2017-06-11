@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"fmt"
 	"io/ioutil"
+	"math/rand"
 	"os"
 	"path/filepath"
 
@@ -152,4 +153,15 @@ func SyncFile(data []byte, path string) bool {
 // SaveFile writes a file no matter what
 func SaveFile(data []byte, path string) {
 	ioutil.WriteFile(path, data, 0755)
+}
+
+const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+// RandomString Generator
+func RandomString(n int) string {
+	b := make([]byte, n)
+	for i := range b {
+		b[i] = letterBytes[rand.Intn(len(letterBytes))]
+	}
+	return string(b)
 }

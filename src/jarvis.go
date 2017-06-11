@@ -14,15 +14,15 @@ import (
 
 	Core "./core"
 	Modules "./modules"
-	"github.com/chosenken/twitch2go"
 	"github.com/fatih/color"
-	"github.com/zmb3/spotify"
 )
 
 var (
-	spotifyClient *spotify.Client
-	twitchClient  *twitch2go.Client
+	spotifyModule *Modules.SpotifyModule
+	twitchModule  *Modules.TwitchModule
+	overlayModule *Modules.OverlayModule
 	logFile       *os.File
+	config        Core.Config
 
 	spotifyTicker *time.Ticker
 	twitchTicker  *time.Ticker
@@ -51,7 +51,7 @@ func main() {
 	Core.Log("SYSTEM", "LOG", "Just A Rather Very Intelligent System "+color.BlueString("v"+Version))
 
 	// Load Config
-	var config = Core.ReadConfig()
+	config := Core.ReadConfig()
 
 	// Pathing Check
 	os.MkdirAll(filepath.Dir(config.General.OutputPath), 0755)
@@ -80,24 +80,25 @@ func main() {
 	Core.InitializeWebServer(config.General.ServerPort)
 
 	// Initialize Modules
-	Modules.InitializeOverlay(&config)
+	var overlayModule Modules.OverlayModule
+	overlayModule.Init(&config)
 
 	// Initialize Spotify
+	var spotifyModule Modules.SpotifyModule
 	if config.Spotify.Enabled {
-		spotifyClient = Modules.InitializeSpotify(&config)
+		spotifyModule.Init(&config)
 		spotifyPollingFrequency, spotifyPollingError := time.ParseDuration(config.Spotify.PollingFrequency)
 		if spotifyPollingError != nil {
 			spotifyPollingFrequency, _ = time.ParseDuration("5s")
 		}
 		spotifyTicker = time.NewTicker(spotifyPollingFrequency)
-
-		// Get Initial Value
-		Modules.PollSpotify(spotifyClient, &config)
+		spotifyModule.Poll()
 	}
 
 	// Initialize Twitch
+	var twitchModule Modules.TwitchModule
 	if config.Twitch.Enabled {
-		twitchClient = Modules.InitializeTwitch(&config)
+		twitchModule.Init(&config)
 		twitchPollingFrequency, twitchPollingError := time.ParseDuration(config.Twitch.PollingFrequency)
 		if twitchPollingError == nil {
 			twitchPollingFrequency, _ = time.ParseDuration("10s")
@@ -105,7 +106,7 @@ func main() {
 		twitchTicker = time.NewTicker(twitchPollingFrequency)
 
 		// Get Initial Value
-		Modules.PollTwitch(twitchClient, &config)
+		twitchModule.Poll()
 	}
 
 	// Lets do this!
@@ -115,9 +116,9 @@ func main() {
 	for {
 		select {
 		case <-spotifyTicker.C:
-			Modules.PollSpotify(spotifyClient, &config)
+			spotifyModule.Poll()
 		case <-twitchTicker.C:
-			Modules.PollTwitch(twitchClient, &config)
+			twitchModule.Poll()
 		}
 	}
 }

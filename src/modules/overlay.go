@@ -12,28 +12,53 @@ import (
 	Core "../core"
 )
 
-var (
+// OverlayModule Class
+type OverlayModule struct {
 	baseDir      string
 	basePage     string
 	basePath     string
 	resourceBase string
-)
 
-// InitializeOverlay Module
-func InitializeOverlay(config *Core.Config) {
-	// Setup endpoint
-	Core.AddEndpoint("/overlay", overlayRender)
-	Core.AddEndpoint("/overlay/resource", overlayGetResource)
-
-	baseDir = config.AppDir
-	basePath = path.Join(config.AppDir, "resources", "overlay", "index.html")
-	resourceBase = path.Join(config.AppDir, "resources", "overlay", "content")
+	config *Core.Config
 }
 
-func overlayGetResource(w http.ResponseWriter, r *http.Request) {
+// Init  Module
+func (m *OverlayModule) Init(config *Core.Config) {
+
+	// Assing Config
+	m.config = config
+
+	// Setup endpoint
+	Core.AddEndpoint("/overlay", m.overlayEndpoint)
+	Core.AddEndpoint("/overlay/resource", m.overlayResourceEndpoint)
+
+	m.baseDir = m.config.AppDir
+	m.basePath = path.Join(m.config.AppDir, "resources", "overlay", "index.html")
+	m.resourceBase = path.Join(m.config.AppDir, "resources", "overlay", "content")
+}
+
+func (m *OverlayModule) overlayEndpoint(w http.ResponseWriter, r *http.Request) {
+
+	// Server Page Per Time
+	basePageData, error := ioutil.ReadFile(m.basePath)
+	if error != nil {
+		Core.Log("OVERLAY", "ERROR", "Unable to read base HTML page ("+m.basePath+") from resources folder.")
+	} else {
+		m.basePage = string(basePageData)
+	}
+
+	if len(m.basePage) <= 0 {
+		Core.Log("OVERLAY", "ERROR", "No data to serve for overlay.")
+		fmt.Fprintf(w, "No Overlay Found")
+	} else {
+		fmt.Fprintf(w, m.basePage)
+	}
+}
+
+func (m *OverlayModule) overlayResourceEndpoint(w http.ResponseWriter, r *http.Request) {
 
 	// Build File Path
-	filePath := path.Join(resourceBase, r.URL.RawQuery)
+	filePath := path.Join(m.resourceBase, r.URL.RawQuery)
 
 	// Check Existence
 	_, err := os.Stat(filePath)
@@ -81,23 +106,5 @@ func overlayGetResource(w http.ResponseWriter, r *http.Request) {
 	if _, err := w.Write(fileData); err != nil {
 		Core.Log("SPOTIFY", "ERROR", "Unable to write resource stream")
 		Core.Log("SPOTIFY", "ERROR", err.Error())
-	}
-}
-
-func overlayRender(w http.ResponseWriter, r *http.Request) {
-
-	// Server Page Per Time
-	basePageData, error := ioutil.ReadFile(basePath)
-	if error != nil {
-		Core.Log("OVERLAY", "ERROR", "Unable to read base HTML page ("+basePath+") from resources folder.")
-	} else {
-		basePage = string(basePageData)
-	}
-
-	if len(basePage) <= 0 {
-		Core.Log("OVERLAY", "ERROR", "No data to serve for overlay.")
-		fmt.Fprintf(w, "No Overlay Found")
-	} else {
-		fmt.Fprintf(w, basePage)
 	}
 }

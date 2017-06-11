@@ -53,7 +53,7 @@ The configuration file needs to be in the same directory as the executable, and 
 ### [General]
 | Option        | Description  | Type  | Example  |
 | :------------ |:-------------| :-----| :------- |
-| `OutputPat` | The absolute path to where the outputted data files should be placed  | _string_ |"/Users/reapazor/StreamingData/"|
+| `OutputPath` | The absolute path to where the outputted data files should be placed  | _string_ |"/Users/reapazor/StreamingData/"|
 | `ServerPort` | The port which the callback/overlay server listens on; this by default should be 8080. If you change it, you must edit your overlay's HTML files to reflect the changed port. | _integer_ | 8080 |
 
 ### [Spotify]

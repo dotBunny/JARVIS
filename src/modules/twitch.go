@@ -16,37 +16,40 @@ import (
 	"github.com/chosenken/twitch2go"
 )
 
-// TwitchData contains the live data we compare against
-type TwitchData struct {
+// TwitchModule Class
+type TwitchModule struct {
 	LastFollower   string
 	LastSubscriber string
 	OAuth          string
-}
 
-var (
-	twitchData                 TwitchData
 	twitchLatestFollowerPath   string
 	twitchLatestSubscriberPath string
-)
 
-// InitializeTwitch Module
-func InitializeTwitch(config *Core.Config) *twitch2go.Client {
+	client *twitch2go.Client
+	config *Core.Config
+}
+
+// Init Module
+func (m *TwitchModule) Init(config *Core.Config) {
+
+	// Assing Config
+	m.config = config
 
 	// Only do this if we are going to write files
-	if config.Twitch.Output {
+	if m.config.Twitch.Output {
 
 		// Create our output paths
-		twitchLatestFollowerPath = filepath.Join(config.General.OutputPath, "Twitch_LatestFollower.txt")
-		twitchLatestSubscriberPath = filepath.Join(config.General.OutputPath, "Twitch_LatestSubscriber.txt")
+		m.twitchLatestFollowerPath = filepath.Join(m.config.General.OutputPath, "Twitch_LatestFollower.txt")
+		m.twitchLatestSubscriberPath = filepath.Join(m.config.General.OutputPath, "Twitch_LatestSubscriber.txt")
 
 		// Check twitchLatestFollowerPath
-		if _, err := os.Stat(twitchLatestFollowerPath); os.IsNotExist(err) {
-			ioutil.WriteFile(twitchLatestFollowerPath, nil, 0755)
+		if _, err := os.Stat(m.twitchLatestFollowerPath); os.IsNotExist(err) {
+			ioutil.WriteFile(m.twitchLatestFollowerPath, nil, 0755)
 		}
 
 		// Check twitchLatestFollowerPath
-		if _, err := os.Stat(twitchLatestSubscriberPath); os.IsNotExist(err) {
-			ioutil.WriteFile(twitchLatestSubscriberPath, nil, 0755)
+		if _, err := os.Stat(m.twitchLatestSubscriberPath); os.IsNotExist(err) {
+			ioutil.WriteFile(m.twitchLatestSubscriberPath, nil, 0755)
 		}
 	}
 
@@ -56,66 +59,61 @@ func InitializeTwitch(config *Core.Config) *twitch2go.Client {
 	client := twitch2go.NewClient(config.Twitch.ClientID)
 
 	// Add Endpoints
-	Core.AddEndpoint("/twitch/follower/last", twitchWebGetLastFollower)
+	Core.AddEndpoint("/twitch/follower/last", m.lastFollowerEndpoint)
 
-	return client
+	m.client = client
 }
 
 // PollTwitch For Updates
-func PollTwitch(client *twitch2go.Client, config *Core.Config) {
-	twitchFollowers(client, config)
+func (m *TwitchModule) Poll() {
+	m.pollFollowers()
 }
 
-func twitchFollowers(client *twitch2go.Client, config *Core.Config) bool {
+func (m *TwitchModule) lastFollowerEndpoint(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, string(m.LastFollower))
+}
 
-	followers, error := client.GetChannelFollows(strconv.Itoa(config.Twitch.ChannelID), "", 1, "DESC")
+func (m *TwitchModule) pollFollowers() {
+
+	followers, error := m.client.GetChannelFollows(strconv.Itoa(m.config.Twitch.ChannelID), "", 1, "DESC")
 	if error != nil {
 		Core.Log("TWITCH", "ERROR", error.Error())
-		return false
+		return
 	}
 
 	if followers.Total > 0 {
-		if followers.Follows[0].User.DisplayName != twitchData.LastFollower {
+		if followers.Follows[0].User.DisplayName != m.LastFollower {
 
-			if config.Twitch.Output {
+			if m.config.Twitch.Output {
 				var buffer bytes.Buffer
 				buffer.WriteString(followers.Follows[0].User.DisplayName)
-				Core.SaveFile(buffer.Bytes(), twitchLatestFollowerPath)
+				Core.SaveFile(buffer.Bytes(), m.twitchLatestFollowerPath)
 			}
 
-			twitchData.LastFollower = followers.Follows[0].User.DisplayName
+			m.LastFollower = followers.Follows[0].User.DisplayName
 			Core.Log("TWITCH", "IMPORTANT", "New Follower "+followers.Follows[0].User.DisplayName)
 		}
 	}
-
-	return true
 }
 
-func twitchSubscribers(client *twitch2go.Client, config *Core.Config) bool {
+func (m *TwitchModule) pollSubscribers() {
 
-	subscribers, error := client.GetChannelSubscribers(strconv.Itoa(config.Twitch.ChannelID), twitchData.OAuth, 1, 0, "DESC")
+	subscribers, error := m.client.GetChannelSubscribers(strconv.Itoa(m.config.Twitch.ChannelID), m.OAuth, 1, 0, "DESC")
 	if error != nil {
 		Core.Log("TWITCH", "ERROR", error.Error())
-		return false
 	}
 
 	if subscribers.Total > 0 {
-		if subscribers.Subscriptions[0].User.Name != twitchData.LastSubscriber {
+		if subscribers.Subscriptions[0].User.Name != m.LastSubscriber {
 
-			if config.Twitch.Output {
+			if m.config.Twitch.Output {
 				var buffer bytes.Buffer
 				buffer.WriteString(subscribers.Subscriptions[0].User.Name)
-				Core.SaveFile(buffer.Bytes(), twitchLatestSubscriberPath)
+				Core.SaveFile(buffer.Bytes(), m.twitchLatestSubscriberPath)
 			}
 
-			twitchData.LastSubscriber = subscribers.Subscriptions[0].User.Name
+			m.LastSubscriber = subscribers.Subscriptions[0].User.Name
 			Core.Log("TWITCH", "IMPORTANT", "New Subscriber "+subscribers.Subscriptions[0].User.Name)
 		}
 	}
-
-	return true
-}
-
-func twitchWebGetLastFollower(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, string(twitchData.LastFollower))
 }

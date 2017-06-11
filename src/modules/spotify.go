@@ -16,56 +16,63 @@ import (
 	"github.com/zmb3/spotify"
 )
 
-// SpotifyData contains the live data we compare against
-type SpotifyData struct {
+var (
+	ch = make(chan *spotify.Client)
+)
+
+// SpotifyModule Class
+type SpotifyModule struct {
 	LastInfoData  []byte
 	LastImageData []byte
 	DurationMS    int
 	PlayedMS      int
-}
 
-var (
-	spotifyData            SpotifyData
+	auth                   spotify.Authenticator
 	spotifyLatestSongPath  string
 	spotifyLatestImagePath string
-	auth                   spotify.Authenticator
+	state                  string
 
-	ch    = make(chan *spotify.Client)
-	state = "JARVIS"
-)
+	client *spotify.Client
+	config *Core.Config
+}
 
-// InitializeSpotify Module
-func InitializeSpotify(config *Core.Config) *spotify.Client {
+// Init  Module
+func (m *SpotifyModule) Init(config *Core.Config) {
+
+	// Assing Config
+	m.config = config
+
+	// Create State
+	m.state = Core.RandomString(5)
 
 	if config.Spotify.Output {
 		// Create our output paths
-		spotifyLatestSongPath = filepath.Join(config.General.OutputPath, "Spotify_LatestSong.txt")
-		if _, err := os.Stat(spotifyLatestSongPath); os.IsNotExist(err) {
-			ioutil.WriteFile(spotifyLatestSongPath, nil, 0755)
+		m.spotifyLatestSongPath = filepath.Join(m.config.General.OutputPath, "Spotify_LatestSong.txt")
+		if _, err := os.Stat(m.spotifyLatestSongPath); os.IsNotExist(err) {
+			ioutil.WriteFile(m.spotifyLatestSongPath, nil, 0755)
 		}
-
 	}
 
 	// Nop matter what we are going to be caching the image
-	spotifyLatestImagePath = filepath.Join(config.General.OutputPath, "Spotify_LatestImage.jpg")
-	if _, err := os.Stat(spotifyLatestImagePath); os.IsNotExist(err) {
-		ioutil.WriteFile(spotifyLatestImagePath, nil, 0755)
+	m.spotifyLatestImagePath = filepath.Join(m.config.General.OutputPath, "Spotify_LatestImage.jpg")
+	if _, err := os.Stat(m.spotifyLatestImagePath); os.IsNotExist(err) {
+		ioutil.WriteFile(m.spotifyLatestImagePath, nil, 0755)
 	}
 
 	// Create new authenticator with permissions
-	auth = spotify.NewAuthenticator("http://localhost:"+strconv.Itoa(config.General.ServerPort)+config.Spotify.Callback,
+	m.auth = spotify.NewAuthenticator("http://localhost:"+strconv.Itoa(m.config.General.ServerPort)+m.config.Spotify.Callback,
 		spotify.ScopeUserReadCurrentlyPlaying,
 		spotify.ScopeUserReadRecentlyPlayed)
 
 	// Start Login AUTH Procedures
-	auth.SetAuthInfo(config.Spotify.ClientID, config.Spotify.ClientSecret)
+	m.auth.SetAuthInfo(m.config.Spotify.ClientID, m.config.Spotify.ClientSecret)
 
 	// TODO: Add something to retain login info?
 
 	// Add Endpoint for Callbac
-	Core.AddEndpoint(config.Spotify.Callback, spotifyCompleteAuthentication)
+	Core.AddEndpoint(m.config.Spotify.Callback, m.authenticateCallback)
 
-	url := auth.AuthURL(state)
+	url := m.auth.AuthURL(m.state)
 	Core.Log("SPOTIFY", "IMPORTANT", "Please log in to Spotify by visiting the following page in your browser (copied to your clipboard):\n\n"+url+"\n")
 	Core.CopyToClipboard(url)
 
@@ -73,8 +80,8 @@ func InitializeSpotify(config *Core.Config) *spotify.Client {
 	client := <-ch
 
 	// Add Endpoints
-	Core.AddEndpoint("/spotify/track", spotifyWebGetTrack)
-	Core.AddEndpoint("/spotify/image", spotifyWebGetImage)
+	Core.AddEndpoint("/spotify/track", m.trackEndpoint)
+	Core.AddEndpoint("/spotify/image", m.imageEndpoint)
 
 	// use the client to make calls that require authorization
 	user, err := client.CurrentUser()
@@ -83,32 +90,41 @@ func InitializeSpotify(config *Core.Config) *spotify.Client {
 	}
 	Core.Log("SPOTIFY", "LOG", "You are logged in as: "+user.ID)
 
-	return client
+	// Assign Client
+	m.client = client
 }
 
-// PollSpotify For Updates
-func PollSpotify(client *spotify.Client, config *Core.Config) {
-	spotifyGetCurrentlyPlaying(client, config)
+// Poll For Updates
+func (m *SpotifyModule) Poll() {
+	m.pollCurrentlyPlaying()
 }
 
-func spotifyCompleteAuthentication(w http.ResponseWriter, r *http.Request) {
-	tok, err := auth.Token(state, r)
+func (m *SpotifyModule) authenticateCallback(w http.ResponseWriter, r *http.Request) {
+	tok, err := m.auth.Token(m.state, r)
 	if err != nil {
 		http.Error(w, "Couldn't get token", http.StatusForbidden)
 		log.Fatal(err)
 	}
-	if st := r.FormValue("state"); st != state {
+	if st := r.FormValue("state"); st != m.state {
 		http.NotFound(w, r)
-		log.Fatalf("State mismatch: %s != %s\n", st, state)
+		log.Fatalf("State mismatch: %s != %s\n", st, m.state)
 	}
 	// use the token to get an authenticated client
-	client := auth.NewClient(tok)
+	client := m.auth.NewClient(tok)
 	fmt.Fprintf(w, "Login Completed!")
 	ch <- &client
 }
 
-func spotifyGetCurrentlyPlaying(client *spotify.Client, config *Core.Config) {
-	state, err := client.PlayerCurrentlyPlaying()
+func (m *SpotifyModule) imageEndpoint(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "image/jpeg")
+	w.Header().Set("Content-Length", strconv.Itoa(len(m.LastImageData)))
+	if _, err := w.Write(m.LastImageData); err != nil {
+		Core.Log("SPOTIFY", "ERROR", "Unable to write image")
+	}
+}
+
+func (m *SpotifyModule) pollCurrentlyPlaying() {
+	state, err := m.client.PlayerCurrentlyPlaying()
 
 	if err != nil {
 		Core.Log("SPOTIFY", "ERROR", "Unable to retrieve currently playing song")
@@ -126,22 +142,22 @@ func spotifyGetCurrentlyPlaying(client *spotify.Client, config *Core.Config) {
 		buffer.WriteString(" - ")
 		buffer.WriteString(state.Item.Name)
 
-		if buffer.Len() > config.Spotify.TruncateTrackLength {
-			buffer.Truncate(config.Spotify.TruncateTrackLength)
-			buffer.WriteString(config.Spotify.TruncateTrackRunes)
+		if buffer.Len() > m.config.Spotify.TruncateTrackLength {
+			buffer.Truncate(m.config.Spotify.TruncateTrackLength)
+			buffer.WriteString(m.config.Spotify.TruncateTrackRunes)
 		}
 
-		if !bytes.Equal(buffer.Bytes(), spotifyData.LastInfoData) {
+		if !bytes.Equal(buffer.Bytes(), m.LastInfoData) {
 
 			Core.Log("SPOTIFY", "LOG", buffer.String())
 
-			if config.Spotify.Output {
-				Core.SaveFile(buffer.Bytes(), spotifyLatestSongPath)
+			if m.config.Spotify.Output {
+				Core.SaveFile(buffer.Bytes(), m.spotifyLatestSongPath)
 			}
 
-			spotifyData.LastInfoData = buffer.Bytes()
-			spotifyData.DurationMS = state.Item.Duration
-			spotifyData.PlayedMS = state.Progress
+			m.LastInfoData = buffer.Bytes()
+			m.DurationMS = state.Item.Duration
+			m.PlayedMS = state.Progress
 
 			// Clear buffer
 			buffer.Reset()
@@ -152,24 +168,16 @@ func spotifyGetCurrentlyPlaying(client *spotify.Client, config *Core.Config) {
 				writer := bufio.NewWriter(&buffer)
 				state.Item.Album.Images[0].Download(writer)
 
-				if !bytes.Equal(buffer.Bytes(), spotifyData.LastImageData) {
+				if !bytes.Equal(buffer.Bytes(), m.LastImageData) {
 
-					Core.SaveFile(buffer.Bytes(), spotifyLatestImagePath)
-					spotifyData.LastImageData = buffer.Bytes()
+					Core.SaveFile(buffer.Bytes(), m.spotifyLatestImagePath)
+					m.LastImageData = buffer.Bytes()
 				}
 			}
 		}
 	}
 }
 
-func spotifyWebGetTrack(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, string(spotifyData.LastInfoData))
-}
-func spotifyWebGetImage(w http.ResponseWriter, r *http.Request) {
-
-	w.Header().Set("Content-Type", "image/jpeg")
-	w.Header().Set("Content-Length", strconv.Itoa(len(spotifyData.LastImageData)))
-	if _, err := w.Write(spotifyData.LastImageData); err != nil {
-		Core.Log("SPOTIFY", "ERROR", "Unable to write image")
-	}
+func (m *SpotifyModule) trackEndpoint(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, string(m.LastInfoData))
 }
