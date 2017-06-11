@@ -37,16 +37,17 @@ var (
 // InitializeSpotify Module
 func InitializeSpotify(config *Core.Config) *spotify.Client {
 
-	// Create our output paths
-	spotifyLatestSongPath = filepath.Join(config.General.OutputPath, "Spotify_LatestSong.txt")
-	spotifyLatestImagePath = filepath.Join(config.General.OutputPath, "Spotify_LatestImage.jpg")
+	if config.Spotify.Output {
+		// Create our output paths
+		spotifyLatestSongPath = filepath.Join(config.General.OutputPath, "Spotify_LatestSong.txt")
+		if _, err := os.Stat(spotifyLatestSongPath); os.IsNotExist(err) {
+			ioutil.WriteFile(spotifyLatestSongPath, nil, 0755)
+		}
 
-	// Check twitchLatestFollowerPath
-	if _, err := os.Stat(spotifyLatestSongPath); os.IsNotExist(err) {
-		ioutil.WriteFile(spotifyLatestSongPath, nil, 0755)
 	}
 
-	// Check twitchLatestFollowerPath
+	// Nop matter what we are going to be caching the image
+	spotifyLatestImagePath = filepath.Join(config.General.OutputPath, "Spotify_LatestImage.jpg")
 	if _, err := os.Stat(spotifyLatestImagePath); os.IsNotExist(err) {
 		ioutil.WriteFile(spotifyLatestImagePath, nil, 0755)
 	}
@@ -134,7 +135,9 @@ func spotifyGetCurrentlyPlaying(client *spotify.Client, config *Core.Config) {
 
 			Core.Log("SPOTIFY", "LOG", buffer.String())
 
-			Core.SaveFile(buffer.Bytes(), spotifyLatestSongPath)
+			if config.Spotify.Output {
+				Core.SaveFile(buffer.Bytes(), spotifyLatestSongPath)
+			}
 
 			spotifyData.LastInfoData = buffer.Bytes()
 			spotifyData.DurationMS = state.Item.Duration
