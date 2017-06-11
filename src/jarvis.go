@@ -80,6 +80,7 @@ func main() {
 	Core.InitializeWebServer(config.General.ServerPort)
 
 	// Initialize Modules
+	Modules.InitializeOverlay(&config)
 	spotifyClient = Modules.InitializeSpotify(&config)
 	twitchClient = Modules.InitializeTwitch(&config)
 
