@@ -5,7 +5,9 @@ package modules
 
 import (
 	"bytes"
+	"fmt"
 	"io/ioutil"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -47,6 +49,9 @@ func InitializeTwitch(config *Core.Config) *twitch2go.Client {
 	// channel_commercial, channel_editor, channel_subscriptions,
 	// &scope=user_read+channel_read
 	client := twitch2go.NewClient(config.Twitch.ClientID)
+
+	// Add Endpoints
+	Core.AddEndpoint("/twitch/follower/last", twitchWebGetLastFollower)
 
 	return client
 }
@@ -101,6 +106,10 @@ func twitchSubscribers(client *twitch2go.Client, config *Core.Config) bool {
 	}
 
 	return true
+}
+
+func twitchWebGetLastFollower(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, string(twitchData.LastFollower))
 }
 
 // TwitchRender component

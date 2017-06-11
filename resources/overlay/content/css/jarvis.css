@@ -1,5 +1,7 @@
 body {
     background-color: none;
+    margin: 0px auto; 
+    overflow: hidden;
 }
 
 .center {

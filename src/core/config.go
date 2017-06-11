@@ -35,6 +35,12 @@ type TwitchConfig struct {
 	Callback         string
 }
 
+// OverlayConfig elements
+type OverlayConfig struct {
+	Endpoint         string
+	RefreshFrequency string
+}
+
 // JIRAConfig elements
 type JIRAConfig struct {
 	URI string
@@ -45,6 +51,7 @@ type Config struct {
 	General GeneralConfig
 	Spotify SpotifyConfig
 	Twitch  TwitchConfig
+	Overlay OverlayConfig
 }
 
 // ReadConfig gets the local config file

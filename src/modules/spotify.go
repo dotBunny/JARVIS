@@ -71,6 +71,10 @@ func InitializeSpotify(config *Core.Config) *spotify.Client {
 	// wait for auth to complete
 	client := <-ch
 
+	// Add Endpoints
+	Core.AddEndpoint("/spotify/track", spotifyWebGetTrack)
+	Core.AddEndpoint("/spotify/image", spotifyWebGetImage)
+
 	// use the client to make calls that require authorization
 	user, err := client.CurrentUser()
 	if err != nil {
@@ -152,6 +156,18 @@ func spotifyGetCurrentlyPlaying(client *spotify.Client, config *Core.Config) {
 				}
 			}
 		}
+	}
+}
+
+func spotifyWebGetTrack(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, string(spotifyData.LastInfoData))
+}
+func spotifyWebGetImage(w http.ResponseWriter, r *http.Request) {
+
+	w.Header().Set("Content-Type", "image/jpeg")
+	w.Header().Set("Content-Length", strconv.Itoa(len(spotifyData.LastImageData)))
+	if _, err := w.Write(spotifyData.LastImageData); err != nil {
+		Core.Log("SPOTIFY", "ERROR", "Unable to write image")
 	}
 }
 
