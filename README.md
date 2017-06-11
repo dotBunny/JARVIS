@@ -86,12 +86,12 @@ Once you have managed to wrangle [GO](https://golang.org/) into compiling the so
 `CTRL-C` to Exit
 
 ## Overlay
-As of 0.1.1, the "Overlay" feature is experimental, but in theory you can create many things with it.  In tools like OBS, you would add a browser source and set it to `http://localhost:port/overlay` and it will serve the content there
+As of 0.1.1, the "Overlay" feature is experimental, but in theory you can create many things with it.  In tools like OBS, you would add a browser source and set it to `http://localhost:[ServerPort]/overlay` and it will serve the content there
 
 ### Data Endpoints
 While JARVIS is running, there are numerous endpoints available for extraction data, outside of the file repository:
 
->http://localhost:port/spotify/track  
->http://localhost:port/spotify/image  
->http://localhost:port/twitch/follower/last  
+>http://localhost:[ServerPort]/spotify/track  
+>http://localhost:[ServerPort]/spotify/image  
+>http://localhost:[ServerPort]/twitch/follower/last  
 
