@@ -35,12 +35,6 @@ type TwitchConfig struct {
 	Callback         string
 }
 
-// OverlayConfig elements
-type OverlayConfig struct {
-	Endpoint         string
-	RefreshFrequency string
-}
-
 // JIRAConfig elements
 type JIRAConfig struct {
 	URI string
@@ -48,10 +42,10 @@ type JIRAConfig struct {
 
 // Config is an external config type
 type Config struct {
+	AppDir  string
 	General GeneralConfig
 	Spotify SpotifyConfig
 	Twitch  TwitchConfig
-	Overlay OverlayConfig
 }
 
 // ReadConfig gets the local config file
@@ -76,6 +70,8 @@ func ReadConfig() Config {
 		Log("SYSTEM", "ERROR", "Your jarvis.toml file seems BAD! You need to edit it OR fix what you messed up.")
 		log.Fatal(err)
 	}
+
+	config.AppDir = dir
 
 	return config
 }

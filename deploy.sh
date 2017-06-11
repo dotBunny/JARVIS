@@ -5,6 +5,7 @@ cd "$(dirname "$0")"
 # Remove & Create Temp Folder
 rm -rf jarvis-build/
 mkdir -p jarvis-build
+mkdir -p jarvis-build/resources
 
 # Build OSX
 go build -o jarvis-build/jarvis ./src
@@ -19,6 +20,7 @@ rm -rf jarvis.zip
 
 # Copy Resources Over
 cp -rf resources/jarvis.toml jarvis-build/
+cp -rf resources/overlay jarvis-build/resources
 
 # Compress File
 zip -r jarvis-build.zip jarvis-build/
