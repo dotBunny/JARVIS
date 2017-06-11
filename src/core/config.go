@@ -52,6 +52,7 @@ func ReadConfig() Config {
 
 	dir, pathError := filepath.Abs(filepath.Dir(os.Args[0]))
 	if pathError != nil {
+		Log("SYSTEM", "ERROR", "Odd, the application was not able to figure out its own path. No idea. You got any?")
 		log.Fatal("Unable to determine path of application")
 	}
 
@@ -65,6 +66,7 @@ func ReadConfig() Config {
 
 	var config Config
 	if _, err := toml.DecodeFile(configPath, &config); err != nil {
+		Log("SYSTEM", "ERROR", "Your jarvis.toml file seems BAD! You need to edit it OR fix what you messed up.")
 		log.Fatal(err)
 	}
 
