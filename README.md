@@ -51,8 +51,8 @@ The configuration file needs to be in the same directory as the executable, and 
 >OutputPath = "/path/where/to/save/files/"  
 >ServerPort = 8080
 >  
->[Spotify] 
->PollingFrequency = "5s" 
+>[Spotify]  
+>PollingFrequency = "5s"  
 >ClientID = "SPOTIFY CLIENT ID"  
 >ClientSecret = "SPOTIFY SECRET"  
 >Callback = "/callbackEndpoint"  
@@ -60,8 +60,8 @@ The configuration file needs to be in the same directory as the executable, and 
 >TruncateTrackRunes = "..."  
 >  
 >[Twitch]  
->PollingFrequency = "10s"
->ClientID = "TWITCH CLIENT ID"
+>PollingFrequency = "10s"  
+>ClientID = "TWITCH CLIENT ID"  
 >ClientSecret = "TWITCH SECRET"  
 >OAuth = "TWITCH OAUTH STRING" #Not Used Currently  
 >ChannelID = YOUR CHANNEL ID  
