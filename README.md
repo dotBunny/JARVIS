@@ -72,7 +72,10 @@ The configuration file needs to be in the same directory as the executable, and 
 >ClientID = "TWITCH CLIENT ID"  
 >ClientSecret = "TWITCH SECRET"  
 >OAuth = "TWITCH OAUTH STRING" #Not Used Currently  
->ChannelID = YOUR CHANNEL ID  
+>ChannelID = YOUR CHANNEL ID   
+>  
+>[Overlay]  
+>CacheIndex = false  
   
 ### Twitch Channel ID
 Hop on over to terminal and fill this command out, and it will return some JSON with your "ChannelID" listed in it.

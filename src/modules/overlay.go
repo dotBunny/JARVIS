@@ -3,6 +3,7 @@ package modules
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"path"
 	"strconv"
 
@@ -12,52 +13,66 @@ import (
 )
 
 var (
-	basePage     string
-	resourceBase string
-	imageBase    string
-	cssBase      string
-	jsBase       string
+	baseDir        string
+	basePage       string
+	basePath       string
+	basePageCached bool
+	resourceBase   string
 )
 
 // InitializeOverlay Module
 func InitializeOverlay(config *Core.Config) {
 	// Setup endpoint
 	Core.AddEndpoint("/overlay", overlayRender)
-	Core.AddEndpoint("/overlay/img", overlayGetImage)
-	Core.AddEndpoint("/overlay/css", overlayGetCSS)
-	Core.AddEndpoint("/overlay/js", overlayGetJS)
+	Core.AddEndpoint("/overlay/resource", overlayGetResource)
 
 	// Cache HTML
-	basePath := path.Join(config.AppDir, "resources", "overlay", "index.html")
-	resourceBase := path.Join(config.AppDir, "resources", "overlay", "content")
-	imageBase = path.Join(resourceBase, "img")
-	cssBase = path.Join(resourceBase, "css")
-	jsBase = path.Join(resourceBase, "js")
+	baseDir = config.AppDir
+	basePath = path.Join(config.AppDir, "resources", "overlay", "index.html")
+	resourceBase = path.Join(config.AppDir, "resources", "overlay", "content")
 
-	basePageData, error := ioutil.ReadFile(basePath)
-	basePage = string(basePageData)
+	if config.Overlay.CacheIndex {
+		Core.Log("OVERLAY", "LOG", "Caching Overlay HTML")
+		basePageData, error := ioutil.ReadFile(basePath)
 
-	if error != nil {
-		Core.Log("OVERLAY", "ERROR", "Unable to read base HTML page ("+basePath+") from resources folder.")
-	}
-	if len(basePage) <= 0 {
-		Core.Log("OVERLAY", "ERROR", "No data to serve for overlay.")
+		if error != nil {
+			Core.Log("OVERLAY", "ERROR", "Unable to read base HTML page ("+basePath+") from resources folder.")
+		} else {
+			basePage = string(basePageData)
+		}
+
+		if len(basePage) <= 0 {
+			Core.Log("OVERLAY", "ERROR", "No data to serve for overlay.")
+		} else {
+			basePageCached = true
+		}
 	}
 }
 
-func overlayGetImage(w http.ResponseWriter, r *http.Request) {
+func overlayGetResource(w http.ResponseWriter, r *http.Request) {
 
-	// Get Image File
-	filePath := r.FormValue("path")
+	// Build File Path
+	filePath := path.Join(resourceBase, r.URL.RawQuery)
 
-	fileData, err := ioutil.ReadFile(path.Join(imageBase, filePath))
-
+	// Check Existence
+	_, err := os.Stat(filePath)
 	if err != nil {
-		Core.Log("OVERLAY", "ERROR", err.Error())
+		Core.Log("OVERLAY", "ERROR", "Unable to find file: "+filePath)
+		fmt.Fprintf(w, "Resource Not Found")
+		return
 	}
 
-	// r.FormValue("path
+	fileData, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		Core.Log("OVERLAY", "ERROR", err.Error())
+		fmt.Fprintf(w, "Invalid Resource")
+		return
+	}
 
+	// No need to cache locally
+	w.Header().Set("Cache-Control", "no-cache, must-revalidate")
+
+	// Check MIME Type
 	last3 := filePath[len(filePath)-3:]
 	switch last3 {
 	case "png":
@@ -66,57 +81,46 @@ func overlayGetImage(w http.ResponseWriter, r *http.Request) {
 	case "gif":
 		w.Header().Set("Content-Type", "image/gif")
 		break
-	default:
+	case ".js":
+		w.Header().Set("Content-Type", "application/javascript")
+		break
+	case "css":
+		w.Header().Set("Content-Type", "text/css")
+		break
+	case "jpg":
+	case "peg":
 		w.Header().Set("Content-Type", "image/jpeg")
+		break
+	default:
+		w.Header().Set("Content-Type", "text/plain")
 		break
 	}
 
 	w.Header().Set("Content-Length", strconv.Itoa(len(fileData)))
 	if _, err := w.Write(fileData); err != nil {
-		Core.Log("SPOTIFY", "ERROR", "Unable to write image")
-	}
-}
-func overlayGetCSS(w http.ResponseWriter, r *http.Request) {
-
-	filePath := r.FormValue("path")
-
-	fileData, err := ioutil.ReadFile(path.Join(cssBase, filePath))
-
-	if err != nil {
-		Core.Log("OVERLAY", "ERROR", err.Error())
-	}
-	w.Header().Set("Content-Type", "text/css")
-
-	w.Header().Set("Content-Length", strconv.Itoa(len(fileData)))
-	if _, err := w.Write(fileData); err != nil {
-		Core.Log("SPOTIFY", "ERROR", "Unable to write image")
-	}
-
-}
-func overlayGetJS(w http.ResponseWriter, r *http.Request) {
-
-	filePath := r.FormValue("path")
-
-	fileData, err := ioutil.ReadFile(path.Join(jsBase, filePath))
-
-	if err != nil {
-		Core.Log("OVERLAY", "ERROR", err.Error())
-	}
-	w.Header().Set("Content-Type", "application/javascript")
-
-	w.Header().Set("Content-Length", strconv.Itoa(len(fileData)))
-	if _, err := w.Write(fileData); err != nil {
-		Core.Log("SPOTIFY", "ERROR", "Unable to write image")
+		Core.Log("SPOTIFY", "ERROR", "Unable to write resource stream")
+		Core.Log("SPOTIFY", "ERROR", err.Error())
 	}
 }
 
 func overlayRender(w http.ResponseWriter, r *http.Request) {
-	if len(basePage) > 0 {
+	if basePageCached {
 		fmt.Fprintf(w, basePage)
 	} else {
-		fmt.Fprintf(w, "No Overlay Found")
-	}
 
-	// all requests outside of the
-	// folder need to look at the resources folder as its base
+		// Server Page Per Time
+		basePageData, error := ioutil.ReadFile(basePath)
+		if error != nil {
+			Core.Log("OVERLAY", "ERROR", "Unable to read base HTML page ("+basePath+") from resources folder.")
+		} else {
+			basePage = string(basePageData)
+		}
+
+		if len(basePage) <= 0 {
+			Core.Log("OVERLAY", "ERROR", "No data to serve for overlay.")
+			fmt.Fprintf(w, "No Overlay Found")
+		} else {
+			fmt.Fprintf(w, basePage)
+		}
+	}
 }
