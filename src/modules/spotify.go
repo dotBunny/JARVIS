@@ -65,7 +65,8 @@ func InitializeSpotify(config *Core.Config) *spotify.Client {
 	Core.AddEndpoint(config.Spotify.Callback, spotifyCompleteAuthentication)
 
 	url := auth.AuthURL(state)
-	Core.Log("SPOTIFY", "IMPORTANT", "Please log in to Spotify by visiting the following page in your browser:\n\n"+url+"\n")
+	Core.Log("SPOTIFY", "IMPORTANT", "Please log in to Spotify by visiting the following page in your browser (copied to your clipboard):\n\n"+url+"\n")
+	Core.CopyToClipboard(url)
 
 	// wait for auth to complete
 	client := <-ch

@@ -10,8 +10,14 @@ import (
 
 	"log"
 
+	"github.com/atotto/clipboard"
 	"github.com/fatih/color"
 )
+
+//CopyToClipboard string
+func CopyToClipboard(buffer string) {
+	clipboard.WriteAll(buffer)
+}
 
 // GetFiles returns a list of all files under the basePath (recursively) that have the passed extensions
 func GetFiles(basePath string, extensions []string) []string {

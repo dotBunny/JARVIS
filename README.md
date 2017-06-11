@@ -30,6 +30,7 @@ go get github.com/zmb3/spotify
 go get github.com/chosenken/twitch2go  
 go get github.com/andygrunwald/go-jira
 go get github.com/fatih/color
+go get github.com/atotto/clipboard
 ```
 
 Depending on your platform you may need to adjust the build scripts, they work on macOS and Linux varieties. We just haven't made the windows equivalents. If someone would be so kind? 
