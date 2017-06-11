@@ -51,14 +51,14 @@ _It's important that GO's 'bin' is in your path (on macOS/Linux) for the build s
 The configuration file needs to be in the same directory as the executable, and named `jarvis.toml`
 
 ### [General]
-| Option        | Description           | Type | Example  |
-| ------------- |:-------------| :-----| :-----|
+| Option        | Description  | Type  | Example  |
+| :------------ |:-------------| :-----| :------- |
 | `OutputPat` | The absolute path to where the outputted data files should be placed  | _string_ |"/Users/reapazor/StreamingData/"|
 | `ServerPort` | The port which the callback/overlay server listens on; this by default should be 8080. If you change it, you must edit your overlay's HTML files to reflect the changed port. | _integer_ | 8080 |
 
 ### [Spotify]
-| Option        | Description           | Type | Example  |
-| ------------- |:-------------| :-----| :-----|
+| Option        | Description  | Type  | Example  |
+| :------------ |:-------------| :-----| :------- |
 | `Enabled` | Should JARVIS attempt connections to Spotify; do you want to use the Spotify module? | _boolean_ | true |
 | `Output` | Should data files for Spotify be output to the `OutputPath` | _boolean_ | true |
 | `PollingFrequency` | How often should Spotify be polled for new information on what's playing/happening. Current recommendation is to keep this at every 5 seconds. | _string_ | "5s" |
@@ -69,8 +69,8 @@ The configuration file needs to be in the same directory as the executable, and 
 | `TruncateTrackRunes` | The characters to append when truncating with the `TruncateTrackLength`| _string_ | "..." |
 
 ### [Twitch]
-| Option        | Description           | Type | Example  |
-| ------------- |:-------------| :-----| :-----|
+| Option        | Description  | Type  | Example  |
+| :------------ |:-------------| :-----| :------- |
 | `Enabled` | Should JARVIS attempt connections to Twitch; do you want to use the Twitch module? | _boolean_ | true |
 | `Output` | Should data files for Twitch be output to the `OutputPath` | _boolean_ | true |
 | `PollingFrequency` | How often should Twitch be polled for new information. Current recommendation is to keep this at every 10 seconds. | _string_ | "10s" |
