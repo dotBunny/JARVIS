@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"time"
 
 	"io/ioutil"
 
@@ -27,6 +28,7 @@ type SpotifyModule struct {
 	LastImageData []byte
 	DurationMS    int
 	PlayedMS      int
+	Ticker        *time.Ticker
 
 	auth                   spotify.Authenticator
 	spotifyLatestSongPath  string
@@ -38,7 +40,7 @@ type SpotifyModule struct {
 }
 
 // Init  Module
-func (m *SpotifyModule) Init(config *Core.Config) {
+func (m *SpotifyModule) Init(config *Core.Config, console *ConsoleModule) {
 
 	// Assing Config
 	m.config = config
@@ -97,11 +99,37 @@ func (m *SpotifyModule) Init(config *Core.Config) {
 
 	// Assign Client
 	m.client = client
+
+	// Create Ticker
+	spotifyPollingFrequency, spotifyPollingError := time.ParseDuration(m.config.Spotify.PollingFrequency)
+	if spotifyPollingError != nil {
+		spotifyPollingFrequency, _ = time.ParseDuration("5s")
+	}
+	m.Ticker = time.NewTicker(spotifyPollingFrequency)
+}
+
+// Loop awaiting ticker
+func (m *SpotifyModule) Loop() {
+	for {
+		select {
+		case <-m.Ticker.C:
+			m.Poll()
+		}
+	}
 }
 
 // Poll For Updates
 func (m *SpotifyModule) Poll() {
 	m.pollCurrentlyPlaying()
+}
+
+// Shutdown Module
+func (m *SpotifyModule) Shutdown() {
+	if m != nil {
+		if m.Ticker != nil {
+			m.Ticker.Stop()
+		}
+	}
 }
 
 func (m *SpotifyModule) authenticateCallback(w http.ResponseWriter, r *http.Request) {

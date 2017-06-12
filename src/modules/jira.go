@@ -9,6 +9,6 @@ type JIRAModule struct {
 }
 
 // Init  Module
-func (m *JIRAModule) Init(config *Core.Config) {
+func (m *JIRAModule) Init(config *Core.Config, console *ConsoleModule) {
 
 }

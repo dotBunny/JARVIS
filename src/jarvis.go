@@ -1,6 +1,8 @@
 package main
 
 import (
+	"bufio"
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -8,9 +10,6 @@ import (
 	"path"
 	"path/filepath"
 	"syscall"
-	"time"
-
-	"fmt"
 
 	Core "./core"
 	Modules "./modules"
@@ -21,15 +20,14 @@ var (
 	spotifyModule *Modules.SpotifyModule
 	twitchModule  *Modules.TwitchModule
 	overlayModule *Modules.OverlayModule
+	consoleModule *Modules.ConsoleModule
 	logFile       *os.File
 	config        Core.Config
-
-	spotifyTicker *time.Ticker
-	twitchTicker  *time.Ticker
+	quit          chan os.Signal
 )
 
 // Version Number
-const Version string = "0.1.1"
+const Version string = "0.2.0"
 
 func main() {
 
@@ -61,64 +59,62 @@ func main() {
 	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
 	go func() {
 		<-quit
-		fmt.Println("")
-		Core.Log("SYSTEM", "LOG", "Shutting Down ...")
-		if spotifyTicker != nil {
-			spotifyTicker.Stop()
-		}
-		if twitchTicker != nil {
-			twitchTicker.Stop()
-		}
-		close(quit)
-		os.Exit(1)
+		Exit("")
 	}()
 	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
 
 	Core.Log("SYSTEM", "LOG", "Starting Up ...")
+
+	// Initialize Console
+	var consoleModule Modules.ConsoleModule
+	consoleModule.Init(&config)
+	consoleModule.AddHandler("quit", "Quit the application", Exit)
+	consoleModule.AddAlias("exit", "quit")
 
 	// Initialize Webserver
 	Core.InitializeWebServer(config.General.ServerPort)
 
 	// Initialize Modules
 	var overlayModule Modules.OverlayModule
-	overlayModule.Init(&config)
+	overlayModule.Init(&config, &consoleModule)
 
 	// Initialize Spotify
 	var spotifyModule Modules.SpotifyModule
 	if config.Spotify.Enabled {
-		spotifyModule.Init(&config)
-		spotifyPollingFrequency, spotifyPollingError := time.ParseDuration(config.Spotify.PollingFrequency)
-		if spotifyPollingError != nil {
-			spotifyPollingFrequency, _ = time.ParseDuration("5s")
-		}
-		spotifyTicker = time.NewTicker(spotifyPollingFrequency)
+		spotifyModule.Init(&config, &consoleModule)
 		spotifyModule.Poll()
+		go spotifyModule.Loop()
 	}
 
 	// Initialize Twitch
 	var twitchModule Modules.TwitchModule
 	if config.Twitch.Enabled {
-		twitchModule.Init(&config)
-		twitchPollingFrequency, twitchPollingError := time.ParseDuration(config.Twitch.PollingFrequency)
-		if twitchPollingError == nil {
-			twitchPollingFrequency, _ = time.ParseDuration("10s")
-		}
-		twitchTicker = time.NewTicker(twitchPollingFrequency)
-
-		// Get Initial Value
+		twitchModule.Init(&config, &consoleModule)
 		twitchModule.Poll()
+		go twitchModule.Loop()
 	}
 
 	// Lets do this!
 	Core.Log("SYSTEM", "LOG", "Ready")
 
-	// Infinite Loop
-	for {
-		select {
-		case <-spotifyTicker.C:
-			spotifyModule.Poll()
-		case <-twitchTicker.C:
-			twitchModule.Poll()
-		}
+	// Activate Console
+
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
+		consoleModule.Handle(scanner.Text())
 	}
+}
+
+// Exit the application
+func Exit(input string) {
+	fmt.Println("")
+	Core.Log("SYSTEM", "LOG", "Shutting Down ...")
+
+	spotifyModule.Shutdown()
+	twitchModule.Shutdown()
+
+	if quit != nil {
+		close(quit)
+	}
+	os.Exit(1)
 }

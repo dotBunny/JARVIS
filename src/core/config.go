@@ -47,7 +47,8 @@ type JIRAConfig struct {
 
 // Config is an external config type
 type Config struct {
-	AppDir  string
+	AppDir string
+
 	General GeneralConfig
 	Spotify SpotifyConfig
 	Twitch  TwitchConfig

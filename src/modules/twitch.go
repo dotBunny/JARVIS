@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"time"
 
 	Core "../core"
 	"github.com/chosenken/twitch2go"
@@ -21,6 +22,7 @@ type TwitchModule struct {
 	LastFollower   string
 	LastSubscriber string
 	OAuth          string
+	Ticker         *time.Ticker
 
 	twitchLatestFollowerPath   string
 	twitchLatestSubscriberPath string
@@ -30,7 +32,7 @@ type TwitchModule struct {
 }
 
 // Init Module
-func (m *TwitchModule) Init(config *Core.Config) {
+func (m *TwitchModule) Init(config *Core.Config, console *ConsoleModule) {
 
 	// Assing Config
 	m.config = config
@@ -62,11 +64,36 @@ func (m *TwitchModule) Init(config *Core.Config) {
 	Core.AddEndpoint("/twitch/follower/last", m.lastFollowerEndpoint)
 
 	m.client = client
+
+	twitchPollingFrequency, twitchPollingError := time.ParseDuration(m.config.Twitch.PollingFrequency)
+	if twitchPollingError == nil {
+		twitchPollingFrequency, _ = time.ParseDuration("10s")
+	}
+	m.Ticker = time.NewTicker(twitchPollingFrequency)
 }
 
-// PollTwitch For Updates
+// Loop awaiting ticker
+func (m *TwitchModule) Loop() {
+	for {
+		select {
+		case <-m.Ticker.C:
+			m.Poll()
+		}
+	}
+}
+
+// Poll For Updates
 func (m *TwitchModule) Poll() {
 	m.pollFollowers()
+}
+
+// Shutdown Module
+func (m *TwitchModule) Shutdown() {
+	if m != nil {
+		if m.Ticker != nil {
+			m.Ticker.Stop()
+		}
+	}
 }
 
 func (m *TwitchModule) lastFollowerEndpoint(w http.ResponseWriter, r *http.Request) {

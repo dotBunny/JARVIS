@@ -88,9 +88,15 @@ curl -H 'Accept: application/vnd.twitchtv.v5+json' -H 'Client-ID: <CLIENT ID>' -
 ```
 
 ## Help
-Once you have managed to wrangle [GO](https://golang.org/) into compiling the source, you simply need to run the executable. You will be prompted to login to Spotify (to provide a token for the app). You will need to do this every time the app stars, thus, the URL needed is copied to your clipboard for a quick paste into your nearest local browser.
+Once you have managed to wrangle [GO](https://golang.org/) into compiling the source, you simply need to run the executable. You will be prompted to login to Spotify (to provide a token for the app). You will need to do this every time the app stars, thus, the URL needed is copied to your clipboard for a quick paste into your nearest local browser. If you have left `AutoLogin` on in the Spotify settings of the `jarvis.toml` it will even open a browser automatically for you.
 
-`CTRL-C` to Exit
+**Type `exit` (and press enter) or press `CTRL-C` to Exit**
+
+### Console Commands
+
+| Command        | Description  |  Example  |
+| :------------- | :----------- | :-------- |
+| `quit` | Quit the application | quit |
 
 ## Overlay
 As of 0.1.1, the "Overlay" feature is experimental, but in theory you can create many things with it.  In tools like OBS, you would add a browser source and set it to `http://localhost:[ServerPort]/overlay` and it will serve the content there

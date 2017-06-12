@@ -24,7 +24,7 @@ type OverlayModule struct {
 }
 
 // Init  Module
-func (m *OverlayModule) Init(config *Core.Config) {
+func (m *OverlayModule) Init(config *Core.Config, console *ConsoleModule) {
 
 	// Assing Config
 	m.config = config
