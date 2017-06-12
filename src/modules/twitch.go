@@ -5,6 +5,7 @@ package modules
 
 import (
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"path/filepath"
 	"strconv"
@@ -83,6 +84,12 @@ func (m *TwitchModule) Init(config *Core.Config, console *ConsoleModule) {
 		Core.Touch(m.channelFollowersPath)
 	}
 
+	// Load Saved WorkingOn
+	savedLatestFollower, err := ioutil.ReadFile(m.latestFollowerPath)
+	if err == nil {
+		m.LastFollower = string(savedLatestFollower)
+	}
+
 	// TODO: Need to auth with scope for subscribers to work
 	// channel_commercial, channel_editor, channel_subscriptions,
 	// &scope=user_read+channel_read
@@ -132,6 +139,7 @@ func (m *TwitchModule) Init(config *Core.Config, console *ConsoleModule) {
 		// Setup Console Commands
 		console.AddHandler("twitch.say", "Say something in the Twitch IRC channel", m.consoleChannelSay)
 		console.AddAlias("t", "twitch.say")
+		console.AddHandler("twitch.update", "Force polling Twitch for updates.", m.consoleUpdate)
 		console.AddHandler("twitch.whisper", "Whisper someone on Twitch's IRC server.", m.consoleWhisper)
 		console.AddAlias("w", "twitch.whisper")
 	}
@@ -185,6 +193,12 @@ func (m *TwitchModule) consoleChannelSay(input string) {
 	m.irc.Privmsg(m.config.Twitch.ChatChannel, input)
 	Core.Log("TWITCH", "LOG", m.openBracket+m.config.Twitch.ChatName+m.closeBracket+" "+input)
 }
+
+func (m *TwitchModule) consoleUpdate(input string) {
+	m.Poll()
+	Core.Log("TWITCH", "LOG", "Force Update")
+}
+
 func (m *TwitchModule) consoleWhisper(input string) {
 
 	splitLocation := strings.Index(input, " ")
@@ -249,8 +263,14 @@ func (m *TwitchModule) pollFollowers() {
 func (m *TwitchModule) pollStream() {
 	stream, err := m.client.GetStreamByChannel(strconv.Itoa(m.config.Twitch.ChannelID))
 
-	if stream == nil {
-		Core.Log("TWITCH", "LOG", "Stream Offline - "+err.Error())
+	if err != nil {
+		Core.Log("TWITCH", "ERROR", "Polling Stream Error - "+err.Error())
+		return
+	} else if stream == nil {
+		Core.Log("TWITCH", "IMPORTANT", "Stream Offline")
+		return
+	} else if stream.Game == "" {
+		Core.Log("TWITCH", "IMPORTANT", "Stream Offline")
 		return
 	}
 

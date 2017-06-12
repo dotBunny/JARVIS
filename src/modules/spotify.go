@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"path/filepath"
@@ -50,6 +51,11 @@ func (m *SpotifyModule) Init(config *Core.Config, console *ConsoleModule) {
 		// Create our output paths
 		m.songPath = filepath.Join(m.config.General.OutputPath, "Spotify_LatestSong.txt")
 		Core.Touch(m.songPath)
+	}
+
+	savedSong, err := ioutil.ReadFile(m.songPath)
+	if err == nil {
+		m.LastInfoData = savedSong
 	}
 
 	// Nop matter what we are going to be caching the image
@@ -107,6 +113,7 @@ func (m *SpotifyModule) Init(config *Core.Config, console *ConsoleModule) {
 	console.AddAlias("n", "spotify.next")
 	console.AddHandler("spotify.pause", "Pause/Play the current track in Spotify.", m.consolePausePlay)
 	console.AddAlias("p", "spotify.pause")
+	console.AddHandler("spotify.update", "Force polling Spotify for updates.", m.consoleUpdate)
 }
 
 // Loop awaiting ticker
@@ -170,6 +177,11 @@ func (m *SpotifyModule) consolePausePlay(args string) {
 		m.client.Play()
 		m.CurrentlyPlaying = true
 	}
+}
+
+func (m *SpotifyModule) consoleUpdate(input string) {
+	m.Poll()
+	Core.Log("SPOTIFY", "LOG", "Force Update")
 }
 
 func (m *SpotifyModule) endpointImage(w http.ResponseWriter, r *http.Request) {

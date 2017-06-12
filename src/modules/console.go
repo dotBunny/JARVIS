@@ -23,6 +23,8 @@ func (m *ConsoleModule) Init(config *Core.Config) {
 	m.aliases = make(map[string]string)
 
 	m.AddHandler("help", "This list.", m.consoleHelp)
+	m.AddHandler("update", "Force all active modules to poll their data sources for updates.", m.consoleUpdate)
+
 }
 
 // AddHandler for command
@@ -96,4 +98,16 @@ func (m *ConsoleModule) consoleHelp(input string) {
 	}
 
 	Core.Log("SYSTEM", "LOG", "Registered Commands\n"+output)
+}
+
+func (m *ConsoleModule) consoleUpdate(input string) {
+
+	twitch, ok := m.commands["twitch.update"]
+	if ok {
+		twitch("")
+	}
+	spotify, ok := m.commands["spotify.update"]
+	if ok {
+		spotify("")
+	}
 }

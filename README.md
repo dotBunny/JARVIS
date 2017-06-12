@@ -114,8 +114,11 @@ Once you have managed to wrangle [GO](https://golang.org/) into compiling the so
 | :------------- | :---- | :----------- | :-------- |
 | `spotify.next` | `next`, `n` | Skips to the next track in the user's Spotify queue. | _next_ |
 | `spotify.pause` | `p` | Pause/Play the current track in Spotify. | _p_ |
+| `spotify.update` | | Force polling Spotify for updates. | _spotify.update_ |
 | `twitch.say` | `t` | Send a message to your Twitch channel. | _t Hello World!_ |
+| `twitch.update` | | Force polling Twitch for updates. | _twitch.update_ |
 | `twitch.whisper` | `w` | Send a whisper to someone on the Twitch IRC server. | _w reapazor You are awesome!_ |
+| `update` | | Force all active modules to poll their data sources for updates. | _update_ |
 | `workingon` | `o` | Set your currently working on text. | _workingon The JARVIS System_ |
 | `quit` | `exit`, `x` | Quit the application | _quit_ |
 
