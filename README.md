@@ -15,10 +15,13 @@ Is JARVIS helping you? Show some love for [@reapazor](http://twitch.tv/reapazor)
     * Spotify Latest Song w/ Truncation
     * Twitch Latest Follower
     * Twitch Latest Subscriber (Not Fully Finished)
+    * Working On Text
 * Image File Data
     * Spotify Latest Song Album Cover
 * Configurable Overlay (For Browser Sources)
     * Accessible Local Data Endpoints
+    * Page hosting platform
+* Console Commands!
 
 ![Outputs](https://dl.dropboxusercontent.com/u/118962/JARVIS/outputs.png)
 
