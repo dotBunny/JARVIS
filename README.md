@@ -94,9 +94,10 @@ Once you have managed to wrangle [GO](https://golang.org/) into compiling the so
 
 ### Console Commands
 
-| Command        | Description  |  Example  |
-| :------------- | :----------- | :-------- |
-| `quit` | Quit the application | quit |
+| Command        | Alias | Description  |  Example  |
+| :------------- | :---- | :----------- | :-------- |
+| `quit` | `exit` | Quit the application | quit |
+| `spotify.next` | `next` | Skips to the next track in the user's Spotify queue. | next |
 
 ## Overlay
 As of 0.1.1, the "Overlay" feature is experimental, but in theory you can create many things with it.  In tools like OBS, you would add a browser source and set it to `http://localhost:[ServerPort]/overlay` and it will serve the content there

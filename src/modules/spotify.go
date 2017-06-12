@@ -65,7 +65,8 @@ func (m *SpotifyModule) Init(config *Core.Config, console *ConsoleModule) {
 	// Create new authenticator with permissions
 	m.auth = spotify.NewAuthenticator("http://localhost:"+strconv.Itoa(m.config.General.ServerPort)+m.config.Spotify.Callback,
 		spotify.ScopeUserReadCurrentlyPlaying,
-		spotify.ScopeUserReadRecentlyPlayed)
+		spotify.ScopeUserReadRecentlyPlayed,
+		spotify.ScopeUserModifyPlaybackState)
 
 	// Start Login AUTH Procedures
 	m.auth.SetAuthInfo(m.config.Spotify.ClientID, m.config.Spotify.ClientSecret)
@@ -106,6 +107,9 @@ func (m *SpotifyModule) Init(config *Core.Config, console *ConsoleModule) {
 		spotifyPollingFrequency, _ = time.ParseDuration("5s")
 	}
 	m.Ticker = time.NewTicker(spotifyPollingFrequency)
+
+	console.AddHandler("spotify.next", "Skips to the next track in the user's Spotify queue.", m.consoleNextTrack)
+	console.AddAlias("next", "spotify.next")
 }
 
 // Loop awaiting ticker
@@ -153,6 +157,11 @@ func (m *SpotifyModule) authenticateCallback(w http.ResponseWriter, r *http.Requ
 	fmt.Fprintf(w, "Login Completed! Please close this tab/window.")
 	// }
 	ch <- &client
+}
+
+func (m *SpotifyModule) consoleNextTrack(args string) {
+	Core.Log("SPOTIFY", "LOG", "Next Track!")
+	m.client.Next()
 }
 
 func (m *SpotifyModule) imageEndpoint(w http.ResponseWriter, r *http.Request) {
