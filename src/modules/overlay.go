@@ -34,6 +34,8 @@ func (m *OverlayModule) Init(config *Core.Config) {
 	Core.AddEndpoint("/overlay/resource", m.overlayResourceEndpoint)
 	Core.AddEndpoint("/overlay/page", m.overlayPageEndpoint)
 
+	Core.Log("OVERLAY", "IMPORTANT", "Your default overlay can be accessed at: http://localhost:"+strconv.Itoa(m.config.General.ServerPort)+"/overlay")
+
 	m.baseDir = m.config.AppDir
 	m.basePath = path.Join(m.config.AppDir, "resources", "overlay", "index.html")
 	m.resourceBase = path.Join(m.config.AppDir, "resources", "overlay", "content")
