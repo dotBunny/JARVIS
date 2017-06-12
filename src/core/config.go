@@ -38,6 +38,12 @@ type TwitchConfig struct {
 	ClientSecret     string
 	ChannelID        int
 	Callback         string
+
+	ChatEnabled bool
+	ChatEcho    bool
+	ChatName    string
+	ChatChannel string
+	ChatToken   string
 }
 
 // WorkingOnConfig elements

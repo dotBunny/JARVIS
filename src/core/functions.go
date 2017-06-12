@@ -90,6 +90,13 @@ func Log(channel string, class string, message string) {
 	color.Unset()
 }
 
+// Touch a file
+func Touch(filepath string) {
+	if _, err := os.Stat(filepath); os.IsNotExist(err) {
+		ioutil.WriteFile(filepath, nil, 0755)
+	}
+}
+
 // ReadLines grabs the contents of a text file, and allows conditional includes
 func ReadLines(filePath string, parse func(string) (string, bool)) ([]string, error) {
 	inputFile, err := os.Open(filePath)

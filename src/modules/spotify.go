@@ -6,12 +6,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"path/filepath"
 	"strconv"
 	"time"
-
-	"io/ioutil"
 
 	Core "../core"
 	"github.com/skratchdot/open-golang/open"
@@ -52,16 +49,12 @@ func (m *SpotifyModule) Init(config *Core.Config, console *ConsoleModule) {
 	if config.Spotify.Output {
 		// Create our output paths
 		m.songPath = filepath.Join(m.config.General.OutputPath, "Spotify_LatestSong.txt")
-		if _, err := os.Stat(m.songPath); os.IsNotExist(err) {
-			ioutil.WriteFile(m.songPath, nil, 0755)
-		}
+		Core.Touch(m.songPath)
 	}
 
 	// Nop matter what we are going to be caching the image
 	m.imagePath = filepath.Join(m.config.General.OutputPath, "Spotify_LatestImage.jpg")
-	if _, err := os.Stat(m.imagePath); os.IsNotExist(err) {
-		ioutil.WriteFile(m.imagePath, nil, 0755)
-	}
+	Core.Touch(m.imagePath)
 
 	// Create new authenticator with permissions
 	m.auth = spotify.NewAuthenticator("http://localhost:"+strconv.Itoa(m.config.General.ServerPort)+m.config.Spotify.Callback,

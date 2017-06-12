@@ -2,9 +2,7 @@ package modules
 
 import (
 	"fmt"
-	"io/ioutil"
 	"net/http"
-	"os"
 	"path/filepath"
 
 	Core "../core"
@@ -27,11 +25,7 @@ func (m *WorkingOnModule) Init(config *Core.Config, console *ConsoleModule) {
 	// Only do this if we are going to write files
 	if m.config.WorkingOn.Output {
 		m.TextPath = filepath.Join(m.config.General.OutputPath, "WorkingOn_Message.txt")
-
-		// Check twitchLatestFollowerPath
-		if _, err := os.Stat(m.TextPath); os.IsNotExist(err) {
-			ioutil.WriteFile(m.TextPath, nil, 0755)
-		}
+		Core.Touch(m.TextPath)
 	}
 
 	// Setup Endpoints
@@ -39,7 +33,7 @@ func (m *WorkingOnModule) Init(config *Core.Config, console *ConsoleModule) {
 
 	// Setup Console Commands
 	console.AddHandler("workingon", "Set your currently working on text.", m.consoleWorkingOn)
-	console.AddAlias("w", "workingon")
+	console.AddAlias("o", "workingon")
 }
 
 func (m *WorkingOnModule) consoleWorkingOn(input string) {

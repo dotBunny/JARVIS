@@ -78,7 +78,7 @@ func (m *ConsoleModule) Handle(input string) {
 	if ok {
 		execCommand := m.commands[command]
 		execCommand(args)
-	} else {
+	} else if len(command) > 0 {
 		Core.Log("SYSTEM", "LOG", "Invalid command: "+command)
 	}
 }

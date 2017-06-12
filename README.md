@@ -21,6 +21,7 @@ Is JARVIS helping you? Show some love for [@reapazor](http://twitch.tv/reapazor)
 * Configurable Overlay (For Browser Sources)
     * Accessible Local Data Endpoints
     * Page hosting platform
+* Twitch Chat Integration
 * Console Commands!
 
 ![Outputs](https://dl.dropboxusercontent.com/u/118962/JARVIS/outputs.png)
@@ -45,6 +46,7 @@ go get github.com/fatih/color
 go get github.com/atotto/clipboard
 go get github.com/akavel/rsrc
 go get github.com/skratchdot/open-golang/open
+go get github.com/thoj/go-ircevent
 ```
 
 Depending on your platform you may need to adjust the build scripts, they work on macOS and Linux varieties. We just haven't made the windows equivalents.
@@ -82,6 +84,11 @@ The configuration file needs to be in the same directory as the executable, and 
 | `ClientID` | The `ClientID` can be found on your [Twitch Connections](https://www.twitch.tv/settings/connections) page for the app; you most likely will need to register an app first to find it. | _string_ | "d9srlt99fyxzrwa9k9ad2zjzjzl3xh" |
 | `ClientSecret` | Same idea as the `ClientID`, it can be found in the same spot, right underneath. You may need to click the _New Secret_ button. | _string_ | "3owshhw8ukfp2x3i34v3mnh5sjsgo0" |
 | `ChannelID` | This is the numerical identifier of your channel, it isn't so simple to get off hand. Check the section below on one way to get it. | _integer_ | 21139969 |
+| `ChatEnabled` | Should the IRC server be connected too; disabling this will remove your ability to respond to messages inside of JARVIS. | _boolean_ | false |
+| `ChatEcho` | Should the chat channel content be shown in JARVIS | _boolean_ | true |
+| `ChatName` | The alias to use when connecting to Twitch's IRC server | _string_ | "reapazor" |
+| `ChatToken` | The token used for connecting to Twitch's IRC servers, this can be easily found by visiting [here](http://www.twitchapps.com/tmi/). | _string_ | "oauth:aqwegd3126l25azg0nn70if82nr9d1" |
+| `ChatChannel` | The channel to join when connected to Twitch's IRC server | _string_ | "#reapazor" |
 
 ### [WorkingOn]
 | Option        | Description  | Type  | Example  |
@@ -104,10 +111,12 @@ Once you have managed to wrangle [GO](https://golang.org/) into compiling the so
 
 | Command        | Alias | Description  |  Example  |
 | :------------- | :---- | :----------- | :-------- |
-| `quit` | `exit`, `x` | Quit the application | _quit_ |
 | `spotify.next` | `next`, `n` | Skips to the next track in the user's Spotify queue. | _next_ |
 | `spotify.pause` | `p` | Pause/Play the current track in Spotify. | _p_ |
-| `workingon` | `w` | Set your currently working on text. | _workingon The JARVIS System_ |
+| `twitch.say` | `t` | Send a message to your Twitch channel. | _t Hello World!_ |
+| `twitch.whisper` | `w` | Send a whisper to someone on the Twitch IRC server. | _w reapazor You are awesome!_ |
+| `workingon` | `o` | Set your currently working on text. | _workingon The JARVIS System_ |
+| `quit` | `exit`, `x` | Quit the application | _quit_ |
 
 ## Overlay
 As of 0.1.1, the "Overlay" feature is experimental, but in theory you can create many things with it.  In tools like OBS, you would add a browser source and set it to `http://localhost:8080/overlay` and it will serve the content there.
