@@ -21,6 +21,8 @@ func (m *ConsoleModule) Init(config *Core.Config) {
 	m.commands = make(map[string]ConsoleFunction)
 	m.descriptions = make(map[string]string)
 	m.aliases = make(map[string]string)
+
+	m.AddHandler("help", "This list.", m.consoleHelp)
 }
 
 // AddHandler for command
@@ -79,4 +81,19 @@ func (m *ConsoleModule) Handle(input string) {
 	} else {
 		Core.Log("SYSTEM", "LOG", "Invalid command: "+command)
 	}
+}
+
+func (m *ConsoleModule) consoleHelp(input string) {
+
+	var output = "\n"
+	for key, _ := range m.commands {
+
+		if len(key) < 9 {
+			output = output + key + "\t\t" + m.descriptions[key] + "\n"
+		} else {
+			output = output + key + "\t" + m.descriptions[key] + "\n"
+		}
+	}
+
+	Core.Log("SYSTEM", "LOG", "Registered Commands\n"+output)
 }
