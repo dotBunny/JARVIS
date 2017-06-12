@@ -13,6 +13,7 @@ import (
 	"io/ioutil"
 
 	Core "../core"
+	"github.com/skratchdot/open-golang/open"
 	"github.com/zmb3/spotify"
 )
 
@@ -76,6 +77,10 @@ func (m *SpotifyModule) Init(config *Core.Config) {
 	Core.Log("SPOTIFY", "IMPORTANT", "Please log in to Spotify by visiting the following page in your browser (copied to your clipboard):\n\n"+url+"\n")
 	Core.CopyToClipboard(url)
 
+	if m.config.Spotify.AutoLogin {
+		open.Run(url)
+	}
+
 	// wait for auth to complete
 	client := <-ch
 
@@ -111,7 +116,14 @@ func (m *SpotifyModule) authenticateCallback(w http.ResponseWriter, r *http.Requ
 	}
 	// use the token to get an authenticated client
 	client := m.auth.NewClient(tok)
-	fmt.Fprintf(w, "Login Completed!")
+
+	// Output and attempt to close tab
+	// if m.config.Spotify.AutoLogin {
+	// 	Core.Log("SPOTIFY", "LOG", "Login Detected. Closing Tab")
+	// 	fmt.Fprintf(w, "<html><body>Spotify Login Complete<script type=\"text/javascript\">window.close();</script></body></html>")
+	// } else {
+	fmt.Fprintf(w, "Login Completed! Please close this tab/window.")
+	// }
 	ch <- &client
 }
 

@@ -41,6 +41,7 @@ go get github.com/andygrunwald/go-jira
 go get github.com/fatih/color
 go get github.com/atotto/clipboard
 go get github.com/akavel/rsrc
+go get github.com/skratchdot/open-golang/open
 ```
 
 Depending on your platform you may need to adjust the build scripts, they work on macOS and Linux varieties. We just haven't made the windows equivalents.
@@ -61,6 +62,7 @@ The configuration file needs to be in the same directory as the executable, and 
 | :------------ |:-------------| :-----| :------- |
 | `Enabled` | Should JARVIS attempt connections to Spotify; do you want to use the Spotify module? | _boolean_ | true |
 | `Output` | Should data files for Spotify be output to the `OutputPath` | _boolean_ | true |
+| `AutoLogin` | Attempt to automate the login process by automatically opening a browser tab during the authentication process. We'd close it too but that is not allowed. | _boolean_ | true |
 | `PollingFrequency` | How often should Spotify be polled for new information on what's playing/happening. Current recommendation is to keep this at every 5 seconds. | _string_ | "5s" |
 | `ClientID` | The `ClientID` can be found on your [Spotify Developer](https://developer.spotify.com/my-applications/#!/applications) page for the app; you most likely will need to create an app first to find it. | _string_ | "7d90d691a1194380a3704dfb818x8cb1" |
 | `ClientSecret` | Same idea as the `ClientID`, it can be found in the same spot, right underneath. | _string_ | "520dab945cbd4d738df58a124826a91c" |

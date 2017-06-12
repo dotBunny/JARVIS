@@ -16,6 +16,7 @@ import (
 type OverlayModule struct {
 	baseDir      string
 	basePage     string
+	pageBasePath string
 	basePath     string
 	resourceBase string
 
@@ -31,10 +32,12 @@ func (m *OverlayModule) Init(config *Core.Config) {
 	// Setup endpoint
 	Core.AddEndpoint("/overlay", m.overlayEndpoint)
 	Core.AddEndpoint("/overlay/resource", m.overlayResourceEndpoint)
+	Core.AddEndpoint("/overlay/page", m.overlayPageEndpoint)
 
 	m.baseDir = m.config.AppDir
 	m.basePath = path.Join(m.config.AppDir, "resources", "overlay", "index.html")
 	m.resourceBase = path.Join(m.config.AppDir, "resources", "overlay", "content")
+	m.pageBasePath = path.Join(m.config.AppDir, "resources", "overlay")
 }
 
 func (m *OverlayModule) overlayEndpoint(w http.ResponseWriter, r *http.Request) {
@@ -52,6 +55,31 @@ func (m *OverlayModule) overlayEndpoint(w http.ResponseWriter, r *http.Request) 
 		fmt.Fprintf(w, "No Overlay Found")
 	} else {
 		fmt.Fprintf(w, m.basePage)
+	}
+}
+func (m *OverlayModule) overlayPageEndpoint(w http.ResponseWriter, r *http.Request) {
+
+	// Build File Path
+	filePath := path.Join(m.pageBasePath, r.URL.RawQuery)
+
+	// Check Existence
+	_, err := os.Stat(filePath)
+	if err != nil {
+		Core.Log("OVERLAY", "ERROR", "Unable to find file: "+filePath)
+		fmt.Fprintf(w, "Resource Not Found")
+		return
+	}
+
+	pageData, error := ioutil.ReadFile(m.basePath)
+	if error != nil {
+		Core.Log("OVERLAY", "ERROR", "Unable to read base HTML page ("+m.basePath+") from resources folder.")
+	}
+
+	if len(pageData) <= 0 {
+		Core.Log("OVERLAY", "ERROR", "No data to serve for overlay.")
+		fmt.Fprintf(w, "No Overlay Found")
+	} else {
+		fmt.Fprintf(w, string(pageData))
 	}
 }
 

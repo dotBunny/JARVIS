@@ -6,7 +6,8 @@ ServerPort = 8080
 
 [Spotify]
 Enabled = true
-Output= true
+Output = true
+AutoLogin = true
 PollingFrequency = "5s"
 ClientID = "<SPOTIFY_CLIENT_ID>"
 ClientSecret = "<SPOTIFY_CLIENT_SECRET>"
@@ -21,6 +22,3 @@ PollingFrequency = "10s"
 ClientID = "<TWITCH_CLIENT_ID>"
 ClientSecret = "<TWITCH_CLIENT_SECRET>"
 ChannelID = <TWITCH_CHANNEL_ID>
-
-[Overlay]
-CacheIndex = false
