@@ -30,9 +30,9 @@ func (m *OverlayModule) Init(config *Core.Config, console *ConsoleModule) {
 	m.config = config
 
 	// Setup endpoint
-	Core.AddEndpoint("/overlay", m.overlayEndpoint)
-	Core.AddEndpoint("/overlay/resource", m.overlayResourceEndpoint)
-	Core.AddEndpoint("/overlay/page", m.overlayPageEndpoint)
+	Core.AddEndpoint("/overlay", m.endpointOverlay)
+	Core.AddEndpoint("/overlay/resource", m.endpointOverlayResource)
+	Core.AddEndpoint("/overlay/page", m.endpointOverlayPage)
 
 	Core.Log("OVERLAY", "IMPORTANT", "Your default overlay can be accessed at: http://localhost:"+strconv.Itoa(m.config.General.ServerPort)+"/overlay")
 
@@ -42,7 +42,7 @@ func (m *OverlayModule) Init(config *Core.Config, console *ConsoleModule) {
 	m.pageBasePath = path.Join(m.config.AppDir, "resources", "overlay")
 }
 
-func (m *OverlayModule) overlayEndpoint(w http.ResponseWriter, r *http.Request) {
+func (m *OverlayModule) endpointOverlay(w http.ResponseWriter, r *http.Request) {
 
 	// Server Page Per Time
 	basePageData, error := ioutil.ReadFile(m.basePath)
@@ -59,7 +59,7 @@ func (m *OverlayModule) overlayEndpoint(w http.ResponseWriter, r *http.Request) 
 		fmt.Fprintf(w, m.basePage)
 	}
 }
-func (m *OverlayModule) overlayPageEndpoint(w http.ResponseWriter, r *http.Request) {
+func (m *OverlayModule) endpointOverlayPage(w http.ResponseWriter, r *http.Request) {
 
 	// Build File Path
 	filePath := path.Join(m.pageBasePath, r.URL.RawQuery)
@@ -72,9 +72,9 @@ func (m *OverlayModule) overlayPageEndpoint(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	pageData, error := ioutil.ReadFile(m.basePath)
+	pageData, error := ioutil.ReadFile(filePath)
 	if error != nil {
-		Core.Log("OVERLAY", "ERROR", "Unable to read base HTML page ("+m.basePath+") from resources folder.")
+		Core.Log("OVERLAY", "ERROR", "Unable to read base HTML page ("+filePath+") from resources folder.")
 	}
 
 	if len(pageData) <= 0 {
@@ -85,7 +85,7 @@ func (m *OverlayModule) overlayPageEndpoint(w http.ResponseWriter, r *http.Reque
 	}
 }
 
-func (m *OverlayModule) overlayResourceEndpoint(w http.ResponseWriter, r *http.Request) {
+func (m *OverlayModule) endpointOverlayResource(w http.ResponseWriter, r *http.Request) {
 
 	// Build File Path
 	filePath := path.Join(m.resourceBase, r.URL.RawQuery)

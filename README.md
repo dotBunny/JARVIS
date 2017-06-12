@@ -107,7 +107,9 @@ Once you have managed to wrangle [GO](https://golang.org/) into compiling the so
 | `workingon` | `w` | Set your currently working on text. | _workingon The JARVIS System_ |
 
 ## Overlay
-As of 0.1.1, the "Overlay" feature is experimental, but in theory you can create many things with it.  In tools like OBS, you would add a browser source and set it to `http://localhost:8080/overlay` and it will serve the content there
+As of 0.1.1, the "Overlay" feature is experimental, but in theory you can create many things with it.  In tools like OBS, you would add a browser source and set it to `http://localhost:8080/overlay` and it will serve the content there.
+
+There is also a neat little feature where you can server other html files in the overlay folder, http://localhost:8080/overlay/page?spotify-image.html for example will serve a browser source version of the spotify image that refreshes every 5 seconds. 
 
 ### Data Endpoints
 While JARVIS is running, there are numerous endpoints available for extraction data, outside of the file repository:
