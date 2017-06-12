@@ -113,6 +113,7 @@ func (m *SpotifyModule) Init(config *Core.Config, console *ConsoleModule) {
 	console.AddAlias("n", "spotify.next")
 	console.AddHandler("spotify.pause", "Pause/Play the current track in Spotify.", m.consolePausePlay)
 	console.AddAlias("p", "spotify.pause")
+	console.AddHandler("spotify.stats", "Display some stats from Spotify.", m.consoleStats)
 	console.AddHandler("spotify.update", "Force polling Spotify for updates.", m.consoleUpdate)
 }
 
@@ -176,6 +177,17 @@ func (m *SpotifyModule) consolePausePlay(args string) {
 		Core.Log("SPOTIFY", "LOG", "Playing")
 		m.client.Play()
 		m.CurrentlyPlaying = true
+	}
+}
+
+func (m *SpotifyModule) consoleStats(input string) {
+
+	if m.DurationMS == 0 {
+
+		Core.Log("SPOTIFY", "LOG", "Currently playing "+string(m.LastInfoData)+" (?)")
+	} else {
+		percentComplete := float64(((m.PlayedMS / m.DurationMS) * 100))
+		Core.Log("SPOTIFY", "LOG", "Currently playing "+string(m.LastInfoData)+" ("+fmt.Sprint(Core.Round(percentComplete, .5, 2))+"%)")
 	}
 }
 

@@ -139,6 +139,7 @@ func (m *TwitchModule) Init(config *Core.Config, console *ConsoleModule) {
 		// Setup Console Commands
 		console.AddHandler("twitch.say", "Say something in the Twitch IRC channel", m.consoleChannelSay)
 		console.AddAlias("t", "twitch.say")
+		console.AddHandler("twitch.stats", "Display some stats about the Twitch channel/stream.", m.consoleStats)
 		console.AddHandler("twitch.update", "Force polling Twitch for updates.", m.consoleUpdate)
 		console.AddHandler("twitch.whisper", "Whisper someone on Twitch's IRC server.", m.consoleWhisper)
 		console.AddAlias("w", "twitch.whisper")
@@ -194,6 +195,9 @@ func (m *TwitchModule) consoleChannelSay(input string) {
 	Core.Log("TWITCH", "LOG", m.openBracket+m.config.Twitch.ChatName+m.closeBracket+" "+input)
 }
 
+func (m *TwitchModule) consoleStats(input string) {
+	Core.Log("TWITCH", "LOG", "Current Viewers: "+fmt.Sprint(m.CurrentViewers)+"\tFollowers: "+fmt.Sprint(m.ChannelFollowers))
+}
 func (m *TwitchModule) consoleUpdate(input string) {
 	m.Poll()
 	Core.Log("TWITCH", "LOG", "Force Update")
