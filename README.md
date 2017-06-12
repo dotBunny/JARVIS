@@ -101,9 +101,10 @@ Once you have managed to wrangle [GO](https://golang.org/) into compiling the so
 
 | Command        | Alias | Description  |  Example  |
 | :------------- | :---- | :----------- | :-------- |
-| `quit` | `exit`, `x` | Quit the application | quit |
-| `spotify.next` | `next`, `n` | Skips to the next track in the user's Spotify queue. | next |
-| `workingon` | `w` | Set your currently working on text. | workingon The JARVIS System |
+| `quit` | `exit`, `x` | Quit the application | _quit_ |
+| `spotify.next` | `next`, `n` | Skips to the next track in the user's Spotify queue. | _next_ |
+| `spotify.pause` | `p` | Pause/Play the current track in Spotify. | _p_ |
+| `workingon` | `w` | Set your currently working on text. | _workingon The JARVIS System_ |
 
 ## Overlay
 As of 0.1.1, the "Overlay" feature is experimental, but in theory you can create many things with it.  In tools like OBS, you would add a browser source and set it to `http://localhost:8080/overlay` and it will serve the content there

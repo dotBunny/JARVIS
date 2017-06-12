@@ -35,7 +35,7 @@ func (m *WorkingOnModule) Init(config *Core.Config, console *ConsoleModule) {
 	}
 
 	// Setup Endpoints
-	Core.AddEndpoint("/workingon", m.workingOnEndpoint)
+	Core.AddEndpoint("/workingon", m.endpointWorkingOn)
 
 	// Setup Console Commands
 	console.AddHandler("workingon", "Set your currently working on text.", m.consoleWorkingOn)
@@ -50,6 +50,6 @@ func (m *WorkingOnModule) consoleWorkingOn(input string) {
 	Core.Log("WORKING", "LOG", "Set: "+input)
 }
 
-func (m *WorkingOnModule) workingOnEndpoint(w http.ResponseWriter, r *http.Request) {
+func (m *WorkingOnModule) endpointWorkingOn(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(m.Message))
 }

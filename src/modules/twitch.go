@@ -24,8 +24,8 @@ type TwitchModule struct {
 	OAuth          string
 	Ticker         *time.Ticker
 
-	twitchLatestFollowerPath   string
-	twitchLatestSubscriberPath string
+	latestFollowerPath   string
+	latestSubscriberPath string
 
 	client *twitch2go.Client
 	config *Core.Config
@@ -41,17 +41,17 @@ func (m *TwitchModule) Init(config *Core.Config, console *ConsoleModule) {
 	if m.config.Twitch.Output {
 
 		// Create our output paths
-		m.twitchLatestFollowerPath = filepath.Join(m.config.General.OutputPath, "Twitch_LatestFollower.txt")
-		m.twitchLatestSubscriberPath = filepath.Join(m.config.General.OutputPath, "Twitch_LatestSubscriber.txt")
+		m.latestFollowerPath = filepath.Join(m.config.General.OutputPath, "Twitch_LatestFollower.txt")
+		m.latestSubscriberPath = filepath.Join(m.config.General.OutputPath, "Twitch_LatestSubscriber.txt")
 
-		// Check twitchLatestFollowerPath
-		if _, err := os.Stat(m.twitchLatestFollowerPath); os.IsNotExist(err) {
-			ioutil.WriteFile(m.twitchLatestFollowerPath, nil, 0755)
+		// Check latestFollowerPath
+		if _, err := os.Stat(m.latestFollowerPath); os.IsNotExist(err) {
+			ioutil.WriteFile(m.latestFollowerPath, nil, 0755)
 		}
 
-		// Check twitchLatestFollowerPath
-		if _, err := os.Stat(m.twitchLatestSubscriberPath); os.IsNotExist(err) {
-			ioutil.WriteFile(m.twitchLatestSubscriberPath, nil, 0755)
+		// Check latestFollowerPath
+		if _, err := os.Stat(m.latestSubscriberPath); os.IsNotExist(err) {
+			ioutil.WriteFile(m.latestSubscriberPath, nil, 0755)
 		}
 	}
 
@@ -61,7 +61,7 @@ func (m *TwitchModule) Init(config *Core.Config, console *ConsoleModule) {
 	client := twitch2go.NewClient(config.Twitch.ClientID)
 
 	// Add Endpoints
-	Core.AddEndpoint("/twitch/follower/last", m.lastFollowerEndpoint)
+	Core.AddEndpoint("/twitch/follower/last", m.endpointLastFollower)
 
 	m.client = client
 
@@ -96,7 +96,7 @@ func (m *TwitchModule) Shutdown() {
 	}
 }
 
-func (m *TwitchModule) lastFollowerEndpoint(w http.ResponseWriter, r *http.Request) {
+func (m *TwitchModule) endpointLastFollower(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(m.LastFollower))
 }
 
@@ -114,7 +114,7 @@ func (m *TwitchModule) pollFollowers() {
 			if m.config.Twitch.Output {
 				var buffer bytes.Buffer
 				buffer.WriteString(followers.Follows[0].User.DisplayName)
-				Core.SaveFile(buffer.Bytes(), m.twitchLatestFollowerPath)
+				Core.SaveFile(buffer.Bytes(), m.latestFollowerPath)
 			}
 
 			m.LastFollower = followers.Follows[0].User.DisplayName
@@ -136,7 +136,7 @@ func (m *TwitchModule) pollSubscribers() {
 			if m.config.Twitch.Output {
 				var buffer bytes.Buffer
 				buffer.WriteString(subscribers.Subscriptions[0].User.Name)
-				Core.SaveFile(buffer.Bytes(), m.twitchLatestSubscriberPath)
+				Core.SaveFile(buffer.Bytes(), m.latestSubscriberPath)
 			}
 
 			m.LastSubscriber = subscribers.Subscriptions[0].User.Name
