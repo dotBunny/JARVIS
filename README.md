@@ -1,5 +1,5 @@
 # JARVIS: Streamer's Butler
-A optimized console application comprised of features from a **streamer's wishlist**. 
+An optimized console application comprised of features from a **streamer's wishlist**. 
 
 ## Credits
 This couldn't of been made without all of the awesome developers out there making their work availble to the public. 
