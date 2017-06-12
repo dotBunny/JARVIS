@@ -22,6 +22,7 @@ PollingFrequency = "10s"
 ClientID = "<TWITCH_CLIENT_ID>"
 ClientSecret = "<TWITCH_CLIENT_SECRET>"
 ChannelID = <TWITCH_CHANNEL_ID>
+LastFollowersCount = 10
 ChatEnabled = true
 ChatEcho = true
 ChatName = "JARVIS"

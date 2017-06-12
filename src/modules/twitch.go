@@ -12,6 +12,8 @@ import (
 
 	"strings"
 
+	"bytes"
+
 	Core "../core"
 	"github.com/chosenken/twitch2go"
 	"github.com/fatih/color"
@@ -24,6 +26,7 @@ const server string = "irc.chat.twitch.tv:6667"
 type TwitchModule struct {
 	LastFollower   string
 	LastSubscriber string
+	LastFollowers  string
 
 	ChannelFollowers   uint
 	ChannelViews       uint
@@ -34,6 +37,7 @@ type TwitchModule struct {
 	Ticker *time.Ticker
 
 	latestFollowerPath     string
+	latestFollowersPath    string
 	latestSubscriberPath   string
 	currentGamePath        string
 	currentViewersPath     string
@@ -61,6 +65,7 @@ func (m *TwitchModule) Init(config *Core.Config, console *ConsoleModule) {
 
 		// Create our output paths
 		m.latestFollowerPath = filepath.Join(m.config.General.OutputPath, "Twitch_LatestFollower.txt")
+		m.latestFollowersPath = filepath.Join(m.config.General.OutputPath, "Twitch_LatestFollowers.txt")
 		m.latestSubscriberPath = filepath.Join(m.config.General.OutputPath, "Twitch_LatestSubscriber.txt")
 		m.currentGamePath = filepath.Join(m.config.General.OutputPath, "Twitch_CurrentGame.txt")
 		m.currentViewersPath = filepath.Join(m.config.General.OutputPath, "Twitch_CurrentViewers.txt")
@@ -203,33 +208,49 @@ func (m *TwitchModule) endpointLastFollower(w http.ResponseWriter, r *http.Reque
 
 func (m *TwitchModule) pollFollowers() {
 
-	followers, error := m.client.GetChannelFollows(strconv.Itoa(m.config.Twitch.ChannelID), "", 1, "DESC")
+	followers, error := m.client.GetChannelFollows(strconv.Itoa(m.config.Twitch.ChannelID), "", m.config.Twitch.LastFollowersCount, "DESC")
 	if error != nil {
 		Core.Log("TWITCH", "ERROR", error.Error())
 		return
 	}
 
 	if followers.Total > 0 {
-		if followers.Follows[0].User.DisplayName != m.LastFollower {
 
+		// Handle Last Follower
+		if followers.Follows[0].User.DisplayName != m.LastFollower {
 			if m.config.Twitch.Output {
 				Core.SaveFile([]byte(followers.Follows[0].User.DisplayName), m.latestFollowerPath)
 			}
 
 			m.LastFollower = followers.Follows[0].User.DisplayName
 			Core.Log("TWITCH", "IMPORTANT", "New Follower "+followers.Follows[0].User.DisplayName)
+
+			// Because the latest isn't the same we know the last 10 is not accurate
+
+			var buffer bytes.Buffer
+			items := len(followers.Follows)
+			if items > m.config.Twitch.LastFollowersCount {
+				items = m.config.Twitch.LastFollowersCount
+			}
+			for i := 0; i < items; i++ {
+				buffer.WriteString(followers.Follows[i].User.DisplayName)
+				buffer.WriteString("\n")
+			}
+
+			m.LastFollowers = buffer.String()
+			if m.config.Twitch.Output {
+				Core.SaveFile(buffer.Bytes(), m.latestFollowersPath)
+			}
 		}
 	}
+
 }
 
 func (m *TwitchModule) pollStream() {
 	stream, err := m.client.GetStreamByChannel(strconv.Itoa(m.config.Twitch.ChannelID))
-	if err != nil {
-		Core.Log("TWITCH", "ERROR", "Unable to poll stream information.")
-	}
 
 	if stream == nil {
-		Core.Log("TWITCH", "LOG", "Stream Offline")
+		Core.Log("TWITCH", "LOG", "Stream Offline - "+err.Error())
 		return
 	}
 

@@ -56,45 +56,7 @@ _It's important that GO's 'bin' is in your path (on macOS/Linux) for the build s
 ## Configuration File
 The configuration file needs to be in the same directory as the executable, and named `jarvis.toml`
 
-### [General]
-| Option        | Description  | Type  | Example  |
-| :------------ |:-------------| :-----| :------- |
-| `OutputPath` | The absolute path to where the outputted data files should be placed  | _string_ |"/Users/reapazor/StreamingData/"|
-| `ServerPort` | The port which the callback/overlay server listens on; this by default should be 8080. If you change it, you must edit your overlay's HTML files to reflect the changed port. | _integer_ | 8080 |
-
-### [Spotify]
-| Option        | Description  | Type  | Example  |
-| :------------ |:-------------| :-----| :------- |
-| `Enabled` | Should JARVIS attempt connections to Spotify; do you want to use the Spotify module? | _boolean_ | true |
-| `Output` | Should data files for Spotify be output to the `OutputPath` | _boolean_ | true |
-| `AutoLogin` | Attempt to automate the login process by automatically opening a browser tab during the authentication process. We'd close it too but that is not allowed. | _boolean_ | true |
-| `PollingFrequency` | How often should Spotify be polled for new information on what's playing/happening. Current recommendation is to keep this at every 5 seconds. | _string_ | "5s" |
-| `ClientID` | The `ClientID` can be found on your [Spotify Developer](https://developer.spotify.com/my-applications/#!/applications) page for the app; you most likely will need to create an app first to find it. | _string_ | "7d90d691a1194380a3704dfb818x8cb1" |
-| `ClientSecret` | Same idea as the `ClientID`, it can be found in the same spot, right underneath. | _string_ | "520dab945cbd4d738df58a124826a91c" |
-| `Callback` | This is the endpoint of the listen server that will take the response from Spotify during the login process. You **must** add the full path (http://localhost:8080/callbackSpotify) on your Spotify developer page to the _Redirect URIs_ section. | _string_ | "/callbackSpotify" |
-| `TruncateTrackLength` | The character length at which the combined artist and track name will be truncated | _integer_ | 85 |
-| `TruncateTrackRunes` | The characters to append when truncating with the `TruncateTrackLength`| _string_ | "..." |
-
-### [Twitch]
-| Option        | Description  | Type  | Example  |
-| :------------ |:-------------| :-----| :------- |
-| `Enabled` | Should JARVIS attempt connections to Twitch; do you want to use the Twitch module? | _boolean_ | true |
-| `Output` | Should data files for Twitch be output to the `OutputPath` | _boolean_ | true |
-| `PollingFrequency` | How often should Twitch be polled for new information. Current recommendation is to keep this at every 10 seconds. | _string_ | "10s" |
-| `ClientID` | The `ClientID` can be found on your [Twitch Connections](https://www.twitch.tv/settings/connections) page for the app; you most likely will need to register an app first to find it. | _string_ | "d9srlt99fyxzrwa9k9ad2zjzjzl3xh" |
-| `ClientSecret` | Same idea as the `ClientID`, it can be found in the same spot, right underneath. You may need to click the _New Secret_ button. | _string_ | "3owshhw8ukfp2x3i34v3mnh5sjsgo0" |
-| `ChannelID` | This is the numerical identifier of your channel, it isn't so simple to get off hand. Check the section below on one way to get it. | _integer_ | 21139969 |
-| `ChatEnabled` | Should the IRC server be connected too; disabling this will remove your ability to respond to messages inside of JARVIS. | _boolean_ | false |
-| `ChatEcho` | Should the chat channel content be shown in JARVIS | _boolean_ | true |
-| `ChatName` | The alias to use when connecting to Twitch's IRC server | _string_ | "reapazor" |
-| `ChatToken` | The token used for connecting to Twitch's IRC servers, this can be easily found by visiting [here](http://www.twitchapps.com/tmi/). | _string_ | "oauth:aqwegd3126l25azg0nn70if82nr9d1" |
-| `ChatChannel` | The channel to join when connected to Twitch's IRC server | _string_ | "#reapazor" |
-
-### [WorkingOn]
-| Option        | Description  | Type  | Example  |
-| :------------ |:-------------| :-----| :------- |
-| `Enabled` | Should the WorkingOn module be active? | _boolean_ | true |
-| `Output` | Should data files for what your working on be output to the `OutputPath` | _boolean_ | true |
+For a detailed breakdown of the configuration file, please have a look at the wiki's [Configuration](https://github.com/dotBunny/JARVIS/wiki/Configuration) page.
 
 ### Get Your Twitch Channel ID
 Hop on over to terminal and fill this command out, and it will return some JSON with your "ChannelID" listed in it.

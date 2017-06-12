@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"path/filepath"
 
+	"io/ioutil"
+
 	Core "../core"
 )
 
@@ -26,6 +28,12 @@ func (m *WorkingOnModule) Init(config *Core.Config, console *ConsoleModule) {
 	if m.config.WorkingOn.Output {
 		m.TextPath = filepath.Join(m.config.General.OutputPath, "WorkingOn_Message.txt")
 		Core.Touch(m.TextPath)
+	}
+
+	// Load Saved WorkingOn
+	savedMessage, err := ioutil.ReadFile(m.TextPath)
+	if err == nil {
+		m.Message = string(savedMessage)
 	}
 
 	// Setup Endpoints
