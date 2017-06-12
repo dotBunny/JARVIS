@@ -27,7 +27,7 @@ Is JARVIS helping you? Show some love for [@reapazor](http://twitch.tv/reapazor)
 ### Prebuilt Version
 While not always the latest and greatest, occasionally we will update the "easy mode".  
 
-[JARVIS-0.1.zip](https://github.com/dotBunny/JARVIS/releases/download/0.1/JARVIS-0.1.zip)
+[JARVIS-0.1.1.zip](https://github.com/dotBunny/JARVIS/releases/download/0.1.1/JARVIS-0.1.1.zip)
 
 _Make sure to edit the jarvis.toml configuration file!_
 
