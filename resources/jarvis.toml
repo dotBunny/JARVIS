@@ -23,6 +23,6 @@ ClientID = "<TWITCH_CLIENT_ID>"
 ClientSecret = "<TWITCH_CLIENT_SECRET>"
 ChannelID = <TWITCH_CHANNEL_ID>
 
-[WorkignOn]
+[WorkingOn]
 Enabled = true
 Output = true
