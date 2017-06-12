@@ -64,6 +64,8 @@ func Log(channel string, class string, message string) {
 			color.Set(color.FgBlue)
 		} else if channel == "OVERLAY" {
 			color.Set(color.FgCyan)
+		} else if channel == "WORKING" {
+			color.Set(color.FgHiBlue)
 		}
 		log.Println(channel + "\t" + message)
 		break
@@ -76,6 +78,8 @@ func Log(channel string, class string, message string) {
 			channel = color.BlueString(channel)
 		} else if channel == "OVERLAY" {
 			channel = color.CyanString(channel)
+		} else if channel == "WORKING" {
+			channel = color.HiBlueString(channel)
 		}
 
 		// Normal (Just Channel Color)

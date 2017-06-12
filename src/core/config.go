@@ -40,6 +40,12 @@ type TwitchConfig struct {
 	Callback         string
 }
 
+// WorkingOnConfig elements
+type WorkingOnConfig struct {
+	Enabled bool
+	Output  bool
+}
+
 // JIRAConfig elements
 type JIRAConfig struct {
 	URI string
@@ -49,9 +55,10 @@ type JIRAConfig struct {
 type Config struct {
 	AppDir string
 
-	General GeneralConfig
-	Spotify SpotifyConfig
-	Twitch  TwitchConfig
+	General   GeneralConfig
+	Spotify   SpotifyConfig
+	Twitch    TwitchConfig
+	WorkingOn WorkingOnConfig
 }
 
 // ReadConfig gets the local config file

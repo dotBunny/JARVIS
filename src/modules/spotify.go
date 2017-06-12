@@ -110,6 +110,7 @@ func (m *SpotifyModule) Init(config *Core.Config, console *ConsoleModule) {
 
 	console.AddHandler("spotify.next", "Skips to the next track in the user's Spotify queue.", m.consoleNextTrack)
 	console.AddAlias("next", "spotify.next")
+	console.AddAlias("n", "spotify.next")
 }
 
 // Loop awaiting ticker

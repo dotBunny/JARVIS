@@ -80,7 +80,12 @@ The configuration file needs to be in the same directory as the executable, and 
 | `ClientSecret` | Same idea as the `ClientID`, it can be found in the same spot, right underneath. You may need to click the _New Secret_ button. | _string_ | "3owshhw8ukfp2x3i34v3mnh5sjsgo0" |
 | `ChannelID` | This is the numerical identifier of your channel, it isn't so simple to get off hand. Check the section below on one way to get it. | _integer_ | 21139969 |
 
-  
+### [WorkingOn]
+| Option        | Description  | Type  | Example  |
+| :------------ |:-------------| :-----| :------- |
+| `Enabled` | Should the WorkingOn module be active? | _boolean_ | true |
+| `Output` | Should data files for what your working on be output to the `OutputPath` | _boolean_ | true |
+
 ### Get Your Twitch Channel ID
 Hop on over to terminal and fill this command out, and it will return some JSON with your "ChannelID" listed in it.
 ```bash
@@ -96,18 +101,22 @@ Once you have managed to wrangle [GO](https://golang.org/) into compiling the so
 
 | Command        | Alias | Description  |  Example  |
 | :------------- | :---- | :----------- | :-------- |
-| `quit` | `exit` | Quit the application | quit |
-| `spotify.next` | `next` | Skips to the next track in the user's Spotify queue. | next |
+| `quit` | `exit`, `x` | Quit the application | quit |
+| `spotify.next` | `next`, `n` | Skips to the next track in the user's Spotify queue. | next |
+| `workingon` | `w` | Set your currently working on text. | workingon The JARVIS System |
 
 ## Overlay
-As of 0.1.1, the "Overlay" feature is experimental, but in theory you can create many things with it.  In tools like OBS, you would add a browser source and set it to `http://localhost:[ServerPort]/overlay` and it will serve the content there
+As of 0.1.1, the "Overlay" feature is experimental, but in theory you can create many things with it.  In tools like OBS, you would add a browser source and set it to `http://localhost:8080/overlay` and it will serve the content there
 
 ### Data Endpoints
 While JARVIS is running, there are numerous endpoints available for extraction data, outside of the file repository:
 
->http://localhost:[ServerPort]/spotify/track  
->http://localhost:[ServerPort]/spotify/image  
->http://localhost:[ServerPort]/twitch/follower/last  
+| Endpoint        | Data |
+| :------------- | :---- |
+| http://localhost:8080/spotify/track | The current track text from Spotify |
+| http://localhost:8080/spotify/image | The raw image data from Spotify |
+| http://localhost:8080/twitch/follower/last  | The last person to follow you on Twitch |
+| http://localhost:8080/workingon | Your last set _Working On_ text |
 
 ## Feature Requests
 Drop them in the [Issues](https://github.com/dotBunny/JARVIS/issues) section, and mark them as an enhancement (label). Please understand that this is just a side project, resulting from not liking what was currently available.

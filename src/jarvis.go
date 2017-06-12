@@ -17,13 +17,14 @@ import (
 )
 
 var (
-	spotifyModule *Modules.SpotifyModule
-	twitchModule  *Modules.TwitchModule
-	overlayModule *Modules.OverlayModule
-	consoleModule *Modules.ConsoleModule
-	logFile       *os.File
-	config        Core.Config
-	quit          chan os.Signal
+	spotifyModule   *Modules.SpotifyModule
+	twitchModule    *Modules.TwitchModule
+	overlayModule   *Modules.OverlayModule
+	consoleModule   *Modules.ConsoleModule
+	workingOnModule *Modules.WorkingOnModule
+	logFile         *os.File
+	config          Core.Config
+	quit            chan os.Signal
 )
 
 // Version Number
@@ -70,6 +71,7 @@ func main() {
 	consoleModule.Init(&config)
 	consoleModule.AddHandler("quit", "Quit the application", Exit)
 	consoleModule.AddAlias("exit", "quit")
+	consoleModule.AddAlias("x", "quit")
 
 	// Initialize Webserver
 	Core.InitializeWebServer(config.General.ServerPort)
@@ -94,11 +96,16 @@ func main() {
 		go twitchModule.Loop()
 	}
 
+	// Initialize WorkingOn
+	var workingOnModule Modules.WorkingOnModule
+	if config.WorkingOn.Enabled {
+		workingOnModule.Init(&config, &consoleModule)
+	}
+
 	// Lets do this!
 	Core.Log("SYSTEM", "LOG", "Ready")
 
 	// Activate Console
-
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		consoleModule.Handle(scanner.Text())
