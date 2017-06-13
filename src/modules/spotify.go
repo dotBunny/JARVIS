@@ -62,6 +62,11 @@ func (m *SpotifyModule) Init(config *Core.Config, console *ConsoleModule) {
 	m.imagePath = filepath.Join(m.config.General.OutputPath, "Spotify_LatestImage.jpg")
 	Core.Touch(m.imagePath)
 
+	savedImage, err := ioutil.ReadFile(m.imagePath)
+	if err == nil {
+		m.LastImageData = savedImage
+	}
+
 	// Create new authenticator with permissions
 	m.auth = spotify.NewAuthenticator("http://localhost:"+strconv.Itoa(m.config.General.ServerPort)+m.config.Spotify.Callback,
 		spotify.ScopeUserReadCurrentlyPlaying,
