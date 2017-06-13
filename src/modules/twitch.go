@@ -97,6 +97,7 @@ func (m *TwitchModule) Init(config *Core.Config, console *ConsoleModule) {
 
 	// Add Endpoints
 	Core.AddEndpoint("/twitch/follower/last", m.endpointLastFollower)
+	Core.AddEndpoint("/twitch/viewers/current", m.endpointCurrentViewers)
 
 	m.client = client
 
@@ -217,6 +218,10 @@ func (m *TwitchModule) consoleWhisper(input string) {
 
 func (m *TwitchModule) endpointLastFollower(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(m.LastFollower))
+}
+func (m *TwitchModule) endpointCurrentViewers(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, string(m.CurrentViewers))
+
 }
 
 func (m *TwitchModule) pollFollowers() {
