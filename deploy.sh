@@ -22,6 +22,9 @@ rm -rf jarvis.zip
 cp -rf resources/jarvis.toml jarvis-build/
 cp -rf resources/overlay jarvis-build/resources
 
+# Copy Over Instructions
+cp -rf README.md jarvis-build/
+
 # Compress File
 zip -r jarvis-build.zip jarvis-build/
 
