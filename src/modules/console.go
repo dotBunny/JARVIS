@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	Core "../core"
+	"github.com/fatih/color"
 )
 
 // ConsoleFunction used to pass functions into console
@@ -22,8 +23,8 @@ func (m *ConsoleModule) Init(config *Core.Config) {
 	m.descriptions = make(map[string]string)
 	m.aliases = make(map[string]string)
 
-	m.AddHandler("help", "This list.", m.consoleHelp)
-	m.AddHandler("update", "Force all active modules to poll their data sources for updates.", m.consoleUpdate)
+	m.AddHandler("/help", "This list.", m.consoleHelp)
+	m.AddHandler("/update", "Force all active modules to poll their data sources for updates.", m.consoleUpdate)
 
 }
 
@@ -81,7 +82,8 @@ func (m *ConsoleModule) Handle(input string) {
 		execCommand := m.commands[command]
 		execCommand(args)
 	} else if len(command) > 0 {
-		Core.Log("SYSTEM", "LOG", "Invalid command: "+command)
+
+		Core.Log("SYSTEM", "LOG", "Invalid command: "+command+color.BlueString("\n"+Core.LineSpacer+"'/help' for a list of registered commands"))
 	}
 }
 

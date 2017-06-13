@@ -113,17 +113,17 @@ Once you have managed to wrangle [GO](https://golang.org/) into compiling the so
 
 | Command        | Alias | Description  |  Example  |
 | :------------- | :---- | :----------- | :-------- |
-| `spotify.next` | `next`, `n` | Skips to the next track in the user's Spotify queue. | _next_ |
-| `spotify.pause` | `p` | Pause/Play the current track in Spotify. | _p_ |
-| `spotify.stats` |  | Display some stats about Spotify. | _spotify.stats_ |
-| `spotify.update` | | Force polling Spotify for updates. | _spotify.update_ |
-| `twitch.say` | `t` | Send a message to your Twitch channel. | _t Hello World!_ |
-| `twitch.stats` |  | Display some stats about the Twitch channel/stream. | _twitch.stats_ |
-| `twitch.update` | | Force polling Twitch for updates. | _twitch.update_ |
-| `twitch.whisper` | `w` | Send a whisper to someone on the Twitch IRC server. | _w reapazor You are awesome!_ |
-| `update` | | Force all active modules to poll their data sources for updates. | _update_ |
-| `workingon` | `o` | Set your currently working on text. | _workingon The JARVIS System_ |
-| `quit` | `exit`, `x` | Quit the application | _quit_ |
+| `/spotify.next` | `/next`, `/n`, `/skip` | Skips to the next track in the user's Spotify queue. | _next_ |
+| `/spotify.pause` | `/p` | Pause/Play the current track in Spotify. | _p_ |
+| `/spotify.stats` |  | Display some stats about Spotify. | _spotify.stats_ |
+| `/spotify.update` | | Force polling Spotify for updates. | _spotify.update_ |
+| `/twitch.say` | `/t`, `/say` | Send a message to your Twitch channel. | _t Hello World!_ |
+| `/twitch.stats` |  | Display some stats about the Twitch channel/stream. | _twitch.stats_ |
+| `/twitch.update` | | Force polling Twitch for updates. | _twitch.update_ |
+| `/twitch.whisper` | `/whisper` | Send a whisper to someone on the Twitch IRC server. | _w reapazor You are awesome!_ |
+| `/update` | | Force all active modules to poll their data sources for updates. | _update_ |
+| `/workingon` | `/w` | Set your currently working on text. | _workingon The JARVIS System_ |
+| `/quit` | `/exit`, `/x` | Quit the application | _quit_ |
 
 ## Overlay
 As of 0.1.1, the "Overlay" feature is experimental, but in theory you can create many things with it.  In tools like OBS, you would add a browser source and set it to `http://localhost:8080/overlay` and it will serve the content there.

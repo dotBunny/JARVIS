@@ -138,12 +138,13 @@ func (m *TwitchModule) Init(config *Core.Config, console *ConsoleModule) {
 		go m.irc.Loop()
 
 		// Setup Console Commands
-		console.AddHandler("twitch.say", "Say something in the Twitch IRC channel", m.SendMessageToChannel)
-		console.AddAlias("t", "twitch.say")
-		console.AddHandler("twitch.stats", "Display some stats about the Twitch channel/stream.", m.consoleStats)
-		console.AddHandler("twitch.update", "Force polling Twitch for updates.", m.consoleUpdate)
-		console.AddHandler("twitch.whisper", "Whisper someone on Twitch's IRC server.", m.consoleWhisper)
-		console.AddAlias("w", "twitch.whisper")
+		console.AddHandler("/twitch.say", "Say something in the Twitch IRC channel", m.SendMessageToChannel)
+		console.AddAlias("/t", "/twitch.say")
+		console.AddAlias("/say", "/twitch.say")
+		console.AddHandler("/twitch.stats", "Display some stats about the Twitch channel/stream.", m.consoleStats)
+		console.AddHandler("/twitch.update", "Force polling Twitch for updates.", m.consoleUpdate)
+		console.AddHandler("/twitch.whisper", "Whisper someone on Twitch's IRC server.", m.consoleWhisper)
+		console.AddAlias("/whisper", "/twitch.whisper")
 	}
 }
 

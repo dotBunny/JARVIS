@@ -40,8 +40,8 @@ func (m *WorkingOnModule) Init(config *Core.Config, console *ConsoleModule) {
 	Core.AddEndpoint("/workingon", m.endpointWorkingOn)
 
 	// Setup Console Commands
-	console.AddHandler("workingon", "Set your currently working on text.", m.consoleWorkingOn)
-	console.AddAlias("o", "workingon")
+	console.AddHandler("/workingon", "Set your currently working on text.", m.consoleWorkingOn)
+	console.AddAlias("/w", "/workingon")
 }
 
 func (m *WorkingOnModule) consoleWorkingOn(input string) {

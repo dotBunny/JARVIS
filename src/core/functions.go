@@ -16,6 +16,9 @@ import (
 	"github.com/fatih/color"
 )
 
+// LineSpacer over text to align with normal start
+const LineSpacer string = "\t\t\t\t"
+
 //CopyToClipboard string
 func CopyToClipboard(buffer string) {
 	clipboard.WriteAll(buffer)

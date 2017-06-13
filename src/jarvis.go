@@ -69,9 +69,9 @@ func main() {
 	// Initialize Console
 	var consoleModule Modules.ConsoleModule
 	consoleModule.Init(&config)
-	consoleModule.AddHandler("quit", "Quit the application", Exit)
-	consoleModule.AddAlias("exit", "quit")
-	consoleModule.AddAlias("x", "quit")
+	consoleModule.AddHandler("/quit", "Quit the application", Exit)
+	consoleModule.AddAlias("/exit", "/quit")
+	consoleModule.AddAlias("/x", "/quit")
 
 	// Initialize Webserver
 	Core.InitializeWebServer(config.General.ServerPort)

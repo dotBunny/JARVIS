@@ -18,7 +18,7 @@ TruncateTrackRunes = "..."
 [Twitch]
 Enabled = true
 Output = true
-PollingFrequency = "10s"
+PollingFrequency = "5s"
 ClientID = "<TWITCH_CLIENT_ID>"
 ClientSecret = "<TWITCH_CLIENT_SECRET>"
 ChannelID = <TWITCH_CHANNEL_ID>

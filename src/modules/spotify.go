@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"path"
 	"path/filepath"
 	"strconv"
 	"time"
@@ -61,10 +62,18 @@ func (m *SpotifyModule) Init(config *Core.Config, console *ConsoleModule) {
 	// Nop matter what we are going to be caching the image
 	m.imagePath = filepath.Join(m.config.General.OutputPath, "Spotify_LatestImage.jpg")
 	Core.Touch(m.imagePath)
-
 	savedImage, err := ioutil.ReadFile(m.imagePath)
 	if err == nil {
 		m.LastImageData = savedImage
+	}
+
+	// Set Default
+	if len(m.LastImageData) == 0 {
+		defaultImage, err := ioutil.ReadFile(path.Join(m.config.AppDir, "resources", "overlay", "content", "img", "jarvis-spotify.jpg"))
+		if err == nil {
+			m.LastImageData = defaultImage
+			Core.SaveFile(m.LastImageData, m.imagePath)
+		}
 	}
 
 	// Create new authenticator with permissions
@@ -113,13 +122,14 @@ func (m *SpotifyModule) Init(config *Core.Config, console *ConsoleModule) {
 	}
 	m.Ticker = time.NewTicker(spotifyPollingFrequency)
 
-	console.AddHandler("spotify.next", "Skips to the next track in the user's Spotify queue.", m.consoleNextTrack)
-	console.AddAlias("next", "spotify.next")
-	console.AddAlias("n", "spotify.next")
-	console.AddHandler("spotify.pause", "Pause/Play the current track in Spotify.", m.consolePausePlay)
-	console.AddAlias("p", "spotify.pause")
-	console.AddHandler("spotify.stats", "Display some stats from Spotify.", m.consoleStats)
-	console.AddHandler("spotify.update", "Force polling Spotify for updates.", m.consoleUpdate)
+	console.AddHandler("/spotify.next", "Skips to the next track in the user's Spotify queue.", m.consoleNextTrack)
+	console.AddAlias("/next", "/spotify.next")
+	console.AddAlias("/n", "/spotify.next")
+	console.AddAlias("/skip", "/spotify.next")
+	console.AddHandler("/spotify.pause", "Pause/Play the current track in Spotify.", m.consolePausePlay)
+	console.AddAlias("/p", "/spotify.pause")
+	console.AddHandler("/spotify.stats", "Display some stats from Spotify.", m.consoleStats)
+	console.AddHandler("/spotify.update", "Force polling Spotify for updates.", m.consoleUpdate)
 }
 
 // Loop awaiting ticker
