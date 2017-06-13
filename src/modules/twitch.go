@@ -137,7 +137,7 @@ func (m *TwitchModule) Init(config *Core.Config, console *ConsoleModule) {
 		go m.irc.Loop()
 
 		// Setup Console Commands
-		console.AddHandler("twitch.say", "Say something in the Twitch IRC channel", m.consoleChannelSay)
+		console.AddHandler("twitch.say", "Say something in the Twitch IRC channel", m.SendMessageToChannel)
 		console.AddAlias("t", "twitch.say")
 		console.AddHandler("twitch.stats", "Display some stats about the Twitch channel/stream.", m.consoleStats)
 		console.AddHandler("twitch.update", "Force polling Twitch for updates.", m.consoleUpdate)
@@ -188,11 +188,6 @@ func (m *TwitchModule) Shutdown() {
 			m.irc.Disconnect()
 		}
 	}
-}
-
-func (m *TwitchModule) consoleChannelSay(input string) {
-	m.irc.Privmsg(m.config.Twitch.ChatChannel, input)
-	Core.Log("TWITCH", "LOG", m.openBracket+m.config.Twitch.ChatName+m.closeBracket+" "+input)
 }
 
 func (m *TwitchModule) consoleStats(input string) {
@@ -261,7 +256,7 @@ func (m *TwitchModule) pollFollowers() {
 			}
 		}
 	}
-
+	followers = nil
 }
 
 func (m *TwitchModule) pollStream() {
@@ -316,6 +311,14 @@ func (m *TwitchModule) pollStream() {
 			Core.SaveFile([]byte(m.CurrentGame), m.currentGamePath)
 		}
 	}
+
+	stream = nil
+}
+
+// SendMessageToChannel on Twitch
+func (m *TwitchModule) SendMessageToChannel(input string) {
+	m.irc.Privmsg(m.config.Twitch.ChatChannel, input)
+	Core.Log("TWITCH", "LOG", m.openBracket+m.config.Twitch.ChatName+m.closeBracket+" "+input)
 }
 
 // func (m *TwitchModule) pollSubscribers() {

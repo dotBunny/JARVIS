@@ -178,6 +178,7 @@ func SyncFile(data []byte, path string) bool {
 			return true
 		}
 	}
+
 	return false
 }
 

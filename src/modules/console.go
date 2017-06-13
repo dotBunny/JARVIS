@@ -58,7 +58,7 @@ func (m *ConsoleModule) RemoveHandler(command string) {
 // Handle a command
 func (m *ConsoleModule) Handle(input string) {
 
-	splitLocation := strings.Index(input, " ")
+	var splitLocation = strings.Index(input, " ")
 	var command string
 	var args string
 	if splitLocation > 0 {

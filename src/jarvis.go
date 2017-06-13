@@ -117,11 +117,18 @@ func Exit(input string) {
 	fmt.Println("")
 	Core.Log("SYSTEM", "LOG", "Shutting Down ...")
 
+	// Shutdown modules
 	spotifyModule.Shutdown()
 	twitchModule.Shutdown()
 
+	// Close log ile
+	logFile.Close()
+
+	// Close any open channels
 	if quit != nil {
 		close(quit)
 	}
+
+	// Close application
 	os.Exit(1)
 }

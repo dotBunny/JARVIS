@@ -259,7 +259,11 @@ func (m *SpotifyModule) pollCurrentlyPlaying() {
 					Core.SaveFile(buffer.Bytes(), m.imagePath)
 					m.LastImageData = buffer.Bytes()
 				}
+				writer.Flush()
+
 			}
 		}
+		buffer.Reset()
 	}
+	state = nil
 }

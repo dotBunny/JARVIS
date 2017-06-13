@@ -22,6 +22,8 @@ Is JARVIS helping you? Show some love for [@reapazor](http://twitch.tv/reapazor)
     * Accessible Local Data Endpoints
     * Page hosting platform
 * Twitch Chat Integration
+* Optimized!
+    * < 15 MB Memory Footprint _- It's 10.4 MB on our test systems!_
 * Console Commands!
 
 ![Outputs](https://dl.dropboxusercontent.com/u/118962/JARVIS/outputs.png)
