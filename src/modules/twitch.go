@@ -138,21 +138,33 @@ func (m *TwitchModule) Init(config *Core.Config, console *ConsoleModule) {
 		go m.irc.Loop()
 
 		// Setup Console Commands
+		console.AddHandler("/twitch.ban", "Ban someone from Twitch chat, with an optional message.", m.consoleBan)
+		console.AddAlias("/ban", "/twitch.ban")
+
+		console.AddHandler("/twitch.kick", "Kick someone from Twitch's chat.", m.consoleKick)
+		console.AddAlias("/kick", "/twitch.kick")
+
+		console.AddHandler("/twitch.timeout", "Temporary ban someone for a number of seconds.", m.consoleTimeout)
+		console.AddAlias("/timeout", "/twitch.timeout")
+
 		console.AddHandler("/twitch.say", "Say something in the Twitch IRC channel", m.SendMessageToChannel)
 		console.AddAlias("/t", "/twitch.say")
 		console.AddAlias("/say", "/twitch.say")
+
 		console.AddHandler("/twitch.stats", "Display some stats about the Twitch channel/stream.", m.consoleStats)
 		console.AddHandler("/twitch.update", "Force polling Twitch for updates.", m.consoleUpdate)
+
 		console.AddHandler("/twitch.whisper", "Whisper someone on Twitch's IRC server.", m.consoleWhisper)
 		console.AddAlias("/whisper", "/twitch.whisper")
+
 	}
 }
 
 func (m *TwitchModule) ircNotice(e *irc.Event) {
 	Core.Log("TWITCH", "IMPORTANT", "[NOTICE] <"+e.Nick+"> "+e.Message())
 }
-func (m *TwitchModule) ircMessage(e *irc.Event) {
 
+func (m *TwitchModule) ircMessage(e *irc.Event) {
 	message := e.Message()
 	message = strings.Replace(message, m.config.Twitch.ChatName, m.coloredName, -1)
 
@@ -190,6 +202,60 @@ func (m *TwitchModule) Shutdown() {
 			m.irc.Disconnect()
 		}
 	}
+}
+
+func (m *TwitchModule) consoleBan(input string) {
+	splitLocation := strings.Index(input, " ")
+	var user string
+	var message = "Bye Bye!"
+	if splitLocation > 0 {
+		user = input[:splitLocation]
+		message = strings.Trim(input[(splitLocation+1):len(input)], " ")
+		if len(message) <= 0 {
+			message = "Bye Bye!"
+		}
+	} else {
+		user = input
+	}
+
+	m.irc.SendRaw("CLEARCHAT " + m.config.Twitch.ChatChannel + " :" + user + " @ban-duration=;ban-reason=" + message)
+	m.irc.SendRaw("CLEARCHAT " + m.config.Twitch.ChatChannel + " :" + user)
+	Core.Log("TWITCH", "IMPORTANT", "Banned @"+user+" ("+message+")")
+}
+
+func (m *TwitchModule) consoleTimeout(input string) {
+	splitLocation := strings.Index(input, " ")
+	var user string
+	var timeout = "30"
+	if splitLocation > 0 {
+		user = input[:splitLocation]
+		timeout = strings.Trim(input[(splitLocation+1):len(input)], " ")
+		if len(timeout) <= 0 {
+			timeout = "30"
+		}
+	} else {
+		user = input
+	}
+
+	m.irc.SendRaw("CLEARCHAT " + m.config.Twitch.ChatChannel + " :" + user + " @ban-duration=" + timeout + ";ban-reason=You\\'re on a break!")
+	m.irc.SendRaw("CLEARCHAT " + m.config.Twitch.ChatChannel + " :" + user)
+	Core.Log("TWITCH", "IMPORTANT", "Timedout @"+user+" ("+timeout+" seconds)")
+}
+func (m *TwitchModule) consoleKick(input string) {
+	splitLocation := strings.Index(input, " ")
+	var user string
+	var message = "Bye Bye!"
+	if splitLocation > 0 {
+		user = input[:splitLocation]
+		message = strings.Trim(input[(splitLocation+1):len(input)], " ")
+		if len(message) <= 0 {
+			message = "Bye Bye!"
+		}
+	} else {
+		user = input
+	}
+	m.irc.Kick(input, m.config.Twitch.ChatChannel, message)
+	Core.Log("TWITCH", "IMPORTANT", "Kicked @"+user+" ("+message+")")
 }
 
 func (m *TwitchModule) consoleStats(input string) {
