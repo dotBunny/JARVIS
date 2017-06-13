@@ -7,26 +7,25 @@ This couldn't of been made without all of the awesome developers out there makin
 Is JARVIS helping you? Show some love for [@reapazor](http://twitch.tv/reapazor) and [@dotbunny](http://twitter.com/dotbunny/) on Twitter!
 
 ## Feature Overview
-* Simple Notifications
-
-![Console](https://dl.dropboxusercontent.com/u/118962/JARVIS/console.png)
-
-* Text File Data
-    * Spotify Latest Song w/ Truncation
-    * Twitch Latest Follower
-    * Twitch Latest Subscriber (Not Fully Finished)
-    * Working On Text
-* Image File Data
-    * Spotify Latest Song Album Cover
+* Simple Notification Log
+* Output Data Files
+    * Spotify latest song w/ truncation
+    * Spotify latest album cover image
+    * Twitch latest follower
+    * Twitch latest followers
+    * Twitch channel views
+    * Twitch channel display name
+    * Twitch current game
+    * Twitch current viewer count
+    * Working on text
 * Configurable Overlay (For Browser Sources)
-    * Accessible Local Data Endpoints
-    * Page hosting platform
+    * Accessible local data endpoints
+    * Also lets you host any page!
 * Twitch Chat Integration
+    * Direct message support included
+* Interactive Console
 * Optimized!
-    * < 15 MB Memory Footprint _- It's 10.4 MB on our test systems!_
-* Console Commands!
-
-![Outputs](https://dl.dropboxusercontent.com/u/118962/JARVIS/outputs.png)
+    * < 15 MB memory footprint _- It's 10.4 MB on our test systems!_
 
 ## Installation
 
