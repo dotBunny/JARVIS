@@ -64,7 +64,7 @@ func (m *ConsoleModule) Handle(input string) {
 	var args string
 	if splitLocation > 0 {
 		command = input[:splitLocation]
-		args = input[(splitLocation + 1):len(input)]
+		args = strings.Trim(input[(splitLocation+1):len(input)], " ")
 	} else {
 		command = input
 		args = ""

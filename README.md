@@ -113,6 +113,8 @@ Once you have managed to wrangle [GO](https://golang.org/) into compiling the so
 
 | Command        | Alias | Description  |  Example  |
 | :------------- | :---- | :----------- | :-------- |
+| `/coffee` | | Increment how many coffees are you on for the day? _Optionally you can "set" the value as well | _/coffee_ |
+| `/save` | | Increment the save counter, for when someone saves your ass. | _/save_ |
 | `/spotify.next` | `/next`, `/n`, `/skip` | Skips to the next track in the user's Spotify queue. | _/next_ |
 | `/spotify.pause` | `/p` | Pause/Play the current track in Spotify. | _/p_ |
 | `/spotify.stats` |  | Display some stats about Spotify. | _/spotify.stats_ |
