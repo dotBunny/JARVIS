@@ -21,22 +21,31 @@ var (
 	ch = make(chan *spotify.Client)
 )
 
+const currentlyPlayingBase = "https://open.spotify.com/track/"
+
 // SpotifyModule Class
 type SpotifyModule struct {
-	LastInfoData     []byte
-	LastImageData    []byte
-	DurationMS       int
-	PlayedMS         int
-	CurrentlyPlaying bool
-	Ticker           *time.Ticker
+	LastInfoData        []byte
+	LastImageData       []byte
+	DurationMS          int
+	PlayedMS            int
+	CurrentlyPlaying    bool
+	CurrentlyPlayingURL string
+	Ticker              *time.Ticker
 
 	auth      spotify.Authenticator
 	songPath  string
 	imagePath string
+	urlPath   string
 	state     string
 
 	client *spotify.Client
 	config *Core.Config
+}
+
+// GetCurrentlyPlayingMessage
+func (m *SpotifyModule) GetCurrentlyPlayingMessage() string {
+	return string(m.LastInfoData) + " Mau5 " + m.CurrentlyPlayingURL
 }
 
 // Init  Module
@@ -48,32 +57,23 @@ func (m *SpotifyModule) Init(config *Core.Config, console *ConsoleModule) {
 	// Create State
 	m.state = Core.RandomString(5)
 
-	if config.Spotify.Output {
-		// Create our output paths
-		m.songPath = filepath.Join(m.config.General.OutputPath, "Spotify_LatestSong.txt")
-		Core.Touch(m.songPath)
-	}
-
-	savedSong, err := ioutil.ReadFile(m.songPath)
-	if err == nil {
-		m.LastInfoData = savedSong
-	}
-
-	// Nop matter what we are going to be caching the image
+	// Build Paths
+	m.songPath = filepath.Join(m.config.General.OutputPath, "Spotify_LatestSong.txt")
+	m.urlPath = filepath.Join(m.config.General.OutputPath, "Spotify_LatestURL.txt")
 	m.imagePath = filepath.Join(m.config.General.OutputPath, "Spotify_LatestImage.jpg")
-	Core.Touch(m.imagePath)
-	savedImage, err := ioutil.ReadFile(m.imagePath)
-	if err == nil {
-		m.LastImageData = savedImage
+
+	// Make sure file slots are there, but dont do anything else, we want them overwritten
+	if config.Spotify.Output {
+		Core.Touch(m.songPath)
+		Core.Touch(m.urlPath)
+		Core.Touch(m.imagePath)
 	}
 
-	// Set Default
-	if len(m.LastImageData) == 0 {
-		defaultImage, err := ioutil.ReadFile(path.Join(m.config.AppDir, "resources", "overlay", "content", "img", "jarvis-spotify.jpg"))
-		if err == nil {
-			m.LastImageData = defaultImage
-			Core.SaveFile(m.LastImageData, m.imagePath)
-		}
+	// Write default image to server
+	defaultImage, err := ioutil.ReadFile(path.Join(m.config.AppDir, "resources", "overlay", "content", "img", "jarvis-spotify.jpg"))
+	if err == nil {
+		m.LastImageData = defaultImage
+		Core.SaveFile(m.LastImageData, m.imagePath)
 	}
 
 	// Create new authenticator with permissions
@@ -91,14 +91,15 @@ func (m *SpotifyModule) Init(config *Core.Config, console *ConsoleModule) {
 	Core.AddEndpoint(m.config.Spotify.Callback, m.authenticateCallback)
 
 	url := m.auth.AuthURL(m.state)
-	Core.Log("SPOTIFY", "IMPORTANT", "Please log in to Spotify by visiting the following page in your browser (copied to your clipboard):\n\n"+url+"\n")
+	Core.Log("SPOTIFY", "IMPORTANT", "Please log in to Spotify (URL copied to your clipboard as well): "+url)
 	Core.CopyToClipboard(url)
 
+	// Pop open browser window
 	if m.config.Spotify.AutoLogin {
 		open.Run(url)
 	}
 
-	// wait for auth to complete
+	// wait for Auth to complete
 	client := <-ch
 
 	// Add Endpoints
@@ -253,12 +254,16 @@ func (m *SpotifyModule) pollCurrentlyPlaying() {
 
 			if m.config.Spotify.Output {
 				Core.SaveFile(buffer.Bytes(), m.songPath)
+				Core.SaveFile([]byte(m.CurrentlyPlayingURL), m.urlPath)
 			}
 
 			m.LastInfoData = buffer.Bytes()
 			m.DurationMS = state.Item.Duration
 			m.PlayedMS = state.Progress
 			m.CurrentlyPlaying = state.Playing
+
+			// TODO : Get the URI / name / cache it for sending to channel
+			m.CurrentlyPlayingURL = state.Item.ExternalURLs["spotify"]
 
 			// Clear buffer
 			buffer.Reset()

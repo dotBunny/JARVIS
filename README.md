@@ -130,6 +130,12 @@ Once you have managed to wrangle [GO](https://golang.org/) into compiling the so
 | `/workingon` | `/w` | Set your currently working on text. | _/workingon The JARVIS System_ |
 | `/quit` | `/exit`, `/x` | Quit the application | _/quit_ |
 
+
+### Chat Commants
+| Command        | Alias | Description  |  Example  |
+| :------------- | :---- | :----------- | :-------- |
+| `!spotify` | | Automatically sends to channel the currently playing track information, as well as a link to open it. | _!spotify_ |
+
 ## Overlay
 As of 0.1.1, the "Overlay" feature is experimental, but in theory you can create many things with it.  In tools like OBS, you would add a browser source and set it to `http://localhost:8080/overlay` and it will serve the content there.
 

@@ -5,7 +5,6 @@ package modules
 
 import (
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"path/filepath"
 	"strconv"
@@ -22,6 +21,7 @@ import (
 )
 
 const server string = "irc.chat.twitch.tv:6667"
+const jarvisMessagePrefix string = "VaultBoy "
 
 // TwitchModule Class
 type TwitchModule struct {
@@ -46,9 +46,10 @@ type TwitchModule struct {
 	channelViewsPath       string
 	channelFollowersPath   string
 
-	irc    *irc.Connection
-	client *twitch2go.Client
-	config *Core.Config
+	irc     *irc.Connection
+	client  *twitch2go.Client
+	config  *Core.Config
+	spotify *SpotifyModule
 
 	coloredName  string
 	openBracket  string
@@ -56,10 +57,11 @@ type TwitchModule struct {
 }
 
 // Init Module
-func (m *TwitchModule) Init(config *Core.Config, console *ConsoleModule) {
+func (m *TwitchModule) Init(config *Core.Config, console *ConsoleModule, spotify *SpotifyModule) {
 
 	// Assing Config
 	m.config = config
+	m.spotify = spotify
 
 	// Only do this if we are going to write files
 	if m.config.Twitch.Output {
@@ -82,12 +84,6 @@ func (m *TwitchModule) Init(config *Core.Config, console *ConsoleModule) {
 		Core.Touch(m.currentDisplayNamePath)
 		Core.Touch(m.channelViewsPath)
 		Core.Touch(m.channelFollowersPath)
-	}
-
-	// Load Saved WorkingOn
-	savedLatestFollower, err := ioutil.ReadFile(m.latestFollowerPath)
-	if err == nil {
-		m.LastFollower = string(savedLatestFollower)
 	}
 
 	// TODO: Need to auth with scope for subscribers to work
@@ -166,10 +162,17 @@ func (m *TwitchModule) ircNotice(e *irc.Event) {
 
 func (m *TwitchModule) ircMessage(e *irc.Event) {
 	message := e.Message()
+
 	message = strings.Replace(message, m.config.Twitch.ChatName, m.coloredName, -1)
 
 	if strings.HasPrefix(e.Arguments[0], "#") {
 		Core.Log("TWITCH", "LOG", m.openBracket+e.Nick+m.closeBracket+" "+message)
+
+		// TODO This is where we'd build out chat command recognition and all that sort of feature line
+		if message == "!spotify" {
+			m.SendMessageToChannel(jarvisMessagePrefix + m.spotify.GetCurrentlyPlayingMessage())
+		}
+
 	} else {
 		Core.Log("TWITCH", "IMPORTANT", "[DM] "+m.openBracket+e.Nick+m.closeBracket+" "+message)
 	}

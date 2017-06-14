@@ -91,7 +91,7 @@ func main() {
 	// Initialize Twitch
 	var twitchModule Modules.TwitchModule
 	if config.Twitch.Enabled {
-		twitchModule.Init(&config, &consoleModule)
+		twitchModule.Init(&config, &consoleModule, &spotifyModule)
 		twitchModule.Poll()
 		go twitchModule.Loop()
 	}
