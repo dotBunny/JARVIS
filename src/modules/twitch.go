@@ -121,6 +121,7 @@ func (m *TwitchModule) Init(config *Core.Config, console *ConsoleModule) {
 		if m.config.Twitch.ChatEcho {
 			m.irc.AddCallback("PRIVMSG", m.ircMessage)
 			m.irc.AddCallback("NOTICE", m.ircNotice)
+			m.irc.AddCallback("JOIN", m.ircChannelJoin)
 		}
 
 		err := m.irc.Connect(server)
@@ -158,6 +159,11 @@ func (m *TwitchModule) Init(config *Core.Config, console *ConsoleModule) {
 		console.AddAlias("/whisper", "/twitch.whisper")
 
 	}
+}
+
+func (m *TwitchModule) ircChannelJoin(e *irc.Event) {
+	Core.Log("TWITCH", "LOG", "[JOINED] <"+e.Nick+"> "+e.Message())
+
 }
 
 func (m *TwitchModule) ircNotice(e *irc.Event) {
