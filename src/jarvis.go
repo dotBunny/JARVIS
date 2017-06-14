@@ -102,6 +102,8 @@ func main() {
 		workingOnModule.Init(&config, &consoleModule)
 	}
 
+	// Start UI
+
 	// Lets do this!
 	Core.Log("SYSTEM", "LOG", "Ready")
 
