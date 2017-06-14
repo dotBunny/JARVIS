@@ -48,6 +48,7 @@ go get github.com/atotto/clipboard
 go get github.com/akavel/rsrc
 go get github.com/skratchdot/open-golang/open
 go get github.com/thoj/go-ircevent
+go get github.com/nsf/termbox-go
 ```
 
 Depending on your platform you may need to adjust the build scripts, they work on macOS and Linux varieties. We just haven't made the windows equivalents.

@@ -15,6 +15,12 @@ type ConsoleModule struct {
 	commands     map[string]ConsoleFunction
 	descriptions map[string]string
 	aliases      map[string]string
+	lastCommand  string
+}
+
+//GetLastCommand
+func (m *ConsoleModule) GetLastCommand() string {
+	return m.lastCommand
 }
 
 // Init  Module
@@ -58,6 +64,8 @@ func (m *ConsoleModule) RemoveHandler(command string) {
 
 // Handle a command
 func (m *ConsoleModule) Handle(input string) {
+	// Assign last command (even if its bad)
+	m.lastCommand = input
 
 	var splitLocation = strings.Index(input, " ")
 	var command string
