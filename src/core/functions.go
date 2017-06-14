@@ -9,6 +9,7 @@ import (
 	"math/rand"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"log"
 
@@ -22,6 +23,20 @@ const LineSpacer string = "\t\t\t\t"
 //CopyToClipboard string
 func CopyToClipboard(buffer string) {
 	clipboard.WriteAll(buffer)
+}
+
+// GetCommandArguements from a string, easily breaking it up
+func GetCommandArguements(input string) (string, string) {
+	splitLocation := strings.Index(strings.Trim(input, " "), " ")
+	var command string
+	var subcommand string
+	if splitLocation > 0 {
+		command = input[:splitLocation]
+		subcommand = strings.Trim(input[(splitLocation+1):len(input)], " ")
+	} else {
+		command = input
+	}
+	return command, subcommand
 }
 
 // GetFiles returns a list of all files under the basePath (recursively) that have the passed extensions

@@ -143,6 +143,7 @@ While JARVIS is running, there are numerous endpoints available for extraction d
 | http://localhost:8080/twitch/follower/last  | The last person to follow you on Twitch |
 | http://localhost:8080/twitch/viewers/current | The number of people watching the Twitch stream |
 | http://localhost:8080/workingon | Your last set _Working On_ text |
+| http://localhost:8080/coffee | Your current coffee count |
 
 ## Feature Requests
 Drop them in the [Issues](https://github.com/dotBunny/JARVIS/issues) section, and mark them as an enhancement (label). Please understand that this is just a side project, resulting from not liking what was currently available.

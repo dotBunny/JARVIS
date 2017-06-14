@@ -86,7 +86,6 @@ func (m *ConsoleModule) Handle(input string) {
 		Core.Log("SYSTEM", "LOG", "Invalid command: "+command+color.BlueString("\n"+Core.LineSpacer+"'/help' for a list of registered commands"))
 	}
 }
-
 func (m *ConsoleModule) consoleHelp(input string) {
 
 	var output = "\n"
