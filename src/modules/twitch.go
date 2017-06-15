@@ -369,7 +369,7 @@ func (m *TwitchModule) pollStream() {
 	if stream.Viewers != m.CurrentViewers {
 		m.CurrentViewers = stream.Viewers
 		if m.config.Twitch.Output {
-			workingString = fmt.Sprint(m.CurrentViewers)
+			workingString = fmt.Sprintf("%03d", m.CurrentViewers)
 			Core.SaveFile([]byte(workingString), m.currentViewersPath)
 		}
 	}

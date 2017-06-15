@@ -91,7 +91,7 @@ func (m *WorkingOnModule) consoleCoffee(input string) {
 	}
 
 	if m.config.WorkingOn.Output {
-		Core.SaveFile([]byte(strconv.Itoa(m.CoffeeCount)), m.CoffeePath)
+		Core.SaveFile([]byte(fmt.Sprintf("%02d", m.CoffeeCount)), m.CoffeePath)
 	}
 	Core.Log("WORKING", "WORKING", "Coffee Count: "+strconv.Itoa(m.CoffeeCount))
 }
@@ -106,7 +106,7 @@ func (m *WorkingOnModule) consoleSave(input string) {
 	}
 
 	if m.config.WorkingOn.Output {
-		Core.SaveFile([]byte(strconv.Itoa(m.SavesCount)), m.SavesPath)
+		Core.SaveFile([]byte(fmt.Sprintf("%02d", m.SavesCount)), m.SavesPath)
 	}
 	Core.Log("WORKING", "WORKING", "Saves Count: "+strconv.Itoa(m.SavesCount))
 }
