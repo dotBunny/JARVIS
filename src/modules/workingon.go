@@ -54,7 +54,7 @@ func (m *WorkingOnModule) Init(config *Core.Config, console *ConsoleModule) {
 			m.CoffeeCount = i
 		} else {
 			m.CoffeeCount = 0
-			Core.SaveFile([]byte(strconv.Itoa(m.CoffeeCount)), m.CoffeePath)
+			Core.SaveFile([]byte(fmt.Sprintf("%02d", m.CoffeeCount)), m.CoffeePath)
 		}
 	}
 	// Load Saves
