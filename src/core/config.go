@@ -17,7 +17,7 @@ type GeneralConfig struct {
 
 // ConfigCore holds general configuration information
 type ConfigCore struct {
-	Settings *GeneralConfig
+	settings *GeneralConfig
 
 	dataSource  map[string]*json.RawMessage
 	initialized bool
@@ -28,6 +28,11 @@ type ConfigCore struct {
 // GetConfigData retreives the sub data of a key in the config
 func (m *ConfigCore) GetConfigData(key string) *json.RawMessage {
 	return m.dataSource[key]
+}
+
+// GetOutputPath base to use for files
+func (m *ConfigCore) GetOutputPath() string {
+	return m.settings.OutputPath
 }
 
 // Initialize the Logging Module
@@ -64,22 +69,22 @@ func (m *ConfigCore) Initialize(jarvisInstance *JARVIS) {
 	}
 
 	// Create default general settings
-	m.Settings = new(GeneralConfig)
+	m.settings = new(GeneralConfig)
 
 	// General Config
-	m.Settings.Mode = "bot"
-	m.Settings.OutputPath = path.Join(m.j.GetApplicationPath(), "output")
+	m.settings.Mode = "bot"
+	m.settings.OutputPath = path.Join(m.j.GetApplicationPath(), "output")
 
 	// Check Raw Data
 	if m.dataSource["General"] == nil {
 		log.Println("[Config] Unable to find \"General\" config section. Using defaults.")
 	} else {
 		errorCheck = nil
-		errorCheck = json.Unmarshal(*m.dataSource["General"], &m.Settings)
+		errorCheck = json.Unmarshal(*m.dataSource["General"], &m.settings)
 		if errorCheck != nil {
 			log.Println("[Config]\tUnable to properly parse General Config, somethings may be wonky.")
-			log.Println("[Config]\tGeneral.Mode: " + m.Settings.Mode)
-			log.Println("[Config]\tGeneral.OutputPath: " + m.Settings.OutputPath)
+			log.Println("[Config]\tGeneral.Mode: " + m.settings.Mode)
+			log.Println("[Config]\tGeneral.OutputPath: " + m.settings.OutputPath)
 		}
 	}
 

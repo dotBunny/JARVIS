@@ -7,7 +7,7 @@ import (
 	//"syscall"
 
 	Core "./core"
-	//Modules "./modules"
+	Modules "./modules"
 )
 
 var (
@@ -22,13 +22,17 @@ var (
 	// workingOnModule *Modules.WorkingOnModule
 	// logFile         *os.File
 	// config          Core.Config
-	quit chan os.Signal
+
+	discordModule *Modules.DiscordModule
+	quit          chan os.Signal
 )
 
 func main() {
 
 	// Create new Jarvis instance
 	j = Core.HireJarvis()
+
+	// Initialize Modules (referencing in their dependencies)
 
 	// // Start Logging
 

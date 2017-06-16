@@ -49,7 +49,7 @@ func (m *LogCore) Initialize(jarvisInstance *JARVIS) {
 	m.RegisterChannel("Core", "white")
 	m.RegisterChannel("System", "grey")
 
-	logFile, err := os.OpenFile(path.Join(m.j.Config.Settings.OutputPath, "jarvis.log"), os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	logFile, err := os.OpenFile(path.Join(m.j.Config.GetOutputPath(), "jarvis.log"), os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		panic(err)
 	}
