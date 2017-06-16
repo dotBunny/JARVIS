@@ -11,14 +11,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"log"
-
 	"github.com/atotto/clipboard"
-	"github.com/fatih/color"
 )
-
-// LineSpacer over text to align with normal start
-const LineSpacer string = "\t\t\t\t"
 
 //CopyToClipboard string
 func CopyToClipboard(buffer string) {
@@ -64,50 +58,10 @@ func GetFiles(basePath string, extensions []string) []string {
 	return fileList
 }
 
-// Log message as Jarvis
-func Log(channel string, class string, message string) {
-	switch class {
-	case "ERROR":
-		// Full Message Background Color
-		color.Set(color.FgHiRed, color.Bold)
-		log.Println(channel + "\t" + message)
-		break
-
-	case "IMPORTANT":
-		// Full Message Colored Text
-		if channel == "SPOTIFY" {
-			color.Set(color.FgGreen)
-		} else if channel == "TWITCH" {
-			color.Set(color.FgMagenta)
-		} else if channel == "SYSTEM" {
-			color.Set(color.FgBlue)
-		} else if channel == "OVERLAY" {
-			color.Set(color.FgCyan)
-		} else if channel == "WORKING" {
-			color.Set(color.FgHiBlue)
-		}
-		log.Println(channel + "\t" + message)
-		break
-	default:
-		if channel == "SPOTIFY" {
-			channel = color.GreenString(channel)
-		} else if channel == "TWITCH" {
-			channel = color.MagentaString(channel)
-		} else if channel == "SYSTEM" {
-			channel = color.BlueString(channel)
-		} else if channel == "OVERLAY" {
-			channel = color.CyanString(channel)
-		} else if channel == "WORKING" {
-			channel = color.HiBlueString(channel)
-		}
-
-		// Normal (Just Channel Color)
-		log.Println(channel + "\t" + message)
-		break
-	}
-	// Reset Coloring
-	color.Unset()
-}
+// // Log message as Jarvis
+// func Log(channel string, class string, message string) {
+// 	//.Log(channel, message)
+// }
 
 // Touch a file
 func Touch(filepath string) {
@@ -120,7 +74,7 @@ func Touch(filepath string) {
 func ReadLines(filePath string, parse func(string) (string, bool)) ([]string, error) {
 	inputFile, err := os.Open(filePath)
 	if err != nil {
-		Log("SYSTEM", "ERROR", "Error opening file: "+filePath)
+		//	Log("SYSTEM", "ERROR", "Error opening file: "+filePath)
 		return nil, err
 	}
 	defer inputFile.Close()
@@ -172,7 +126,7 @@ func WriteLines(lines []string, path string) error {
 	// Make file
 	file, err := os.Create(path)
 	if err != nil {
-		Log("SYSTEM", "ERROR", "Error occured when making file "+err.Error())
+		//	Log("SYSTEM", "ERROR", "Error occured when making file "+err.Error())
 		return err
 	}
 	defer file.Close()
@@ -189,7 +143,7 @@ func SyncFile(data []byte, path string) bool {
 	buffer, error := ioutil.ReadFile(path)
 
 	if error != nil {
-		Log("SYSTEM", "ERROR", error.Error())
+		//	Log("SYSTEM", "ERROR", error.Error())
 	} else {
 		if !bytes.Equal(buffer, data) {
 			ioutil.WriteFile(path, data, 0755)
@@ -205,13 +159,11 @@ func SaveFile(data []byte, path string) {
 	ioutil.WriteFile(path, data, 0755)
 }
 
-const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
 // RandomString Generator
 func RandomString(n int) string {
 	b := make([]byte, n)
 	for i := range b {
-		b[i] = letterBytes[rand.Intn(len(letterBytes))]
+		b[i] = LetterBytes[rand.Intn(len(LetterBytes))]
 	}
 	return string(b)
 }

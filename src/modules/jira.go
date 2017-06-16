@@ -1,14 +1,14 @@
 package modules
 
-import (
-	Core "../core"
-)
+// import (
+// 	Core "../core"
+// )
 
-// JIRAModule Class
-type JIRAModule struct {
-}
+// // JIRAModule Class
+// type JIRAModule struct {
+// }
 
-// Init  Module
-func (m *JIRAModule) Init(config *Core.Config, console *ConsoleModule) {
+// // Init  Module
+// func (m *JIRAModule) Init(config *Core.Config, console *ConsoleModule) {
 
-}
+// }
