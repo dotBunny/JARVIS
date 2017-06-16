@@ -1,10 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"os"
-	//"os/signal"
-
-	//"syscall"
+	"os/signal"
+	"syscall"
 
 	Core "./core"
 	Modules "./modules"
@@ -29,6 +29,15 @@ var (
 
 func main() {
 
+	// Create shutdown procedure
+	quit := make(chan os.Signal, 2)
+	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		<-quit
+		Shutdown()
+	}()
+	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
+
 	// Create new Jarvis instance
 	j = Core.HireJarvis()
 
@@ -39,16 +48,6 @@ func main() {
 	// // Startup
 
 	// // Pathing Check
-	// os.MkdirAll(filepath.Dir(config.General.OutputPath), 0755)
-
-	// // Quit Routine
-	// quit := make(chan os.Signal, 2)
-	// signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
-	// go func() {
-	// 	<-quit
-	// 	Exit("")
-	// }()
-	// signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
 
 	// Core.Log("SYSTEM", "LOG", "Starting Up ...")
 
@@ -100,23 +99,23 @@ func main() {
 	// }
 }
 
-// Exit the application
-// func Exit(input string) {
-// 	fmt.Println("")
-// 	Core.Log("SYSTEM", "LOG", "Shutting Down ...")
+// Shutdown JARVIS
+func Shutdown() {
+	fmt.Println("")
+	// Core.Log("SYSTEM", "LOG", "Shutting Down ...")
 
-// 	// Shutdown modules
-// 	spotifyModule.Shutdown()
-// 	twitchModule.Shutdown()
+	// // Shutdown modules
+	// spotifyModule.Shutdown()
+	// twitchModule.Shutdown()
 
-// 	// Close log ile
-// 	logFile.Close()
+	// // Close log ile
+	// logFile.Close()
 
-// 	// Close any open channels
-// 	if quit != nil {
-// 		close(quit)
-// 	}
+	// Close any open channels
+	if quit != nil {
+		close(quit)
+	}
 
-// 	// Close application
-// 	os.Exit(1)
-// }
+	// Close application
+	os.Exit(1)
+}

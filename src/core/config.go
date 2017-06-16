@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"os"
+	"path/filepath"
 
 	"io/ioutil"
 	"path"
@@ -87,6 +88,9 @@ func (m *ConfigCore) Initialize(jarvisInstance *JARVIS) {
 			log.Println("[Config]\tGeneral.OutputPath: " + m.settings.OutputPath)
 		}
 	}
+
+	// Make sure our output path base is good and ready
+	os.MkdirAll(filepath.Dir(m.settings.OutputPath), 0755)
 
 	// Flag class as loaded
 	m.initialized = true
