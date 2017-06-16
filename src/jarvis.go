@@ -102,14 +102,7 @@ func main() {
 // Shutdown JARVIS
 func Shutdown() {
 	fmt.Println("")
-	// Core.Log("SYSTEM", "LOG", "Shutting Down ...")
-
-	// // Shutdown modules
-	// spotifyModule.Shutdown()
-	// twitchModule.Shutdown()
-
-	// // Close log ile
-	// logFile.Close()
+	j.Shutdown()
 
 	// Close any open channels
 	if quit != nil {

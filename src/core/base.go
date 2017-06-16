@@ -61,6 +61,13 @@ func (m *JARVIS) GetApplicationPath() string {
 	return m.applicationPath
 }
 
+// Shutdown JARVIS instance
+func (m *JARVIS) Shutdown() {
+
+	// Stop Loggin
+	m.Log.Shutdown()
+}
+
 // SetApplicationPath to the application directory
 func (m *JARVIS) SetApplicationPath(application string) {
 

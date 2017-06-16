@@ -24,14 +24,13 @@ const (
 
 var (
 	logTypes = []string{"MESSAGE", "WARNING", "ERROR", "FATAL"}
-	logFile  *os.File
 )
 
 // LogCore Class
 type LogCore struct {
 	channels map[string]string
-
-	j *JARVIS
+	logFile  *os.File
+	j        *JARVIS
 }
 
 // Initialize the Logging Module
@@ -59,7 +58,7 @@ func (m *LogCore) Initialize(jarvisInstance *JARVIS) {
 	log.SetOutput(multiWriter)
 
 	// TODO: This file is not being closed properly? cause its in a class
-	defer logFile.Close()
+	//defer logFile.Close()
 
 }
 
@@ -71,6 +70,12 @@ func (m *LogCore) RegisterChannel(tag string, color string) {
 // Raw Alet
 func (m *LogCore) Raw(logType LogType, channel string, message string) {
 	log.Println("[" + channel + "]\t" + message)
+}
+
+// Shutdown LogCore
+func (m *LogCore) Shutdown() {
+
+	m.logFile.Close()
 }
 
 // Message Level Alart
