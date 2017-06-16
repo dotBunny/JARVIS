@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 	"os/signal"
@@ -42,6 +43,10 @@ func main() {
 	j = Core.HireJarvis()
 
 	// Initialize Modules (referencing in their dependencies)
+	// Load up Discord
+	discordModule := new(Modules.DiscordModule)
+	discordModule.Initialize(j)
+	discordModule.Connect()
 
 	// // Start Logging
 
@@ -92,11 +97,11 @@ func main() {
 	// // Lets do this!
 	// Core.Log("SYSTEM", "LOG", "Ready")
 
-	// // Activate Console
-	// scanner := bufio.NewScanner(os.Stdin)
-	// for scanner.Scan() {
-	// 	consoleModule.Handle(scanner.Text())
-	// }
+	// Activate Console
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
+		//consoleModule.Handle(scanner.Text())
+	}
 }
 
 // Shutdown JARVIS

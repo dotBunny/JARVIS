@@ -3,6 +3,9 @@
 package modules
 
 import (
+	"encoding/json"
+	"fmt"
+
 	Core "../core"
 	"github.com/bwmarrin/discordgo"
 )
@@ -68,12 +71,37 @@ func (m *DiscordModule) Connect() {
 // Initialize the Logging Module
 func (m *DiscordModule) Initialize(jarvisInstance *Core.JARVIS) {
 
-	// Create instance of Config Core
-	m = new(DiscordModule)
-
-	// Assign JARVIS (circle!)
-	//jarvisInstance. = m
+	// Assign JARVIS, the module is made we dont to create it like in core!
 	m.j = jarvisInstance
+
+	// Create default general settings
+	m.settings = new(DiscordConfig)
+
+	// Web Server Config
+	m.settings.ClientID = 0
+	m.settings.ClientSecret = "You must enter a ClientID/ClientSecret."
+	m.settings.RedirectURI = "/discord/callback"
+	m.settings.Token = "You must enter a Token."
+	m.settings.Username = "JARVIS"
+
+	// Check Raw Data
+	if m.j.Config.IsInitialized() {
+		if !m.j.Config.IsValidKey("Discord") {
+			m.j.Log.Message("Discord", "Unable to find \"Discord\" config section. Using defaults.")
+		} else {
+
+			errorCheck := json.Unmarshal(*m.j.Config.GetConfigData("Discord"), &m.settings)
+			if errorCheck != nil {
+				m.j.Log.Message("Config", "Unable to properly parse Discord Config, somethings may be wonky.")
+
+				m.j.Log.Message("Config", "Discord.ClientID: "+fmt.Sprintf("%d", m.settings.ClientID))
+				m.j.Log.Message("Config", "Discord.ClientSecret: "+m.settings.ClientSecret)
+				m.j.Log.Message("Config", "Discord.RedirectURI: "+m.settings.RedirectURI)
+				m.j.Log.Message("Config", "Discord.Token: "+m.settings.Token)
+				m.j.Log.Message("Config", "Discord.Username: "+m.settings.Username)
+			}
+		}
+	}
 
 	m.j.Log.RegisterChannel("Discord", "purple")
 }
