@@ -6,6 +6,9 @@ const LineSpacer string = "\t\t\t\t"
 // LetterBytes is used to generate random hashes
 const LetterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
+//CommandPrefix for commands in channel
+const CommandPrefix = "!"
+
 // var (
 // 	// GameDevMeetupIconURI - PTBO Game Dev Thumbnail
 // 	LineSpacer = func() string { return "\t\t\t\t" }
