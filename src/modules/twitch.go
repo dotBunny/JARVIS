@@ -1,182 +1,239 @@
 package modules
 
-// // TwitchConfig elements
-// type TwitchConfig struct {
-// 	Enabled bool
-// 	Output  bool
+// To get your userID
+// curl -H 'Accept: application/vnd.twitchtv.v5+json' -H 'Client-ID: <CLIENT ID>' -X GET https://api.twitch.tv/kraken/users?login=<USERNAME>
 
-// 	PollingFrequency string
-// 	ClientID         string
-// 	ClientSecret     string
-// 	ChannelID        int
-// 	Callback         string
+import (
+	"encoding/json"
+	"fmt"
+	// 	"net/http"
+	// 	"path/filepath"
+	// 	"strconv"
+	// 	"time"
 
-// 	LastFollowersCount int
-// 	ChatEnabled        bool
-// 	ChatEcho           bool
-// 	ChatName           string
-// 	ChatChannel        string
-// 	ChatToken          string
-// }
-// // To get your userID
-// // curl -H 'Accept: application/vnd.twitchtv.v5+json' -H 'Client-ID: <CLIENT ID>' -X GET https://api.twitch.tv/kraken/users?login=<USERNAME>
+	// 	"strings"
 
-// import (
-// 	"fmt"
-// 	"net/http"
-// 	"path/filepath"
-// 	"strconv"
-// 	"time"
+	// 	"bytes"
 
-// 	"strings"
+	"time"
 
-// 	"bytes"
+	Core "../core"
+	"github.com/chosenken/twitch2go"
+	irc "github.com/thoj/go-ircevent"
+	// 	"github.com/fatih/color"
+	// 	"github.com/thoj/go-ircevent"
+)
 
-// 	Core "../core"
-// 	"github.com/chosenken/twitch2go"
-// 	"github.com/fatih/color"
-// 	"github.com/thoj/go-ircevent"
-// )
+const server string = "irc.chat.twitch.tv:6667"
+const jarvisMessagePrefix string = "VaultBoy "
 
-// const server string = "irc.chat.twitch.tv:6667"
-// const jarvisMessagePrefix string = "VaultBoy "
+// TwitchConfig elements
+type TwitchConfig struct {
+	Channel            string
+	ChannelID          int
+	ChatSync           bool
+	ChatSyncChannel    string
+	ClientID           string
+	ClientSecret       string
+	Enabled            bool
+	LastFollowersCount int
+	PollingFrequency   int
+	RedirectURI        string
+	Token              string
+	Username           string
+}
 
-// // TwitchModule Class
-// type TwitchModule struct {
-// 	LastFollower   string
-// 	LastSubscriber string
-// 	LastFollowers  string
+// TwitchMessage is used to pass data around
+type TwitchMessage struct {
+	// Author  string
+	// Command string
+	// Content string
+	// Raw     *discordgo.MessageCreate
+}
 
-// 	ChannelFollowers   uint
-// 	ChannelViews       uint
-// 	ChannelDisplayName string
-// 	CurrentViewers     uint
-// 	CurrentGame        string
+// TwitchModule Class
+type TwitchModule struct {
+	// LastFollower   string
+	// LastSubscriber string
+	// LastFollowers  string
 
-// 	Ticker *time.Ticker
+	// ChannelFollowers   uint
+	// ChannelViews       uint
+	// ChannelDisplayName string
+	// CurrentViewers     uint
+	// CurrentGame        string
 
-// 	latestFollowerPath     string
-// 	latestFollowersPath    string
-// 	latestSubscriberPath   string
-// 	currentGamePath        string
-// 	currentViewersPath     string
-// 	currentDisplayNamePath string
-// 	channelViewsPath       string
-// 	channelFollowersPath   string
+	Ticker *time.Ticker
 
-// 	irc     *irc.Connection
-// 	client  *twitch2go.Client
-// 	config  *Core.Config
-// 	spotify *SpotifyModule
+	// latestFollowerPath     string
+	// latestFollowersPath    string
+	// latestSubscriberPath   string
+	// currentGamePath        string
+	// currentViewersPath     string
+	// currentDisplayNamePath string
+	// channelViewsPath       string
+	// channelFollowersPath   string
+	authenticated bool
+	irc           *irc.Connection
+	client        *twitch2go.Client
+	discord       *DiscordModule
+	settings      *TwitchConfig
+	j             *Core.JARVIS
+}
 
-// 	coloredName  string
-// 	openBracket  string
-// 	closeBracket string
-// }
+// Initialize the Logging Module
+func (m *TwitchModule) Initialize(jarvisInstance *Core.JARVIS, discordInstance *DiscordModule) {
 
-// // Init Module
-// func (m *TwitchModule) Init(config *Core.Config, console *ConsoleModule, spotify *SpotifyModule) {
+	// Assign JARVIS, the module is made we dont to create it like in core!
+	m.j = jarvisInstance
+	m.discord = discordInstance
 
-// 	// Assing Config
-// 	m.config = config
-// 	m.spotify = spotify
+	// Create default general settings
+	m.settings = new(TwitchConfig)
 
-// 	// Only do this if we are going to write files
-// 	if m.config.Twitch.Output {
+	// TWitch Default Config
+	m.settings.Channel = "#reapazor"
+	m.settings.ChannelID = 21139969
+	m.settings.ChatSync = true
+	m.settings.ChatSyncChannel = "#twitch"
+	m.settings.ClientID = "You need to set your ClientID"
+	m.settings.ClientSecret = "You need to set your ClientSecret"
+	m.settings.Enabled = true
+	m.settings.LastFollowersCount = 10
+	m.settings.PollingFrequency = 7
+	m.settings.RedirectURI = "/twitch/callback"
+	m.settings.Token = "You need to set your Token"
+	m.settings.Username = "JARVIS"
 
-// 		// Create our output paths
-// 		m.latestFollowerPath = filepath.Join(m.config.General.OutputPath, "Twitch_LatestFollower.txt")
-// 		m.latestFollowersPath = filepath.Join(m.config.General.OutputPath, "Twitch_LatestFollowers.txt")
-// 		m.latestSubscriberPath = filepath.Join(m.config.General.OutputPath, "Twitch_LatestSubscriber.txt")
-// 		m.currentGamePath = filepath.Join(m.config.General.OutputPath, "Twitch_CurrentGame.txt")
-// 		m.currentViewersPath = filepath.Join(m.config.General.OutputPath, "Twitch_CurrentViewers.txt")
-// 		m.currentDisplayNamePath = filepath.Join(m.config.General.OutputPath, "Twitch_CurrentDisplayName.txt")
-// 		m.channelViewsPath = filepath.Join(m.config.General.OutputPath, "Twitch_ChannelViews.txt")
-// 		m.channelFollowersPath = filepath.Join(m.config.General.OutputPath, "Twitch_ChannelFollowers.txt")
+	// Check Raw Data
+	if m.j.Config.IsInitialized() {
+		if !m.j.Config.IsValidKey("Twitch") {
+			m.j.Log.Message("Twitch", "Unable to find \"Twitch\" config section. Using defaults.")
+		} else {
 
-// 		// Check latestFollowerPath
-// 		Core.Touch(m.latestFollowerPath)
-// 		Core.Touch(m.latestSubscriberPath)
-// 		Core.Touch(m.currentGamePath)
-// 		Core.Touch(m.currentViewersPath)
-// 		Core.Touch(m.currentDisplayNamePath)
-// 		Core.Touch(m.channelViewsPath)
-// 		Core.Touch(m.channelFollowersPath)
-// 	}
+			errorCheck := json.Unmarshal(*m.j.Config.GetConfigData("Twitch"), &m.settings)
+			if errorCheck != nil {
+				m.j.Log.Message("Config", "Unable to properly parse Twitch Config, somethings may be wonky.")
 
-// 	// TODO: Need to auth with scope for subscribers to work
-// 	// channel_commercial, channel_editor, channel_subscriptions,
-// 	// &scope=user_read+channel_read
-// 	client := twitch2go.NewClient(config.Twitch.ClientID)
+				m.j.Log.Message("Config", "Twitch.Channel: "+m.settings.Channel)
+				m.j.Log.Message("Config", "Twitch.ChannelID: "+fmt.Sprintf("%d", m.settings.ChannelID))
+				if m.settings.ChatSync {
+					m.j.Log.Message("Config", "Twitch.ChatSync: true")
+				} else {
+					m.j.Log.Message("Config", "Twitch.ChatSync: false")
+				}
+				m.j.Log.Message("Config", "Twitch.ChatSyncChannel: "+m.settings.ChatSyncChannel)
+				m.j.Log.Message("Config", "Twitch.ClientID: "+m.settings.ClientID)
+				m.j.Log.Message("Config", "Twitch.ClientSecret: "+m.settings.ClientSecret)
+				if m.settings.Enabled {
+					m.j.Log.Message("Config", "Twitch.Enabled: true")
+				} else {
+					m.j.Log.Message("Config", "Twitch.Enabled: false")
+				}
+				m.j.Log.Message("Config", "Twitch.LastFollowersCount: "+fmt.Sprintf("%d", m.settings.LastFollowersCount))
+				m.j.Log.Message("Config", "Twitch.PollingFrequency: "+fmt.Sprintf("%d", m.settings.PollingFrequency))
+				m.j.Log.Message("Config", "Twitch.RedirectURI: "+m.settings.RedirectURI)
+				m.j.Log.Message("Config", "Twitch.Token: "+m.settings.Token)
+				m.j.Log.Message("Config", "Twitch.Username: "+m.settings.Username)
+			}
+		}
+	}
 
-// 	// Add Endpoints
-// 	Core.RegisterEndpoint("/twitch/follower/last", m.endpointLastFollower)
-// 	Core.RegisterEndpoint("/twitch/viewers/current", m.endpointCurrentViewers)
+	// HANDLE OUT PUTS
+	// 	// Only do this if we are going to write files
+	// 	if m.config.Twitch.Output {
 
-// 	m.client = client
+	// 		// Create our output paths
+	// 		m.latestFollowerPath = filepath.Join(m.config.General.OutputPath, "Twitch_LatestFollower.txt")
+	// 		m.latestFollowersPath = filepath.Join(m.config.General.OutputPath, "Twitch_LatestFollowers.txt")
+	// 		m.latestSubscriberPath = filepath.Join(m.config.General.OutputPath, "Twitch_LatestSubscriber.txt")
+	// 		m.currentGamePath = filepath.Join(m.config.General.OutputPath, "Twitch_CurrentGame.txt")
+	// 		m.currentViewersPath = filepath.Join(m.config.General.OutputPath, "Twitch_CurrentViewers.txt")
+	// 		m.currentDisplayNamePath = filepath.Join(m.config.General.OutputPath, "Twitch_CurrentDisplayName.txt")
+	// 		m.channelViewsPath = filepath.Join(m.config.General.OutputPath, "Twitch_ChannelViews.txt")
+	// 		m.channelFollowersPath = filepath.Join(m.config.General.OutputPath, "Twitch_ChannelFollowers.txt")
 
-// 	twitchPollingFrequency, twitchPollingError := time.ParseDuration(m.config.Twitch.PollingFrequency)
-// 	if twitchPollingError == nil {
-// 		twitchPollingFrequency, _ = time.ParseDuration("10s")
-// 	}
-// 	m.Ticker = time.NewTicker(twitchPollingFrequency)
+	// 		// Check latestFollowerPath
+	// 		Core.Touch(m.latestFollowerPath)
+	// 		Core.Touch(m.latestSubscriberPath)
+	// 		Core.Touch(m.currentGamePath)
+	// 		Core.Touch(m.currentViewersPath)
+	// 		Core.Touch(m.currentDisplayNamePath)
+	// 		Core.Touch(m.channelViewsPath)
+	// 		Core.Touch(m.channelFollowersPath)
+	// 	}
 
-// 	// IRC functionality
-// 	if m.config.Twitch.ChatEnabled {
-// 		m.irc = irc.IRC(config.Twitch.ChatName, "jarvis")
+	// 	// Add Endpoints
+	// 	Core.RegisterEndpoint("/twitch/follower/last", m.endpointLastFollower)
+	// 	Core.RegisterEndpoint("/twitch/viewers/current", m.endpointCurrentViewers)
 
-// 		// Twitch IRC Settings
-// 		m.irc.UseTLS = false
-// 		m.irc.Password = config.Twitch.ChatToken
+	m.j.Log.RegisterChannel("Twitch", "purple")
+}
 
-// 		m.irc.AddCallback("001", func(e *irc.Event) { m.irc.Join(m.config.Twitch.ChatChannel) })
-// 		m.irc.AddCallback("366", func(e *irc.Event) {})
+// Connect to Twitch
+func (m *TwitchModule) Connect() {
 
-// 		if m.config.Twitch.ChatEcho {
-// 			m.irc.AddCallback("PRIVMSG", m.ircMessage)
-// 			m.irc.AddCallback("NOTICE", m.ircNotice)
-// 		}
+	if !m.IsEnabled() {
+		return
+	}
+	// Make sure flag is toggled off
+	m.authenticated = false
 
-// 		err := m.irc.Connect(server)
-// 		if err != nil {
-// 			Core.Log("TWITCH", "ERROR", "Unable to connect to Twitch IRC Server.")
-// 			Core.Log("TWITCH", "ERROR", err.Error())
-// 			return
-// 		}
+	// TODO: Need to auth with scope for subscribers to work
+	// channel_commercial, channel_editor, channel_subscriptions,
+	// &scope=user_read+channel_read
+	m.client = twitch2go.NewClient(m.settings.ClientID)
 
-// 		// Create cached handle replacement
-// 		m.coloredName = color.HiMagentaString(m.config.Twitch.ChatName)
-// 		m.openBracket = color.BlueString("<")
-// 		m.closeBracket = color.BlueString(">")
+	// Create Poller
+	twitchPollingFrequency, _ := time.ParseDuration(fmt.Sprintf("%ds", m.settings.PollingFrequency))
+	m.Ticker = time.NewTicker(twitchPollingFrequency)
 
-// 		go m.irc.Loop()
+	// Create IRC Objects
+	m.irc = irc.IRC(m.settings.Username, "jarvis")
+	m.irc.UseTLS = false
+	m.irc.Password = m.settings.Token
 
-// 		// Setup Console Commands
-// 		console.AddHandler("/twitch.ban", "Ban someone from Twitch chat, with an optional message.", m.consoleBan)
-// 		console.AddAlias("/ban", "/twitch.ban")
+	// Set IRC Connection Callback
+	m.irc.AddCallback("001", m.handleConnected)
+	m.irc.AddCallback("366", func(e *irc.Event) {})
+	m.irc.AddCallback("PRIVMSG", m.handleMessage)
+	m.irc.AddCallback("NOTICE", m.handleNotice)
 
-// 		console.AddHandler("/twitch.kick", "Kick someone from Twitch's chat.", m.consoleKick)
-// 		console.AddAlias("/kick", "/twitch.kick")
+	errorCheck := m.irc.Connect(server)
+	if errorCheck != nil {
+		m.j.Log.Error("Twitch", "Unable to connect ot Twitch IRC Server.c"+errorCheck.Error())
+		return
+	}
 
-// 		console.AddHandler("/twitch.timeout", "Temporary ban someone for a number of seconds.", m.consoleTimeout)
-// 		console.AddAlias("/timeout", "/twitch.timeout")
+	// Set auth'd
+	m.authenticated = true
 
-// 		console.AddHandler("/twitch.say", "Say something in the Twitch IRC channel", m.SendMessageToChannel)
-// 		console.AddAlias("/t", "/twitch.say")
-// 		console.AddAlias("/say", "/twitch.say")
+	// Go off and do your thing IRC connection!
+	go m.irc.Loop()
+}
 
-// 		console.AddHandler("/twitch.stats", "Display some stats about the Twitch channel/stream.", m.consoleStats)
-// 		console.AddHandler("/twitch.update", "Force polling Twitch for updates.", m.consoleUpdate)
+func (m *TwitchModule) handleConnected(event *irc.Event) {
+	m.j.Log.Message("Twitch", "Joining channel "+m.settings.Channel)
+	m.irc.Join(m.settings.Channel)
+}
 
-// 		console.AddHandler("/twitch.whisper", "Whisper someone on Twitch's IRC server.", m.consoleWhisper)
-// 		console.AddAlias("/whisper", "/twitch.whisper")
+func (m *TwitchModule) handleMessage(event *irc.Event) {
 
-// 	}
-// }
+	if m.settings.ChatSync {
+		_, _ = m.discord.session.ChannelMessageSend(m.settings.ChatSyncChannel, Core.WrapNickname(event.Nick)+" "+event.Message())
+	}
+}
+func (m *TwitchModule) handleNotice(event *irc.Event) {
 
-// func (m *TwitchModule) ircNotice(e *irc.Event) {
-// 	Core.Log("TWITCH", "IMPORTANT", "[NOTICE] <"+e.Nick+"> "+e.Message())
-// }
+	if m.settings.ChatSync {
+		_, _ = m.discord.session.ChannelMessageSend(m.settings.ChatSyncChannel, "[NOTICE] "+Core.WrapNickname(event.Nick)+" "+event.Message())
+	}
+}
+
+// IsEnabled for usage
+func (m *TwitchModule) IsEnabled() bool {
+	return m.settings.Enabled
+}
 
 // func (m *TwitchModule) ircMessage(e *irc.Event) {
 // 	message := e.Message()

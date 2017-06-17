@@ -57,8 +57,9 @@ func StartBot() {
 	discordModule.Connect()
 
 	// Spotify
-	spotifyModule := new(Modules.SpotifyModule)
-	spotifyModule.Initialize(j)
+	//spotifyModule := new(Modules.SpotifyModule)
+	//spotifyModule.Initialize(j)
+	//spotifyModule.Connect() // Will quietly return if not enabled
 
 	// 	// Initialize Spotify
 	// var spotifyModule Modules.SpotifyModule
@@ -68,10 +69,13 @@ func StartBot() {
 	// 	go spotifyModule.Loop()
 	// }
 
-	// // Initialize Twitch
-	// var twitchModule Modules.TwitchModule
+	// Initialize Twitch
+	twitchModule := new(Modules.TwitchModule)
+	twitchModule.Initialize(j, discordModule)
+	twitchModule.Connect()
+
 	// if config.Twitch.Enabled {
-	// 	twitchModule.Init(&config, &consoleModule, &spotifyModule)
+	// 	twitchModule.Init(j, &consoleModule, &spotifyModule)
 	// 	twitchModule.Poll()
 	// 	go twitchModule.Loop()
 	// }

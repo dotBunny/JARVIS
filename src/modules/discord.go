@@ -98,7 +98,7 @@ func (m *DiscordModule) Initialize(jarvisInstance *Core.JARVIS) {
 	// Create default general settings
 	m.settings = new(DiscordConfig)
 
-	// Web Server Config
+	// Discord Default Config
 	m.settings.ClientID = 0
 	m.settings.ClientSecret = "You must enter a ClientID/ClientSecret."
 	m.settings.RedirectURI = "/discord/callback"

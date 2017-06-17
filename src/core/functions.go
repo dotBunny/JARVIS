@@ -58,16 +58,13 @@ func GetFiles(basePath string, extensions []string) []string {
 	return fileList
 }
 
-// // Log message as Jarvis
-// func Log(channel string, class string, message string) {
-// 	//.Log(channel, message)
-// }
-
-// Touch a file
-func Touch(filepath string) {
-	if _, err := os.Stat(filepath); os.IsNotExist(err) {
-		ioutil.WriteFile(filepath, nil, 0755)
+// RandomString Generator
+func RandomString(n int) string {
+	b := make([]byte, n)
+	for i := range b {
+		b[i] = LetterBytes[rand.Intn(len(LetterBytes))]
 	}
+	return string(b)
 }
 
 // ReadLines grabs the contents of a text file, and allows conditional includes
@@ -107,6 +104,11 @@ func Round(val float64, roundOn float64, places int) (newVal float64) {
 	return
 }
 
+// SaveFile writes a file no matter what
+func SaveFile(data []byte, path string) {
+	ioutil.WriteFile(path, data, 0755)
+}
+
 // StringInArray checks if the target is in the list
 func StringInArray(target string, list []string) bool {
 	for _, v := range list {
@@ -115,6 +117,29 @@ func StringInArray(target string, list []string) bool {
 		}
 	}
 	return false
+}
+
+// SyncFile with data, only writing if the data is different)
+func SyncFile(data []byte, path string) bool {
+	buffer, error := ioutil.ReadFile(path)
+
+	if error != nil {
+		//	Log("SYSTEM", "ERROR", error.Error())
+	} else {
+		if !bytes.Equal(buffer, data) {
+			ioutil.WriteFile(path, data, 0755)
+			return true
+		}
+	}
+
+	return false
+}
+
+// Touch a file
+func Touch(filepath string) {
+	if _, err := os.Stat(filepath); os.IsNotExist(err) {
+		ioutil.WriteFile(filepath, nil, 0755)
+	}
 }
 
 // WriteLines outputs the lines to a file, creating the directory structure as needed
@@ -138,32 +163,7 @@ func WriteLines(lines []string, path string) error {
 	return w.Flush()
 }
 
-// SyncFile with data, only writing if the data is different)
-func SyncFile(data []byte, path string) bool {
-	buffer, error := ioutil.ReadFile(path)
-
-	if error != nil {
-		//	Log("SYSTEM", "ERROR", error.Error())
-	} else {
-		if !bytes.Equal(buffer, data) {
-			ioutil.WriteFile(path, data, 0755)
-			return true
-		}
-	}
-
-	return false
-}
-
-// SaveFile writes a file no matter what
-func SaveFile(data []byte, path string) {
-	ioutil.WriteFile(path, data, 0755)
-}
-
-// RandomString Generator
-func RandomString(n int) string {
-	b := make([]byte, n)
-	for i := range b {
-		b[i] = LetterBytes[rand.Intn(len(LetterBytes))]
-	}
-	return string(b)
+// WRapNickname for IRC
+func WrapNickname(nick string) string {
+	return "<" + nick + ">"
 }

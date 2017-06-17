@@ -55,6 +55,11 @@ func (m *WebServerCore) Initialize(jarvisInstance *JARVIS) {
 			errorCheck := json.Unmarshal(*m.j.Config.GetConfigData("WebServer"), &m.settings)
 			if errorCheck != nil {
 				m.j.Log.Message("Config", "Unable to properly parse WebServer Config, somethings may be wonky.")
+				if m.settings.Enabled {
+					m.j.Log.Message("Config", "WebServer.Enabled: true")
+				} else {
+					m.j.Log.Message("Config", "WebServer.Enabled: false")
+				}
 				m.j.Log.Message("Config", "WebServer.IPAddress: "+m.settings.IPAddress)
 				m.j.Log.Message("Config", "WebServer.ListenPort: "+fmt.Sprintf("%d", m.settings.ListenPort))
 			}
@@ -68,6 +73,11 @@ func (m *WebServerCore) Initialize(jarvisInstance *JARVIS) {
 	go http.ListenAndServe(":"+strconv.Itoa(m.settings.ListenPort), nil)
 
 	m.j.Log.Message("WebServer", "Initialized")
+}
+
+// IsEnabled for usage
+func (m *WebServerCore) IsEnabled() bool {
+	return m.settings.Enabled
 }
 
 // RegisterEndpoint to WebServer

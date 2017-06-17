@@ -62,6 +62,16 @@ type SpotifyModule struct {
 	j             *Core.JARVIS
 }
 
+// Connect to Spotify
+func (m *SpotifyModule) Connect() {
+	// Bail if not enabled
+	if !m.IsEnabled() {
+		return
+	}
+
+	m.stateHash = Core.RandomString(5)
+}
+
 // Initialize the Logging Module
 func (m *SpotifyModule) Initialize(jarvisInstance *Core.JARVIS) {
 
@@ -73,13 +83,13 @@ func (m *SpotifyModule) Initialize(jarvisInstance *Core.JARVIS) {
 
 	// Create default general settings
 	m.settings = new(SpotifyConfig)
+
+	// TODO SET UP CONFIG
 }
 
-// Connect to Spotify
-func (m *SpotifyModule) Connect() {
-
-	m.stateHash = Core.RandomString(5)
-
+// IsEnabled for Usage
+func (m *SpotifyModule) IsEnabled() bool {
+	return m.settings.Enabled
 }
 
 // // GetCurrentlyPlayingMessage
