@@ -1,4 +1,4 @@
-//https://discordapp.com/oauth2/authorize?&client_id=YOUR_CLIENT_ID_HERE&scope=bot&permissions=0
+// USE to authorize bots: https://discordapp.com/oauth2/authorize?&client_id=YOUR_CLIENT_ID_HERE&scope=bot&permissions=0
 
 package modules
 
@@ -12,38 +12,38 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-type DiscordFunc func(*DiscordMessage)
-type DiscordMessage struct {
-	Command string
-	Content string
-
-	Author string
-
-	Raw *discordgo.MessageCreate
-}
-
 // DiscordConfig Settings
 type DiscordConfig struct {
 	ClientID     uint
 	ClientSecret string
-	Username     string
-	Token        string
 	RedirectURI  string
+	Token        string
+	Username     string
+}
+
+// DiscordFunc for IRC
+type DiscordFunc func(*DiscordMessage)
+
+// DiscordMessage is used to pass data around
+type DiscordMessage struct {
+	Author  string
+	Command string
+	Content string
+	Raw     *discordgo.MessageCreate
 }
 
 // DiscordModule facilitates the callback/web related hosting
 type DiscordModule struct {
 	botID          string
-	connected      bool
-	commands       map[string]DiscordFunc
 	commandAliases map[string]string
 	commandCache   []string
+	commands       map[string]DiscordFunc
+	connected      bool
 	descriptions   map[string]string
-
-	settings *DiscordConfig
-	session  *discordgo.Session
-	user     *discordgo.User
-	j        *Core.JARVIS
+	settings       *DiscordConfig
+	session        *discordgo.Session
+	user           *discordgo.User
+	j              *Core.JARVIS
 }
 
 // Connect to Discord Server

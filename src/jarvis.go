@@ -12,20 +12,12 @@ import (
 )
 
 var (
-	// mode       string
-	// configPath string
-
 	j *Core.JARVIS
-	// spotifyModule   *Modules.SpotifyModule
-	// twitchModule    *Modules.TwitchModule
-	// overlayModule   *Modules.OverlayModule
-	// consoleModule   *Modules.ConsoleModule
-	// workingOnModule *Modules.WorkingOnModule
-	// logFile         *os.File
-	// config          Core.Config
 
 	discordModule *Modules.DiscordModule
-	quit          chan os.Signal
+	spotifyModule *Modules.SpotifyModule
+
+	quit chan os.Signal
 )
 
 func main() {
@@ -43,17 +35,32 @@ func main() {
 	j = Core.HireJarvis()
 
 	// Start the show
-	if j.Config.GetMode() == "bot" {
+	if j.Config.IsBot() {
 		StartBot()
 	} else {
 		StartTray()
 	}
 
-	// // Initialize Modules
-	// var overlayModule Modules.OverlayModule
-	// overlayModule.Init(&config, &consoleModule)
+	// Activate Console
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
+		//consoleModule.Handle(scanner.Text())
+	}
+}
 
-	// // Initialize Spotify
+// StartBot Mode
+func StartBot() {
+
+	// Discord
+	discordModule := new(Modules.DiscordModule)
+	discordModule.Initialize(j)
+	discordModule.Connect()
+
+	// Spotify
+	spotifyModule := new(Modules.SpotifyModule)
+	spotifyModule.Initialize(j)
+
+	// 	// Initialize Spotify
 	// var spotifyModule Modules.SpotifyModule
 	// if config.Spotify.Enabled {
 	// 	spotifyModule.Init(&config, &consoleModule)
@@ -75,18 +82,10 @@ func main() {
 	// 	workingOnModule.Init(&config, &consoleModule)
 	// }
 
-	// Activate Console
-	scanner := bufio.NewScanner(os.Stdin)
-	for scanner.Scan() {
-		//consoleModule.Handle(scanner.Text())
-	}
-}
+	// // Initialize Modules
+	// var overlayModule Modules.OverlayModule
+	// overlayModule.Init(&config, &consoleModule)
 
-// StartBot Mode
-func StartBot() {
-	discordModule := new(Modules.DiscordModule)
-	discordModule.Initialize(j)
-	discordModule.Connect()
 }
 
 // StartTray Mode

@@ -9,6 +9,7 @@ import (
 
 // WebServerConfig Settings
 type WebServerConfig struct {
+	Enabled    bool
 	IPAddress  string
 	ListenPort int
 }

@@ -1,17 +1,22 @@
 package modules
 
-// // SpotifyConfig elements
-// type SpotifyConfig struct {
-// 	Enabled             bool
-// 	Output              bool
-// 	AutoLogin           bool
-// 	PollingFrequency    string
-// 	ClientID            string
-// 	ClientSecret        string
-// 	Callback            string
-// 	TruncateTrackLength int
-// 	TruncateTrackRunes  string
-// }
+import (
+	"time"
+
+	Core "../core"
+	"github.com/zmb3/spotify"
+)
+
+// SpotifyConfig elements
+type SpotifyConfig struct {
+	Enabled             bool
+	PollingFrequency    string
+	ClientID            string
+	ClientSecret        string
+	RedirectURI         string
+	TruncateTrackLength int
+	TruncateTrackRunes  string
+}
 
 // import (
 // 	"bufio"
@@ -36,39 +41,51 @@ package modules
 
 // const currentlyPlayingBase = "https://open.spotify.com/track/"
 
-// // SpotifyModule Class
-// type SpotifyModule struct {
-// 	LastInfoData        []byte
-// 	LastImageData       []byte
-// 	DurationMS          int
-// 	PlayedMS            int
-// 	CurrentlyPlaying    bool
-// 	CurrentlyPlayingURL string
-// 	Ticker              *time.Ticker
+// SpotifyModule Class
+type SpotifyModule struct {
+	LastInfoData        []byte
+	LastImageData       []byte
+	DurationMS          int
+	PlayedMS            int
+	CurrentlyPlaying    bool
+	CurrentlyPlayingURL string
+	Ticker              *time.Ticker
 
-// 	auth      spotify.Authenticator
-// 	songPath  string
-// 	imagePath string
-// 	urlPath   string
-// 	state     string
+	auth      spotify.Authenticator
+	songPath  string
+	imagePath string
+	urlPath   string
 
-// 	client *spotify.Client
-// 	config *Core.Config
-// }
+	stateHash     string
+	authenticated bool
+	settings      *SpotifyConfig
+	j             *Core.JARVIS
+}
+
+// Initialize the Logging Module
+func (m *SpotifyModule) Initialize(jarvisInstance *Core.JARVIS) {
+
+	// Assign JARVIS, the module is made we dont to create it like in core!
+	m.j = jarvisInstance
+
+	// Make sure flag is toggled off
+	m.authenticated = false
+
+	// Create default general settings
+	m.settings = new(SpotifyConfig)
+}
+
+// Connect to Spotify
+func (m *SpotifyModule) Connect() {
+
+	m.stateHash = Core.RandomString(5)
+
+}
 
 // // GetCurrentlyPlayingMessage
 // func (m *SpotifyModule) GetCurrentlyPlayingMessage() string {
 // 	return string(m.LastInfoData) + " Mau5 " + m.CurrentlyPlayingURL
 // }
-
-// // Init  Module
-// func (m *SpotifyModule) Init(config *Core.Config, console *ConsoleModule) {
-
-// 	// Assing Config
-// 	m.config = config
-
-// 	// Create State
-// 	m.state = Core.RandomString(5)
 
 // 	// Build Paths
 // 	m.songPath = filepath.Join(m.config.General.OutputPath, "Spotify_LatestSong.txt")
