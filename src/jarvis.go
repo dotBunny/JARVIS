@@ -42,29 +42,12 @@ func main() {
 	// Create new Jarvis instance
 	j = Core.HireJarvis()
 
-	// Initialize Modules (referencing in their dependencies)
-	// Load up Discord
-	discordModule := new(Modules.DiscordModule)
-	discordModule.Initialize(j)
-	discordModule.Connect()
-
-	// // Start Logging
-
-	// // Startup
-
-	// // Pathing Check
-
-	// Core.Log("SYSTEM", "LOG", "Starting Up ...")
-
-	// // Initialize Console
-	// var consoleModule Modules.ConsoleModule
-	// consoleModule.Init(&config)
-	// consoleModule.AddHandler("/quit", "Quit the application", Exit)
-	// consoleModule.AddAlias("/exit", "/quit")
-	// consoleModule.AddAlias("/x", "/quit")
-
-	// // Initialize Webserver
-	// Core.InitializeWebServer(config.General.ServerPort)
+	// Start the show
+	if j.Config.GetMode() == "bot" {
+		StartBot()
+	} else {
+		StartTray()
+	}
 
 	// // Initialize Modules
 	// var overlayModule Modules.OverlayModule
@@ -92,16 +75,23 @@ func main() {
 	// 	workingOnModule.Init(&config, &consoleModule)
 	// }
 
-	// // Start UI
-
-	// // Lets do this!
-	// Core.Log("SYSTEM", "LOG", "Ready")
-
 	// Activate Console
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		//consoleModule.Handle(scanner.Text())
 	}
+}
+
+// StartBot Mode
+func StartBot() {
+	discordModule := new(Modules.DiscordModule)
+	discordModule.Initialize(j)
+	discordModule.Connect()
+}
+
+// StartTray Mode
+func StartTray() {
+
 }
 
 // Shutdown JARVIS

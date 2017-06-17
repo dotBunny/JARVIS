@@ -36,6 +36,11 @@ func (m *ConfigCore) GetOutputPath() string {
 	return m.settings.OutputPath
 }
 
+// GetMode returns operating mode of JARVIS
+func (m *ConfigCore) GetMode() string {
+	return m.settings.Mode
+}
+
 // Initialize the Logging Module
 func (m *ConfigCore) Initialize(jarvisInstance *JARVIS) {
 

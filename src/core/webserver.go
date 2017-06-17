@@ -9,12 +9,14 @@ import (
 
 // WebServerConfig Settings
 type WebServerConfig struct {
+	IPAddress  string
 	ListenPort int
 }
 
 // WebServerCore facilitates the callback/web related hosting
 type WebServerCore struct {
-	settings *WebServerConfig
+	externalIP string
+	settings   *WebServerConfig
 
 	j *JARVIS
 }
@@ -52,6 +54,7 @@ func (m *WebServerCore) Initialize(jarvisInstance *JARVIS) {
 			errorCheck := json.Unmarshal(*m.j.Config.GetConfigData("WebServer"), &m.settings)
 			if errorCheck != nil {
 				m.j.Log.Message("Config", "Unable to properly parse WebServer Config, somethings may be wonky.")
+				m.j.Log.Message("Config", "WebServer.IPAddress: "+m.settings.IPAddress)
 				m.j.Log.Message("Config", "WebServer.ListenPort: "+fmt.Sprintf("%d", m.settings.ListenPort))
 			}
 		}

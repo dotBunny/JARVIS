@@ -48,8 +48,11 @@ func HireJarvis() *JARVIS {
 	j.Log.Initialize(j)
 	j.Log.Message("System", "Version: v"+Version)
 
-	// Initialize the WebServer
-	j.WebServer.Initialize(j)
+	// Initialize Bot Only Core
+	if j.Config.GetMode() == "bot" {
+		// Initialize the WebServer
+		j.WebServer.Initialize(j)
+	}
 
 	// Send it back
 	j.Log.Message("System", "Jarvis Hired!")
