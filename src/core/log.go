@@ -16,6 +16,15 @@ type LogCore struct {
 	j        *JARVIS
 }
 
+func (m *LogCore) getPrefix(channel string) string {
+	// Check for command
+
+	if val, ok := m.prefix[strings.ToUpper(channel)]; ok {
+		return val
+	}
+	return "[" + channel + "] "
+}
+
 // Initialize the Logging Module
 func (m *LogCore) Initialize(jarvisInstance *JARVIS) {
 
@@ -30,7 +39,7 @@ func (m *LogCore) Initialize(jarvisInstance *JARVIS) {
 	m.prefix = make(map[string]string)
 
 	m.RegisterChannel("Core", "white", m.j.Config.GetPrefix())
-	m.RegisterChannel("Core", "grey", m.j.Config.GetPrefix())
+	m.RegisterChannel("System", "grey", m.j.Config.GetPrefix())
 
 	logFile, err := os.OpenFile(path.Join(m.j.Config.GetOutputPath(), "jarvis.log"), os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
@@ -49,6 +58,7 @@ func (m *LogCore) Initialize(jarvisInstance *JARVIS) {
 // RegisterChannel for use with loggin
 func (m *LogCore) RegisterChannel(tag string, color string, prefix string) {
 	m.channels[strings.ToUpper(tag)] = color
+	m.prefix[strings.ToUpper(tag)] = prefix
 }
 
 // Shutdown LogCore
@@ -60,7 +70,7 @@ func (m *LogCore) Shutdown() {
 // Message Level Alart
 func (m *LogCore) Message(channel string, message string) {
 	if m.j.Discord != nil && m.j.Discord.IsConnected() {
-		_, _ = m.j.Discord.GetSession().ChannelMessageSend(m.j.Discord.GetLogChannelID(), "["+channel+"] "+message)
+		_, _ = m.j.Discord.GetSession().ChannelMessageSend(m.j.Discord.GetLogChannelID(), m.getPrefix(channel)+message)
 	}
 	log.Println("[" + channel + "]\t" + message)
 }
@@ -68,7 +78,7 @@ func (m *LogCore) Message(channel string, message string) {
 // Warning Level Alart
 func (m *LogCore) Warning(channel string, message string) {
 	if m.j.Discord != nil && m.j.Discord.IsConnected() {
-		_, _ = m.j.Discord.GetSession().ChannelMessageSend(m.j.Discord.GetLogChannelID(), "["+channel+"] "+message)
+		_, _ = m.j.Discord.GetSession().ChannelMessageSend(m.j.Discord.GetLogChannelID(), m.getPrefix(channel)+message)
 	}
 	log.Println("[" + channel + "]\t" + message)
 }
@@ -76,7 +86,7 @@ func (m *LogCore) Warning(channel string, message string) {
 // Error Level Alart
 func (m *LogCore) Error(channel string, message string) {
 	if m.j.Discord != nil && m.j.Discord.IsConnected() {
-		_, _ = m.j.Discord.GetSession().ChannelMessageSend(m.j.Discord.GetLogChannelID(), "["+channel+"] "+message)
+		_, _ = m.j.Discord.GetSession().ChannelMessageSend(m.j.Discord.GetLogChannelID(), m.getPrefix(channel)+message)
 	}
 	log.Println("[" + channel + "]\t" + message)
 }
@@ -84,50 +94,7 @@ func (m *LogCore) Error(channel string, message string) {
 // Fatal Level Alart
 func (m *LogCore) Fatal(channel string, message string) {
 	if m.j.Discord != nil && m.j.Discord.IsConnected() {
-		_, _ = m.j.Discord.GetSession().ChannelMessageSend(m.j.Discord.GetLogChannelID(), "["+channel+"] "+message)
+		_, _ = m.j.Discord.GetSession().ChannelMessageSend(m.j.Discord.GetLogChannelID(), m.getPrefix(channel)+message)
 	}
-	log.Println("[" + channel + "]\t" + message)
+	log.Fatal("[" + channel + "]\t" + message)
 }
-
-/*
-	switch class {
-	case "ERROR":
-		// Full Message Background Color
-		color.Set(color.FgHiRed, color.Bold)
-		log.Println(channel + "\t" + message)
-		break
-
-	case "IMPORTANT":
-		// Full Message Colored Text
-		if channel == "SPOTIFY" {
-			color.Set(color.FgGreen)
-		} else if channel == "TWITCH" {
-			color.Set(color.FgMagenta)
-		} else if channel == "SYSTEM" {
-			color.Set(color.FgBlue)
-		} else if channel == "OVERLAY" {
-			color.Set(color.FgCyan)
-		} else if channel == "WORKING" {
-			color.Set(color.FgHiBlue)
-		}
-		log.Println(channel + "\t" + message)
-		break
-	default:
-		if channel == "SPOTIFY" {
-			channel = color.GreenString(channel)
-		} else if channel == "TWITCH" {
-			channel = color.MagentaString(channel)
-		} else if channel == "SYSTEM" {
-			channel = color.BlueString(channel)
-		} else if channel == "OVERLAY" {
-			channel = color.CyanString(channel)
-		} else if channel == "WORKING" {
-			channel = color.HiBlueString(channel)
-		}
-
-		// Normal (Just Channel Color)
-		log.Println(channel + "\t" + message)
-		break
-	}
-	// Reset Coloring
-	color.Unset()*/

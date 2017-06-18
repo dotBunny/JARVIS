@@ -79,10 +79,10 @@ func (m *Module) Initialize(jarvisInstance *Core.JARVIS, discordInstance *Core.D
 	m.j = jarvisInstance
 	m.discord = discordInstance
 
-	m.j.Log.RegisterChannel("Twitch", "purple", m.settings.Prefix)
-
 	// Load Configuration
 	m.loadConfig()
+
+	m.j.Log.RegisterChannel("Twitch", "purple", m.settings.Prefix)
 
 	// Some cached settings
 	m.twitchStreamName = strings.TrimLeft(m.settings.Channel, "#")

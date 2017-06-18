@@ -38,12 +38,12 @@ func (m *Module) Initialize(jarvisInstance *Core.JARVIS) {
 	// Assign JARVIS, the module is made we dont to create it like in core!
 	m.j = jarvisInstance
 
-	m.j.Log.RegisterChannel("Spotify", "green", m.settings.Prefix)
-
 	// Make sure flag is toggled off
 	m.authenticated = false
 
 	m.loadConfig()
+
+	m.j.Log.RegisterChannel("Spotify", "green", m.settings.Prefix)
 
 	// If we're not enabled go no further
 	if !m.IsEnabled() {

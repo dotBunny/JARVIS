@@ -159,11 +159,11 @@ func (m *WebServerCore) Initialize(jarvisInstance *JARVIS) {
 	jarvisInstance.WebServer = m
 	m.j = jarvisInstance
 
-	// Register Log Channel
-	m.j.Log.RegisterChannel("WebServer", "blue", m.settings.Prefix)
-
 	// Create default general settings
 	m.settings = new(WebServerConfig)
+
+	// Register Log Channel
+	m.j.Log.RegisterChannel("WebServer", "blue", m.settings.Prefix)
 
 	// Web Server Config
 	m.settings.ListenPort = 8080
