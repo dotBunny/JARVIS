@@ -6,15 +6,18 @@ import (
 
 // Module Class
 type Module struct {
-	outputs *Outputs
-	data    *Data
-	j       *Core.JARVIS
+	outputs  *Outputs
+	data     *Data
+	settings *Config
+	j        *Core.JARVIS
 }
 
 // Initialize the Stats Module
 func (m *Module) Initialize(jarvisInstance *Core.JARVIS) {
 	// Assign JARVIS, the module is made we dont to create it like in core!
 	m.j = jarvisInstance
+
+	m.loadConfig()
 
 	m.j.Log.RegisterChannel("Stats", "red", m.j.Config.GetPrefix())
 

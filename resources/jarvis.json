@@ -21,6 +21,10 @@
     "TruncateTrackRunes" : "...",
     "Prefix": "<:spotify:326026030265663488> "
   },
+  "Stats" : {
+    "PadCoffeeOutput" : 2,
+    "PadSavesOutput" : 2
+  },
   "WebServer" : {
     "Enabled" : true,
     "IPAddress" : "localhost", // Not used currently

@@ -19,7 +19,7 @@ func (m *Module) setupOutputs() {
 
 	m.outputs.WorkingOnPath = filepath.Join(m.j.Config.GetOutputPath(), "Stats_WorkingOn.txt")
 	m.outputs.CoffeeCountPath = filepath.Join(m.j.Config.GetOutputPath(), "Stats_CoffeeCount.txt")
-	m.outputs.SavesCountPath = filepath.Join(m.j.Config.GetOutputPath(), "Spotify_SavesCount.txt")
+	m.outputs.SavesCountPath = filepath.Join(m.j.Config.GetOutputPath(), "Stats_SavesCount.txt")
 
 	// Touch Files
 	Core.Touch(m.outputs.WorkingOnPath)
