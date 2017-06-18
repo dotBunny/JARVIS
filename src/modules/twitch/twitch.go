@@ -1,11 +1,16 @@
-package modules
+package twitch
+
+// twitch.connect (reconnect - reauth)
 
 // To get your userID
 // curl -H 'Accept: application/vnd.twitchtv.v5+json' -H 'Client-ID: <CLIENT ID>' -X GET https://api.twitch.tv/kraken/users?login=<USERNAME>
 
 import (
 	"encoding/json"
-	"fmt"
+	"io/ioutil"
+	"log"
+
+	"golang.org/x/oauth2"
 	// 	"net/http"
 	// 	"path/filepath"
 	// 	"strconv"
@@ -14,34 +19,16 @@ import (
 	// 	"strings"
 
 	// 	"bytes"
-
 	"time"
 
-	Core "../core"
-	"github.com/chosenken/twitch2go"
-	irc "github.com/thoj/go-ircevent"
+	Core "../../core"
+	irc "./irc"
 	// 	"github.com/fatih/color"
 	// 	"github.com/thoj/go-ircevent"
+
+	"net/http"
+	"strings"
 )
-
-const server string = "irc.chat.twitch.tv:6667"
-const jarvisMessagePrefix string = "VaultBoy "
-
-// TwitchConfig elements
-type TwitchConfig struct {
-	Channel            string
-	ChannelID          int
-	ChatSync           bool
-	ChatSyncChannel    string
-	ClientID           string
-	ClientSecret       string
-	Enabled            bool
-	LastFollowersCount int
-	PollingFrequency   int
-	RedirectURI        string
-	Token              string
-	Username           string
-}
 
 // TwitchMessage is used to pass data around
 type TwitchMessage struct {
@@ -74,70 +61,29 @@ type TwitchModule struct {
 	// channelViewsPath       string
 	// channelFollowersPath   string
 	authenticated bool
-	irc           *irc.Connection
-	client        *twitch2go.Client
-	discord       *DiscordModule
-	settings      *TwitchConfig
-	j             *Core.JARVIS
+	irc           *irc.Client
+
+	discord          *Core.DiscordCore
+	settings         *TwitchConfig
+	twitchClient     *http.Client
+	twitchOAuth      oauth2.Config
+	twitchToken      string
+	twitchStreamName string
+	j                *Core.JARVIS
 }
 
 // Initialize the Logging Module
-func (m *TwitchModule) Initialize(jarvisInstance *Core.JARVIS, discordInstance *DiscordModule) {
+func (m *TwitchModule) Initialize(jarvisInstance *Core.JARVIS, discordInstance *Core.DiscordCore) {
 
 	// Assign JARVIS, the module is made we dont to create it like in core!
 	m.j = jarvisInstance
 	m.discord = discordInstance
 
-	// Create default general settings
-	m.settings = new(TwitchConfig)
+	// Load Configuration
+	m.loadConfig()
 
-	// TWitch Default Config
-	m.settings.Channel = "#reapazor"
-	m.settings.ChannelID = 21139969
-	m.settings.ChatSync = true
-	m.settings.ChatSyncChannel = "#twitch"
-	m.settings.ClientID = "You need to set your ClientID"
-	m.settings.ClientSecret = "You need to set your ClientSecret"
-	m.settings.Enabled = true
-	m.settings.LastFollowersCount = 10
-	m.settings.PollingFrequency = 7
-	m.settings.RedirectURI = "/twitch/callback"
-	m.settings.Token = "You need to set your Token"
-	m.settings.Username = "JARVIS"
-
-	// Check Raw Data
-	if m.j.Config.IsInitialized() {
-		if !m.j.Config.IsValidKey("Twitch") {
-			m.j.Log.Message("Twitch", "Unable to find \"Twitch\" config section. Using defaults.")
-		} else {
-
-			errorCheck := json.Unmarshal(*m.j.Config.GetConfigData("Twitch"), &m.settings)
-			if errorCheck != nil {
-				m.j.Log.Message("Config", "Unable to properly parse Twitch Config, somethings may be wonky.")
-
-				m.j.Log.Message("Config", "Twitch.Channel: "+m.settings.Channel)
-				m.j.Log.Message("Config", "Twitch.ChannelID: "+fmt.Sprintf("%d", m.settings.ChannelID))
-				if m.settings.ChatSync {
-					m.j.Log.Message("Config", "Twitch.ChatSync: true")
-				} else {
-					m.j.Log.Message("Config", "Twitch.ChatSync: false")
-				}
-				m.j.Log.Message("Config", "Twitch.ChatSyncChannel: "+m.settings.ChatSyncChannel)
-				m.j.Log.Message("Config", "Twitch.ClientID: "+m.settings.ClientID)
-				m.j.Log.Message("Config", "Twitch.ClientSecret: "+m.settings.ClientSecret)
-				if m.settings.Enabled {
-					m.j.Log.Message("Config", "Twitch.Enabled: true")
-				} else {
-					m.j.Log.Message("Config", "Twitch.Enabled: false")
-				}
-				m.j.Log.Message("Config", "Twitch.LastFollowersCount: "+fmt.Sprintf("%d", m.settings.LastFollowersCount))
-				m.j.Log.Message("Config", "Twitch.PollingFrequency: "+fmt.Sprintf("%d", m.settings.PollingFrequency))
-				m.j.Log.Message("Config", "Twitch.RedirectURI: "+m.settings.RedirectURI)
-				m.j.Log.Message("Config", "Twitch.Token: "+m.settings.Token)
-				m.j.Log.Message("Config", "Twitch.Username: "+m.settings.Username)
-			}
-		}
-	}
+	// Some cached settings
+	m.twitchStreamName = strings.TrimLeft(m.settings.Channel, "#")
 
 	// HANDLE OUT PUTS
 	// 	// Only do this if we are going to write files
@@ -179,55 +125,57 @@ func (m *TwitchModule) Connect() {
 	// Make sure flag is toggled off
 	m.authenticated = false
 
-	// TODO: Need to auth with scope for subscribers to work
-	// channel_commercial, channel_editor, channel_subscriptions,
-	// &scope=user_read+channel_read
-	m.client = twitch2go.NewClient(m.settings.ClientID)
+	// Start OAuth2 Procedure
+	m.authenticate()
+	//go m.getFollowers()
 
 	// Create Poller
-	twitchPollingFrequency, _ := time.ParseDuration(fmt.Sprintf("%ds", m.settings.PollingFrequency))
-	m.Ticker = time.NewTicker(twitchPollingFrequency)
+	// twitchPollingFrequency, _ := time.ParseDuration(fmt.Sprintf("%ds", m.settings.PollingFrequency))
+	// m.Ticker = time.NewTicker(twitchPollingFrequency)
 
-	// Create IRC Objects
-	m.irc = irc.IRC(m.settings.Username, "jarvis")
-	m.irc.UseTLS = false
-	m.irc.Password = m.settings.Token
-
-	// Set IRC Connection Callback
-	m.irc.AddCallback("001", m.handleConnected)
-	m.irc.AddCallback("366", func(e *irc.Event) {})
-	m.irc.AddCallback("PRIVMSG", m.handleMessage)
-	m.irc.AddCallback("NOTICE", m.handleNotice)
-
-	errorCheck := m.irc.Connect(server)
-	if errorCheck != nil {
-		m.j.Log.Error("Twitch", "Unable to connect ot Twitch IRC Server.c"+errorCheck.Error())
-		return
-	}
-
-	// Set auth'd
-	m.authenticated = true
-
-	// Go off and do your thing IRC connection!
-	go m.irc.Loop()
+	// Dont connect twich
+	//m.connectIRC()
 }
 
-func (m *TwitchModule) handleConnected(event *irc.Event) {
-	m.j.Log.Message("Twitch", "Joining channel "+m.settings.Channel)
-	m.irc.Join(m.settings.Channel)
+func (m *TwitchModule) getJSON(url string) map[string]*json.RawMessage {
+
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	req.Header.Set("User-Agent", "JARVIS")
+	req.Header.Set("Client-ID", m.settings.ClientID)
+	req.Header.Set("Accept", "application/vnd.twitchtv.v5+json")
+
+	res, getErr := m.twitchClient.Do(req)
+	if getErr != nil {
+		log.Fatal(getErr)
+	}
+
+	body, readErr := ioutil.ReadAll(res.Body)
+	if readErr != nil {
+		log.Fatal(readErr)
+	}
+
+	var objmap map[string]*json.RawMessage
+
+	json.Unmarshal(body, &objmap)
+
+	return objmap
 }
 
-func (m *TwitchModule) handleMessage(event *irc.Event) {
+func (m *TwitchModule) getFollowers() {
 
-	if m.settings.ChatSync {
-		_, _ = m.discord.session.ChannelMessageSend(m.settings.ChatSyncChannel, Core.WrapNickname(event.Nick)+" "+event.Message())
-	}
-}
-func (m *TwitchModule) handleNotice(event *irc.Event) {
+	data := m.getJSON(twitchRootURL + "channels/" + m.settings.ChannelID + "/follows/?limit=1")
 
-	if m.settings.ChatSync {
-		_, _ = m.discord.session.ChannelMessageSend(m.settings.ChatSyncChannel, "[NOTICE] "+Core.WrapNickname(event.Nick)+" "+event.Message())
+	var followerCount int
+	err := json.Unmarshal(*data["_total"], &followerCount)
+	if err != nil {
+		m.j.Log.Warning("Twitch", "Failed to update follower count.")
 	}
+	//log.Println("Followers: " + fmt.Sprintf("%d", followerCount))
+
 }
 
 // IsEnabled for usage

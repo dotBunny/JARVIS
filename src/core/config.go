@@ -12,9 +12,7 @@ import (
 
 // GeneralConfig Settings
 type GeneralConfig struct {
-	Mode           string
-	BotOutputPath  string
-	TrayOutputPath string
+	OutputPath string
 }
 
 // ConfigCore holds general configuration information
@@ -34,15 +32,7 @@ func (m *ConfigCore) GetConfigData(key string) *json.RawMessage {
 
 // GetOutputPath base to use for files
 func (m *ConfigCore) GetOutputPath() string {
-	if m.IsBot() {
-		return m.settings.BotOutputPath
-	}
-	return m.settings.TrayOutputPath
-}
-
-// GetMode returns operating mode of JARVIS
-func (m *ConfigCore) GetMode() string {
-	return m.settings.Mode
+	return m.settings.OutputPath
 }
 
 // Initialize the Logging Module
@@ -82,9 +72,7 @@ func (m *ConfigCore) Initialize(jarvisInstance *JARVIS) {
 	m.settings = new(GeneralConfig)
 
 	// General Config
-	m.settings.Mode = "bot"
-	m.settings.BotOutputPath = path.Join(m.j.GetApplicationPath(), "output")
-	m.settings.TrayOutputPath = path.Join(m.j.GetApplicationPath(), "output")
+	m.settings.OutputPath = path.Join(m.j.GetApplicationPath(), "output")
 
 	// Check Raw Data
 	if m.dataSource["General"] == nil {
@@ -94,9 +82,7 @@ func (m *ConfigCore) Initialize(jarvisInstance *JARVIS) {
 		errorCheck = json.Unmarshal(*m.dataSource["General"], &m.settings)
 		if errorCheck != nil {
 			log.Println("[Config]\tUnable to properly parse General Config, somethings may be wonky.")
-			log.Println("[Config]\tGeneral.Mode: " + m.settings.Mode)
-			log.Println("[Config]\tGeneral.BotOutputPath: " + m.settings.BotOutputPath)
-			log.Println("[Config]\tGeneral.TrayOutputPath: " + m.settings.TrayOutputPath)
+			log.Println("[Config]\tGeneral.OutputPath: " + m.settings.OutputPath)
 		}
 	}
 
@@ -107,11 +93,6 @@ func (m *ConfigCore) Initialize(jarvisInstance *JARVIS) {
 	// Flag class as loaded
 	m.initialized = true
 	log.Println("[Config]\tInitialized")
-}
-
-// IsBot Mode?
-func (m *ConfigCore) IsBot() bool {
-	return m.settings.Mode == "bot"
 }
 
 // IsInitialized yet?

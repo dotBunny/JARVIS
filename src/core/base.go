@@ -16,6 +16,7 @@ type JARVIS struct {
 
 	WebServer *WebServerCore
 	Config    *ConfigCore
+	Discord   *DiscordCore
 	Log       *LogCore
 }
 
@@ -48,11 +49,14 @@ func HireJarvis() *JARVIS {
 	j.Log.Initialize(j)
 	j.Log.Message("System", "Version: v"+Version)
 
-	// Initialize Bot Only Core
-	if j.Config.GetMode() == "bot" {
-		// Initialize the WebServer
-		j.WebServer.Initialize(j)
-	}
+	// Initialize the WebServer
+	j.WebServer.Initialize(j)
+
+	// Initialize Discord
+	j.Discord.Initialize(j)
+
+	// Tell Discord to Connect
+	j.Discord.Connect()
 
 	// Send it back
 	j.Log.Message("System", "Jarvis Hired!")

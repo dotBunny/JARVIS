@@ -1,24 +1,59 @@
 // USE to authorize bots: https://discordapp.com/oauth2/authorize?&client_id=YOUR_CLIENT_ID_HERE&scope=bot&permissions=0
 
-package modules
+package core
 
 import (
 	"encoding/json"
 	"fmt"
-
 	"strings"
 
-	Core "../core"
 	"github.com/bwmarrin/discordgo"
 )
 
 // DiscordConfig Settings
 type DiscordConfig struct {
-	ClientID     uint
-	ClientSecret string
-	RedirectURI  string
-	Token        string
-	Username     string
+	ClientID         uint
+	ClientSecret     string
+	RedirectURI      string
+	Token            string
+	Username         string
+	PrivateChannelID string
+	LogChannelID     string
+}
+
+func (m *DiscordCore) loadConfig() {
+	// Create default general settings
+	m.settings = new(DiscordConfig)
+
+	// Discord Default Config
+	m.settings.ClientID = 0
+	m.settings.ClientSecret = "You must enter a ClientID/ClientSecret."
+	m.settings.RedirectURI = "/discord/callback"
+	m.settings.Token = "You must enter a Token."
+	m.settings.Username = "JARVIS"
+	m.settings.PrivateChannelID = "324983244326043648"
+	m.settings.LogChannelID = "325784977415340043"
+
+	// Check Raw Data
+	if m.j.Config.IsInitialized() {
+		if !m.j.Config.IsValidKey("Discord") {
+			m.j.Log.Message("Discord", "Unable to find \"Discord\" config section. Using defaults.")
+		} else {
+
+			errorCheck := json.Unmarshal(*m.j.Config.GetConfigData("Discord"), &m.settings)
+			if errorCheck != nil {
+				m.j.Log.Message("Config", "Unable to properly parse Discord Config, somethings may be wonky.")
+
+				m.j.Log.Message("Config", "Discord.ClientID: "+fmt.Sprintf("%d", m.settings.ClientID))
+				m.j.Log.Message("Config", "Discord.ClientSecret: "+m.settings.ClientSecret)
+				m.j.Log.Message("Config", "Discord.RedirectURI: "+m.settings.RedirectURI)
+				m.j.Log.Message("Config", "Discord.Token: "+m.settings.Token)
+				m.j.Log.Message("Config", "Discord.Username: "+m.settings.Username)
+				m.j.Log.Message("Config", "Discord.PrivateChannelID: "+m.settings.PrivateChannelID)
+				m.j.Log.Message("Config", "Discord.LogChannelID: "+m.settings.LogChannelID)
+			}
+		}
+	}
 }
 
 // DiscordFunc for IRC
@@ -32,9 +67,10 @@ type DiscordMessage struct {
 	Raw     *discordgo.MessageCreate
 }
 
-// DiscordModule facilitates the callback/web related hosting
-type DiscordModule struct {
+// DiscordCore facilitates the callback/web related hosting
+type DiscordCore struct {
 	botID          string
+	channelCache   map[string]int
 	commandAliases map[string]string
 	commandCache   []string
 	commands       map[string]DiscordFunc
@@ -43,11 +79,11 @@ type DiscordModule struct {
 	settings       *DiscordConfig
 	session        *discordgo.Session
 	user           *discordgo.User
-	j              *Core.JARVIS
+	j              *JARVIS
 }
 
 // Connect to Discord Server
-func (m *DiscordModule) Connect() {
+func (m *DiscordCore) Connect() {
 
 	var errorCheck error
 
@@ -80,65 +116,58 @@ func (m *DiscordModule) Connect() {
 		m.j.Log.Warning("Discord", "Error opening to Discord servers, "+errorCheck.Error())
 	} else {
 
+		m.j.Log.Message("Discord", "Connected")
 		// We're connected
 		m.connected = true
 	}
+
 }
 
-// Initialize the Logging Module
-func (m *DiscordModule) Initialize(jarvisInstance *Core.JARVIS) {
+// GetSession of Discord
+func (m *DiscordCore) GetSession() *discordgo.Session {
+	return m.session
+}
 
-	// Assign JARVIS, the module is made we dont to create it like in core!
+// GetPrivateChannelID for interaction
+func (m *DiscordCore) GetPrivateChannelID() string {
+	return m.settings.PrivateChannelID
+}
+
+// GetLogChannelID for logging
+func (m *DiscordCore) GetLogChannelID() string {
+	return m.settings.LogChannelID
+}
+
+// Initialize the Discord Module
+func (m *DiscordCore) Initialize(jarvisInstance *JARVIS) {
+
+	// Setup References
+	m = new(DiscordCore)
+	jarvisInstance.Discord = m
 	m.j = jarvisInstance
 
 	// Create command index
 	m.commands = make(map[string]DiscordFunc)
 	m.descriptions = make(map[string]string)
+	m.channelCache = make(map[string]int)
 
-	// Create default general settings
-	m.settings = new(DiscordConfig)
-
-	// Discord Default Config
-	m.settings.ClientID = 0
-	m.settings.ClientSecret = "You must enter a ClientID/ClientSecret."
-	m.settings.RedirectURI = "/discord/callback"
-	m.settings.Token = "You must enter a Token."
-	m.settings.Username = "JARVIS"
-
-	// Check Raw Data
-	if m.j.Config.IsInitialized() {
-		if !m.j.Config.IsValidKey("Discord") {
-			m.j.Log.Message("Discord", "Unable to find \"Discord\" config section. Using defaults.")
-		} else {
-
-			errorCheck := json.Unmarshal(*m.j.Config.GetConfigData("Discord"), &m.settings)
-			if errorCheck != nil {
-				m.j.Log.Message("Config", "Unable to properly parse Discord Config, somethings may be wonky.")
-
-				m.j.Log.Message("Config", "Discord.ClientID: "+fmt.Sprintf("%d", m.settings.ClientID))
-				m.j.Log.Message("Config", "Discord.ClientSecret: "+m.settings.ClientSecret)
-				m.j.Log.Message("Config", "Discord.RedirectURI: "+m.settings.RedirectURI)
-				m.j.Log.Message("Config", "Discord.Token: "+m.settings.Token)
-				m.j.Log.Message("Config", "Discord.Username: "+m.settings.Username)
-			}
-		}
-	}
+	m.loadConfig()
 
 	m.j.Log.RegisterChannel("Discord", "purple")
 }
 
 // IsConnected to Discord?
-func (m *DiscordModule) IsConnected() bool {
+func (m *DiscordCore) IsConnected() bool {
 	return m.connected
 }
 
 // RegisterAlias for a command
-func (m *DiscordModule) RegisterAlias(alias string, command string) {
+func (m *DiscordCore) RegisterAlias(alias string, command string) {
 	m.commandAliases[command] = alias
 }
 
 // RegisterCommand to use with bot
-func (m *DiscordModule) RegisterCommand(command string, function DiscordFunc, description string) {
+func (m *DiscordCore) RegisterCommand(command string, function DiscordFunc, description string) {
 
 	// Sanitize
 	command = strings.ToLower(command)
@@ -158,7 +187,7 @@ func (m *DiscordModule) RegisterCommand(command string, function DiscordFunc, de
 }
 
 // messageHandler handles stuff
-func (m *DiscordModule) messageHandler(session *discordgo.Session, message *discordgo.MessageCreate) {
+func (m *DiscordCore) messageHandler(session *discordgo.Session, message *discordgo.MessageCreate) {
 
 	// Dont process bots own messages
 	if message.Author.ID == m.botID {

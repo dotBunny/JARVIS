@@ -1,111 +1,75 @@
 package main
 
 import (
-	"bufio"
-	"fmt"
 	"os"
-	"os/signal"
-	"syscall"
+
+	"github.com/getlantern/systray"
+
+	"log"
 
 	Core "./core"
-	Modules "./modules"
+
+	Spotify "./modules/spotify"
+	Twitch "./modules/twitch"
+	Resources "./resources"
 )
 
 var (
 	j *Core.JARVIS
 
-	discordModule *Modules.DiscordModule
-	spotifyModule *Modules.SpotifyModule
+	spotifyModule *Spotify.SpotifyModule
+	twitchModule  *Twitch.TwitchModule
 
 	quit chan os.Signal
 )
 
 func main() {
+	systray.Run(onReady)
 
-	// Create shutdown procedure
-	quit := make(chan os.Signal, 2)
-	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
+}
+
+func onReady() {
+	systray.SetIcon(Resources.Data)
+	mQuit := systray.AddMenuItem("Quit", "Shutdown JARVIS")
 	go func() {
-		<-quit
+		<-mQuit.ClickedCh
 		Shutdown()
 	}()
-	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
 
-	// Create new Jarvis instance
-	j = Core.HireJarvis()
+	go func() {
+		// Create new Jarvis instance
+		j = Core.HireJarvis()
 
-	// Start the show
-	if j.Config.IsBot() {
-		StartBot()
-	} else {
-		StartTray()
-	}
+		// // Initialize Twitch
+		// twitchModule := new(Twitch.TwitchModule)
+		// twitchModule.Initialize(j, discordModule)
+		// go twitchModule.Connect()
 
-	// Activate Console
-	scanner := bufio.NewScanner(os.Stdin)
-	for scanner.Scan() {
-		//consoleModule.Handle(scanner.Text())
-	}
-}
+		// Spotify
+		spotifyModule := new(Spotify.SpotifyModule)
+		spotifyModule.Initialize(j)
 
-// StartBot Mode
-func StartBot() {
+		// // Initialize WorkingOn
+		// var workingOnModule Modules.WorkingOnModule
+		// if config.WorkingOn.Enabled {
+		// 	workingOnModule.Init(&config, &consoleModule)
+		// }
 
-	// Discord
-	discordModule := new(Modules.DiscordModule)
-	discordModule.Initialize(j)
-	discordModule.Connect()
+		// // Initialize Modules
+		// var overlayModule Modules.OverlayModule
+		// overlayModule.Init(&config, &consoleModule)
 
-	// Spotify
-	//spotifyModule := new(Modules.SpotifyModule)
-	//spotifyModule.Initialize(j)
-	//spotifyModule.Connect() // Will quietly return if not enabled
-
-	// 	// Initialize Spotify
-	// var spotifyModule Modules.SpotifyModule
-	// if config.Spotify.Enabled {
-	// 	spotifyModule.Init(&config, &consoleModule)
-	// 	spotifyModule.Poll()
-	// 	go spotifyModule.Loop()
-	// }
-
-	// Initialize Twitch
-	twitchModule := new(Modules.TwitchModule)
-	twitchModule.Initialize(j, discordModule)
-	twitchModule.Connect()
-
-	// if config.Twitch.Enabled {
-	// 	twitchModule.Init(j, &consoleModule, &spotifyModule)
-	// 	twitchModule.Poll()
-	// 	go twitchModule.Loop()
-	// }
-
-	// // Initialize WorkingOn
-	// var workingOnModule Modules.WorkingOnModule
-	// if config.WorkingOn.Enabled {
-	// 	workingOnModule.Init(&config, &consoleModule)
-	// }
-
-	// // Initialize Modules
-	// var overlayModule Modules.OverlayModule
-	// overlayModule.Init(&config, &consoleModule)
-
-}
-
-// StartTray Mode
-func StartTray() {
-
+		j.Log.Message("System", "Ready")
+	}()
 }
 
 // Shutdown JARVIS
 func Shutdown() {
-	fmt.Println("")
-	j.Shutdown()
 
-	// Close any open channels
-	if quit != nil {
-		close(quit)
-	}
+	spotifyModule.Shutdown()
+
+	j.Shutdown()
+	log.Println("[SYSTEM]\tShutdown.")
 
 	// Close application
 	os.Exit(1)

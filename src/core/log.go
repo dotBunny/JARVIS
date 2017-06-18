@@ -8,24 +8,6 @@ import (
 	"strings"
 )
 
-// LogType Classification
-type LogType uint
-
-const (
-	// MESSAGE for the sake of logging
-	MESSAGE LogType = iota
-	// WARNING information to be displayed
-	WARNING
-	// ERROR needs fixing
-	ERROR
-	// FATAL application is shutting down
-	FATAL
-)
-
-var (
-	logTypes = []string{"MESSAGE", "WARNING", "ERROR", "FATAL"}
-)
-
 // LogCore Class
 type LogCore struct {
 	channels map[string]string
@@ -67,11 +49,6 @@ func (m *LogCore) RegisterChannel(tag string, color string) {
 	m.channels[strings.ToUpper(tag)] = color
 }
 
-// Raw Alet
-func (m *LogCore) Raw(logType LogType, channel string, message string) {
-	log.Println("[" + channel + "]\t" + message)
-}
-
 // Shutdown LogCore
 func (m *LogCore) Shutdown() {
 
@@ -80,35 +57,34 @@ func (m *LogCore) Shutdown() {
 
 // Message Level Alart
 func (m *LogCore) Message(channel string, message string) {
+	if m.j.Discord.IsConnected() {
+		_, _ = m.j.Discord.GetSession().ChannelMessageSend(m.j.Discord.GetLogChannelID(), "["+channel+"] "+message)
+	}
 	log.Println("[" + channel + "]\t" + message)
 }
 
 // Warning Level Alart
 func (m *LogCore) Warning(channel string, message string) {
+	if m.j.Discord.IsConnected() {
+		_, _ = m.j.Discord.GetSession().ChannelMessageSend(m.j.Discord.GetLogChannelID(), "["+channel+"] "+message)
+	}
 	log.Println("[" + channel + "]\t" + message)
 }
 
 // Error Level Alart
 func (m *LogCore) Error(channel string, message string) {
+	if m.j.Discord.IsConnected() {
+		_, _ = m.j.Discord.GetSession().ChannelMessageSend(m.j.Discord.GetLogChannelID(), "["+channel+"] "+message)
+	}
 	log.Println("[" + channel + "]\t" + message)
 }
 
 // Fatal Level Alart
 func (m *LogCore) Fatal(channel string, message string) {
+	if m.j.Discord.IsConnected() {
+		_, _ = m.j.Discord.GetSession().ChannelMessageSend(m.j.Discord.GetLogChannelID(), "["+channel+"] "+message)
+	}
 	log.Println("[" + channel + "]\t" + message)
-}
-
-func (pn LogType) name() string {
-	return logTypes[pn]
-}
-func (pn LogType) ordinal() int {
-	return int(pn)
-}
-func (pn LogType) String() string {
-	return logTypes[pn]
-}
-func (pn LogType) values() *[]string {
-	return &logTypes
 }
 
 /*

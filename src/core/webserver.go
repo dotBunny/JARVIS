@@ -27,6 +27,16 @@ func (m *WebServerCore) defaultEndpoint(w http.ResponseWriter, r *http.Request) 
 	m.j.Log.Message("WebServer", "Request Received\n"+r.URL.String())
 }
 
+// GetIPAddress server is listening on
+func (m *WebServerCore) GetIPAddress() string {
+	return m.settings.IPAddress
+}
+
+// GetPort server is listening on
+func (m *WebServerCore) GetPort() string {
+	return strconv.Itoa(m.settings.ListenPort)
+}
+
 // Initialize the Logging Module
 func (m *WebServerCore) Initialize(jarvisInstance *JARVIS) {
 
@@ -45,6 +55,8 @@ func (m *WebServerCore) Initialize(jarvisInstance *JARVIS) {
 
 	// Web Server Config
 	m.settings.ListenPort = 8080
+
+	// TODO: Get default IP
 
 	// Check Raw Data
 	if m.j.Config.IsInitialized() {
