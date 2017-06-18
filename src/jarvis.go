@@ -55,12 +55,6 @@ func onReady() {
 		spotifyModule := new(Spotify.SpotifyModule)
 		spotifyModule.Initialize(j)
 
-		// // Initialize WorkingOn
-		// var workingOnModule Modules.WorkingOnModule
-		// if config.WorkingOn.Enabled {
-		// 	workingOnModule.Init(&config, &consoleModule)
-		// }
-
 		// // Initialize Modules
 		// var overlayModule Modules.OverlayModule
 		// overlayModule.Init(&config, &consoleModule)
