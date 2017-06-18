@@ -57,7 +57,7 @@ func (m *LogCore) Shutdown() {
 
 // Message Level Alart
 func (m *LogCore) Message(channel string, message string) {
-	if m.j.Discord.IsConnected() {
+	if m.j.Discord != nil && m.j.Discord.IsConnected() {
 		_, _ = m.j.Discord.GetSession().ChannelMessageSend(m.j.Discord.GetLogChannelID(), "["+channel+"] "+message)
 	}
 	log.Println("[" + channel + "]\t" + message)
@@ -65,7 +65,7 @@ func (m *LogCore) Message(channel string, message string) {
 
 // Warning Level Alart
 func (m *LogCore) Warning(channel string, message string) {
-	if m.j.Discord.IsConnected() {
+	if m.j.Discord != nil && m.j.Discord.IsConnected() {
 		_, _ = m.j.Discord.GetSession().ChannelMessageSend(m.j.Discord.GetLogChannelID(), "["+channel+"] "+message)
 	}
 	log.Println("[" + channel + "]\t" + message)
@@ -73,7 +73,7 @@ func (m *LogCore) Warning(channel string, message string) {
 
 // Error Level Alart
 func (m *LogCore) Error(channel string, message string) {
-	if m.j.Discord.IsConnected() {
+	if m.j.Discord != nil && m.j.Discord.IsConnected() {
 		_, _ = m.j.Discord.GetSession().ChannelMessageSend(m.j.Discord.GetLogChannelID(), "["+channel+"] "+message)
 	}
 	log.Println("[" + channel + "]\t" + message)
@@ -81,7 +81,7 @@ func (m *LogCore) Error(channel string, message string) {
 
 // Fatal Level Alart
 func (m *LogCore) Fatal(channel string, message string) {
-	if m.j.Discord.IsConnected() {
+	if m.j.Discord != nil && m.j.Discord.IsConnected() {
 		_, _ = m.j.Discord.GetSession().ChannelMessageSend(m.j.Discord.GetLogChannelID(), "["+channel+"] "+message)
 	}
 	log.Println("[" + channel + "]\t" + message)

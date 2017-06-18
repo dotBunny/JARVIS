@@ -28,13 +28,13 @@ func (m *SpotifyModule) loadConfig() {
 
 	// Check Raw Data
 	if m.j.Config.IsInitialized() {
-		if !m.j.Config.IsValidKey("Twitch") {
-			m.j.Log.Message("Twitch", "Unable to find \"Twitch\" config section. Using defaults.")
+		if !m.j.Config.IsValidKey("Spotify") {
+			m.j.Log.Message("Spotify", "Unable to find \"Spotify\" config section. Using defaults.")
 		} else {
 
-			errorCheck := json.Unmarshal(*m.j.Config.GetConfigData("Twitch"), &m.settings)
+			errorCheck := json.Unmarshal(*m.j.Config.GetConfigData("Spotify"), &m.settings)
 			if errorCheck != nil {
-				m.j.Log.Message("Config", "Unable to properly parse Twitch Config, somethings may be wonky.")
+				m.j.Log.Message("Config", "Unable to properly parse Spotify Config, somethings may be wonky.")
 			}
 		}
 	}

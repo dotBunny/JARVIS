@@ -10,6 +10,7 @@ import (
 	Core "./core"
 
 	Spotify "./modules/spotify"
+	Stats "./modules/stats"
 	Twitch "./modules/twitch"
 	Resources "./resources"
 )
@@ -19,6 +20,7 @@ var (
 
 	spotifyModule *Spotify.SpotifyModule
 	twitchModule  *Twitch.TwitchModule
+	statsModule   *Stats.StatsModule
 
 	quit chan os.Signal
 )
@@ -44,6 +46,10 @@ func onReady() {
 		// twitchModule := new(Twitch.TwitchModule)
 		// twitchModule.Initialize(j, discordModule)
 		// go twitchModule.Connect()
+
+		// Stats
+		statsModule := new(Stats.StatsModule)
+		statsModule.Initialize(j)
 
 		// Spotify
 		spotifyModule := new(Spotify.SpotifyModule)

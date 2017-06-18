@@ -49,6 +49,7 @@ func (m *SpotifyModule) Initialize(jarvisInstance *Core.JARVIS) {
 	}
 
 	m.setupOutputs()
+	m.setupData()
 
 	// Create new authenticator with permissions
 	m.authenticate()
@@ -56,6 +57,7 @@ func (m *SpotifyModule) Initialize(jarvisInstance *Core.JARVIS) {
 	// Start the basic polling for information
 	m.setupPolling()
 	m.setupEndpoints()
+	m.setupCommands()
 }
 
 // IsEnabled for Usage
@@ -71,50 +73,3 @@ func (m *SpotifyModule) Shutdown() {
 		}
 	}
 }
-
-// // GetCurrentlyPlayingMessage
-// func (m *SpotifyModule) GetCurrentlyPlayingMessage() string {
-// 	return string(m.LastInfoData) + " Mau5 " + m.CurrentlyPlayingURL
-// }
-
-// 	console.AddHandler("/spotify.next", "Skips to the next track in the user's Spotify queue.", m.consoleNextTrack)
-// 	console.AddAlias("/next", "/spotify.next")
-// 	console.AddAlias("/n", "/spotify.next")
-// 	console.AddAlias("/skip", "/spotify.next")
-// 	console.AddHandler("/spotify.pause", "Pause/Play the current track in Spotify.", m.consolePausePlay)
-// 	console.AddAlias("/p", "/spotify.pause")
-// 	console.AddHandler("/spotify.stats", "Display some stats from Spotify.", m.consoleStats)
-// 	console.AddHandler("/spotify.update", "Force polling Spotify for updates.", m.consoleUpdate)
-// }
-
-// func (m *SpotifyModule) consoleNextTrack(args string) {
-// 	Core.Log("SPOTIFY", "LOG", "Next Track!")
-// 	m.client.Next()
-// }
-// func (m *SpotifyModule) consolePausePlay(args string) {
-// 	if m.CurrentlyPlaying {
-// 		Core.Log("SPOTIFY", "LOG", "Paused")
-// 		m.client.Pause()
-// 		m.CurrentlyPlaying = false
-// 	} else {
-// 		Core.Log("SPOTIFY", "LOG", "Playing")
-// 		m.client.Play()
-// 		m.CurrentlyPlaying = true
-// 	}
-// }
-
-// func (m *SpotifyModule) consoleStats(input string) {
-
-// 	if m.DurationMS == 0 {
-
-// 		Core.Log("SPOTIFY", "LOG", "Currently playing "+string(m.LastInfoData)+" (?)")
-// 	} else {
-// 		percentComplete := float64(((m.PlayedMS / m.DurationMS) * 100))
-// 		Core.Log("SPOTIFY", "LOG", "Currently playing "+string(m.LastInfoData)+" ("+fmt.Sprint(Core.Round(percentComplete, .5, 2))+"%)")
-// 	}
-// }
-
-// func (m *SpotifyModule) consoleUpdate(input string) {
-// 	m.Poll()
-// 	Core.Log("SPOTIFY", "LOG", "Force Update")
-// }

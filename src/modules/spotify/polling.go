@@ -15,6 +15,7 @@ func (m *SpotifyModule) setupPolling() {
 	if spotifyPollingError != nil {
 		spotifyPollingFrequency, _ = time.ParseDuration("5s")
 	}
+	m.j.Log.Message("Spotify", "Starting polling at "+spotifyPollingFrequency.String())
 	m.ticker = time.NewTicker(spotifyPollingFrequency)
 
 	go m.loop()

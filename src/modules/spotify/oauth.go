@@ -40,7 +40,7 @@ func (m *SpotifyModule) authenticate() {
 		Description: "An OAuth2 token is required for the Spotify Module to operate properly. You must login via the provided link, allowing the access requested.",
 		Color:       7005032,
 	})
-	m.j.Log.Warning("Spotify", "Please log in to Spotify (URL copied to your clipboard as well): "+url)
+	//m.j.Log.Warning("Spotify", "Please log in to Spotify (URL copied to your clipboard as well): "+url)
 	Core.CopyToClipboard(url)
 	open.Run(url)
 
