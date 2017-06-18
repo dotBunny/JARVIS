@@ -20,7 +20,7 @@ rm -rf jarvis.zip
 
 # Copy Resources Over
 cp -rf resources/jarvis.toml jarvis-build/
-cp -rf resources/overlay jarvis-build/resources
+cp -rf resources/dashboard jarvis-build/resources
 
 # Copy Over Instructions
 cp -rf README.md jarvis-build/

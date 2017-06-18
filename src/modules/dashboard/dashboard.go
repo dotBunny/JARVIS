@@ -1,4 +1,21 @@
-package modules
+package dashboard
+
+import (
+	Core "../../core"
+)
+
+// DashboardModule Class
+type DashboardModule struct {
+	j *Core.JARVIS
+}
+
+// Initialize the Dashboard Module
+func (m *DashboardModule) Initialize(jarvisInstance *Core.JARVIS) {
+	// Assign JARVIS, the module is made we dont to create it like in core!
+	m.j = jarvisInstance
+
+	m.setupEndpoints()
+}
 
 // import (
 // 	"fmt"
@@ -42,23 +59,6 @@ package modules
 // 	m.pageBasePath = path.Join(m.config.AppDir, "resources", "overlay")
 // }
 
-// func (m *OverlayModule) endpointOverlay(w http.ResponseWriter, r *http.Request) {
-
-// 	// Server Page Per Time
-// 	basePageData, error := ioutil.ReadFile(m.basePath)
-// 	if error != nil {
-// 		Core.Log("OVERLAY", "ERROR", "Unable to read base HTML page ("+m.basePath+") from resources folder.")
-// 	} else {
-// 		m.basePage = string(basePageData)
-// 	}
-
-// 	if len(m.basePage) <= 0 {
-// 		Core.Log("OVERLAY", "ERROR", "No data to serve for overlay.")
-// 		fmt.Fprintf(w, "No Overlay Found")
-// 	} else {
-// 		fmt.Fprintf(w, m.basePage)
-// 	}
-// }
 // func (m *OverlayModule) endpointOverlayPage(w http.ResponseWriter, r *http.Request) {
 
 // 	// Build File Path
