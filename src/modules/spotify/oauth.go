@@ -15,7 +15,7 @@ var (
 	ch = make(chan *spotify.Client)
 )
 
-func (m *SpotifyModule) authenticate() {
+func (m *Module) authenticate() {
 
 	m.spotifyOAuth = spotify.NewAuthenticator("http://"+m.j.WebServer.GetIPAddress()+":"+m.j.WebServer.GetPort()+"/spotify/callback",
 		spotify.ScopeUserReadCurrentlyPlaying,
@@ -58,7 +58,7 @@ func (m *SpotifyModule) authenticate() {
 	m.spotifyClient = client
 }
 
-func (m *SpotifyModule) callbackAuthenticate(w http.ResponseWriter, r *http.Request) {
+func (m *Module) callbackAuthenticate(w http.ResponseWriter, r *http.Request) {
 	tok, err := m.spotifyOAuth.Token(m.stateHash, r)
 	if err != nil {
 		http.Error(w, "Couldn't get token", http.StatusForbidden)

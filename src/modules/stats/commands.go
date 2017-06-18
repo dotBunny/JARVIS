@@ -1,6 +1,6 @@
 package stats
 
-func (m *StatsModule) setupCommands() {
+func (m *Module) setupCommands() {
 }
 
 // 	// Setup Console Commands

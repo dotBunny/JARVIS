@@ -5,15 +5,15 @@ import (
 	"strconv"
 )
 
-// SpotifyData Pathing
-type StatsData struct {
+// Data Structure
+type Data struct {
 	WorkingOn   string
 	CoffeeCount int
 	SavesCount  int
 }
 
-func (m *StatsModule) setupData() {
-	m.data = new(StatsData)
+func (m *Module) setupData() {
+	m.data = new(Data)
 
 	// Default
 	m.data.WorkingOn = "JARVIS"

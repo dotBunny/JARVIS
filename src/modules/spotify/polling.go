@@ -9,7 +9,7 @@ import (
 	Core "../../core"
 )
 
-func (m *SpotifyModule) setupPolling() {
+func (m *Module) setupPolling() {
 	// Create Ticker
 	spotifyPollingFrequency, spotifyPollingError := time.ParseDuration(strconv.Itoa(m.settings.PollingFrequency) + "s")
 	if spotifyPollingError != nil {
@@ -22,7 +22,7 @@ func (m *SpotifyModule) setupPolling() {
 }
 
 // Loop awaiting ticker
-func (m *SpotifyModule) loop() {
+func (m *Module) loop() {
 	for {
 		select {
 		case <-m.ticker.C:
@@ -32,11 +32,11 @@ func (m *SpotifyModule) loop() {
 }
 
 // Poll For Updates
-func (m *SpotifyModule) Poll() {
+func (m *Module) Poll() {
 	m.pollCurrentlyPlaying()
 }
 
-func (m *SpotifyModule) pollCurrentlyPlaying() {
+func (m *Module) pollCurrentlyPlaying() {
 
 	state, err := m.spotifyClient.PlayerCurrentlyPlaying()
 

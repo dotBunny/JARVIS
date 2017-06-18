@@ -9,6 +9,8 @@ import (
 
 	Core "./core"
 
+	Dashboard "./modules/dashboard"
+	Overlay "./modules/overlay"
 	Spotify "./modules/spotify"
 	Stats "./modules/stats"
 	Twitch "./modules/twitch"
@@ -18,9 +20,11 @@ import (
 var (
 	j *Core.JARVIS
 
-	spotifyModule *Spotify.SpotifyModule
-	twitchModule  *Twitch.TwitchModule
-	statsModule   *Stats.StatsModule
+	dashboardModule *Dashboard.Module
+	spotifyModule   *Spotify.Module
+	twitchModule    *Twitch.Module
+	statsModule     *Stats.Module
+	overlayModule   *Overlay.Module
 
 	quit chan os.Signal
 )
@@ -31,7 +35,7 @@ func main() {
 }
 
 func onReady() {
-	systray.SetIcon(Resources.Data)
+	systray.SetIcon(Resources.TrayIcon)
 	mQuit := systray.AddMenuItem("Quit", "Shutdown JARVIS")
 	go func() {
 		<-mQuit.ClickedCh
@@ -42,23 +46,23 @@ func onReady() {
 		// Create new Jarvis instance
 		j = Core.HireJarvis()
 
-		// // Initialize Twitch
-		// twitchModule := new(Twitch.TwitchModule)
-		// twitchModule.Initialize(j, discordModule)
-		// go twitchModule.Connect()
+		// Dashboard Moudle
+		dashboardModule := new(Dashboard.Module)
+		dashboardModule.Initialize(j)
 
-		// Stats
-		statsModule := new(Stats.StatsModule)
+		// Stats Module
+		statsModule := new(Stats.Module)
 		statsModule.Initialize(j)
 
-		// Spotify
-		spotifyModule := new(Spotify.SpotifyModule)
+		// Spotify Module
+		spotifyModule := new(Spotify.Module)
 		spotifyModule.Initialize(j)
 
-		// // Initialize Modules
-		// var overlayModule Modules.OverlayModule
-		// overlayModule.Init(&config, &consoleModule)
+		// Overlay Module
+		overlayModule := new(Overlay.Module)
+		overlayModule.Initialize(j)
 
+		// Ready to rock!
 		j.Log.Message("System", "Ready")
 	}()
 }

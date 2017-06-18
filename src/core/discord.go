@@ -4,7 +4,6 @@ package core
 
 import (
 	"encoding/json"
-	"fmt"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
@@ -19,6 +18,7 @@ type DiscordConfig struct {
 	Username         string
 	PrivateChannelID string
 	LogChannelID     string
+	Prefix           string
 }
 
 func (m *DiscordCore) loadConfig() {
@@ -33,6 +33,7 @@ func (m *DiscordCore) loadConfig() {
 	m.settings.Username = "JARVIS"
 	m.settings.PrivateChannelID = "324983244326043648"
 	m.settings.LogChannelID = "325784977415340043"
+	m.settings.Prefix = ":discord: "
 
 	// Check Raw Data
 	if m.j.Config.IsInitialized() {
@@ -43,14 +44,6 @@ func (m *DiscordCore) loadConfig() {
 			errorCheck := json.Unmarshal(*m.j.Config.GetConfigData("Discord"), &m.settings)
 			if errorCheck != nil {
 				m.j.Log.Message("Config", "Unable to properly parse Discord Config, somethings may be wonky.")
-
-				m.j.Log.Message("Config", "Discord.ClientID: "+fmt.Sprintf("%d", m.settings.ClientID))
-				m.j.Log.Message("Config", "Discord.ClientSecret: "+m.settings.ClientSecret)
-				m.j.Log.Message("Config", "Discord.RedirectURI: "+m.settings.RedirectURI)
-				m.j.Log.Message("Config", "Discord.Token: "+m.settings.Token)
-				m.j.Log.Message("Config", "Discord.Username: "+m.settings.Username)
-				m.j.Log.Message("Config", "Discord.PrivateChannelID: "+m.settings.PrivateChannelID)
-				m.j.Log.Message("Config", "Discord.LogChannelID: "+m.settings.LogChannelID)
 			}
 		}
 	}

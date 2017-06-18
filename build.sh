@@ -3,6 +3,6 @@ cd "$(dirname "$0")"
 clear
 mkdir -p bin
 go build -o bin/jarvis ./src
-rm -rf bin/resources
-mkdir -p bin/resources
-cp -rf resources/dashboard bin/resources
+rm -rf bin/www
+mkdir -p bin/www
+cp -rf resources/www bin/

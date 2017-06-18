@@ -4,27 +4,29 @@ import (
 	"encoding/json"
 )
 
-// SpotifyConfig elements
-type SpotifyConfig struct {
+// Config elements
+type Config struct {
 	Enabled             bool
 	PollingFrequency    int
 	ClientID            string
 	ClientSecret        string
 	TruncateTrackLength int
 	TruncateTrackRunes  string
+	Prefix              string
 }
 
 // Initialize the Logging Module
-func (m *SpotifyModule) loadConfig() {
+func (m *Module) loadConfig() {
 	// Create default general settings
-	m.settings = new(SpotifyConfig)
+	m.settings = new(Config)
 
 	m.settings.Enabled = true
 	m.settings.PollingFrequency = 5
-	m.settings.ClientID = "7b90d69131194380a3734dfb818f8cb5"
-	m.settings.ClientSecret = "530dab948cbd4d778ef58a124826a91c"
+	m.settings.ClientID = "Your secret key needs to be in the config"
+	m.settings.ClientSecret = "Your secret key needs to be in the config"
 	m.settings.TruncateTrackLength = 85
 	m.settings.TruncateTrackRunes = "..."
+	m.settings.Prefix = ":spotify: "
 
 	// Check Raw Data
 	if m.j.Config.IsInitialized() {

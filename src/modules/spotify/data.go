@@ -1,7 +1,7 @@
 package spotify
 
-// SpotifyData Pathing
-type SpotifyData struct {
+// Data Structure
+type Data struct {
 	CurrentlyPlayingTrack string
 	LastImageData         []byte
 	DurationMS            int
@@ -10,6 +10,6 @@ type SpotifyData struct {
 	CurrentlyPlayingURL   string
 }
 
-func (m *SpotifyModule) setupData() {
-	m.data = new(SpotifyData)
+func (m *Module) setupData() {
+	m.data = new(Data)
 }

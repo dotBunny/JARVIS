@@ -1,0 +1,42 @@
+{
+  "Discord" : {
+    "ClientID" : 325302550880583681,
+    "ClientSecret" : "<Your Discord Client Secret>",
+    "Token" : "<Your Discord Bot Token>",
+    "Username" : "JARVIS#1070",
+    "PrivateChannelID": "324983244326043648",
+    "LogChannelID": "325784977415340043",
+    "Prefix":":discord: "
+  },
+  "General" : {
+    "OutputPath" : "/StreamingData/"
+  },
+  "Spotify" : {
+    "ClientID" : "<Your Spotify App ClientID>",
+    "ClientSecret" : "<Your Spotify App ClientSecret>",
+    "Enabled" : true,
+    "PollingFrequency" : 5,
+    "TruncateTrackLength" : 85,
+    "TruncateTrackRunes" : "...",
+    "Prefix": ":spotify: "
+  },
+  "WebServer" : {
+    "Enabled" : true,
+    "IPAddress" : "localhost", // Not used currently
+    "ListeningPort" : 8080,
+    "Prefix":":webserver: "
+  },
+  "Twitch" : {
+    "Channel" : "#reapazor",
+    "ChannelID" : "21139969",
+    "ChatSync" : true,
+    "ChatSyncChannelID" : "325241876758396928",
+    "ClientID" : "<Your Twitch App ClientID>",
+    "ClientSecret" : "<Your Twitch App ClientSecret>",
+    "Enabled" : true,
+    "LastFollowersCount" : 10,
+    "PollingFrequency" : 7,
+    "Username" : "mod_jarvis",
+    "Prefix" : ":twitch: "
+  }
+}

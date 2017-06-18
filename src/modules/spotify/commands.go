@@ -1,6 +1,6 @@
 package spotify
 
-func (m *SpotifyModule) setupCommands() {
+func (m *Module) setupCommands() {
 
 }
 

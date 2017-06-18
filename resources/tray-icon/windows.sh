@@ -1,0 +1,1 @@
+/Users/reapazor/go/bin/2goarray data main < icon-64.ico |  grep -v package >> iconwin.go

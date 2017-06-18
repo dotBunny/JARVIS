@@ -10,21 +10,21 @@ import (
 
 // const currentlyPlayingBase = "https://open.spotify.com/track/"
 
-// SpotifyModule Class
-type SpotifyModule struct {
+// Module Class
+type Module struct {
 	ticker        *time.Ticker
 	spotifyOAuth  spotify.Authenticator
 	spotifyClient *spotify.Client
 	stateHash     string
 	authenticated bool
-	settings      *SpotifyConfig
-	outputs       *SpotifyOutputs
-	data          *SpotifyData
+	settings      *Config
+	outputs       *Outputs
+	data          *Data
 	j             *Core.JARVIS
 }
 
 // Connect to Spotify
-func (m *SpotifyModule) Connect() {
+func (m *Module) Connect() {
 	// Bail if not enabled
 	if !m.IsEnabled() {
 		return
@@ -34,9 +34,11 @@ func (m *SpotifyModule) Connect() {
 }
 
 // Initialize the Logging Module
-func (m *SpotifyModule) Initialize(jarvisInstance *Core.JARVIS) {
+func (m *Module) Initialize(jarvisInstance *Core.JARVIS) {
 	// Assign JARVIS, the module is made we dont to create it like in core!
 	m.j = jarvisInstance
+
+	m.j.Log.RegisterChannel("Spotify", "green")
 
 	// Make sure flag is toggled off
 	m.authenticated = false
@@ -61,12 +63,12 @@ func (m *SpotifyModule) Initialize(jarvisInstance *Core.JARVIS) {
 }
 
 // IsEnabled for Usage
-func (m *SpotifyModule) IsEnabled() bool {
+func (m *Module) IsEnabled() bool {
 	return m.settings.Enabled
 }
 
 // Shutdown Module
-func (m *SpotifyModule) Shutdown() {
+func (m *Module) Shutdown() {
 	if m != nil {
 		if m.ticker != nil {
 			m.ticker.Stop()

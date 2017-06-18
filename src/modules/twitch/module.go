@@ -38,8 +38,8 @@ type TwitchMessage struct {
 	// Raw     *discordgo.MessageCreate
 }
 
-// TwitchModule Class
-type TwitchModule struct {
+// Module Class
+type Module struct {
 	// LastFollower   string
 	// LastSubscriber string
 	// LastFollowers  string
@@ -64,7 +64,7 @@ type TwitchModule struct {
 	irc           *irc.Client
 
 	discord          *Core.DiscordCore
-	settings         *TwitchConfig
+	settings         *Config
 	twitchClient     *http.Client
 	twitchOAuth      oauth2.Config
 	twitchToken      string
@@ -73,11 +73,13 @@ type TwitchModule struct {
 }
 
 // Initialize the Logging Module
-func (m *TwitchModule) Initialize(jarvisInstance *Core.JARVIS, discordInstance *Core.DiscordCore) {
+func (m *Module) Initialize(jarvisInstance *Core.JARVIS, discordInstance *Core.DiscordCore) {
 
 	// Assign JARVIS, the module is made we dont to create it like in core!
 	m.j = jarvisInstance
 	m.discord = discordInstance
+
+	m.j.Log.RegisterChannel("Twitch", "purple")
 
 	// Load Configuration
 	m.loadConfig()
@@ -113,11 +115,10 @@ func (m *TwitchModule) Initialize(jarvisInstance *Core.JARVIS, discordInstance *
 	// 	Core.RegisterEndpoint("/twitch/follower/last", m.endpointLastFollower)
 	// 	Core.RegisterEndpoint("/twitch/viewers/current", m.endpointCurrentViewers)
 
-	m.j.Log.RegisterChannel("Twitch", "purple")
 }
 
 // Connect to Twitch
-func (m *TwitchModule) Connect() {
+func (m *Module) Connect() {
 
 	if !m.IsEnabled() {
 		return
@@ -137,7 +138,7 @@ func (m *TwitchModule) Connect() {
 	//m.connectIRC()
 }
 
-func (m *TwitchModule) getJSON(url string) map[string]*json.RawMessage {
+func (m *Module) getJSON(url string) map[string]*json.RawMessage {
 
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
@@ -165,7 +166,7 @@ func (m *TwitchModule) getJSON(url string) map[string]*json.RawMessage {
 	return objmap
 }
 
-func (m *TwitchModule) getFollowers() {
+func (m *Module) getFollowers() {
 
 	data := m.getJSON(twitchRootURL + "channels/" + m.settings.ChannelID + "/follows/?limit=1")
 
@@ -179,11 +180,11 @@ func (m *TwitchModule) getFollowers() {
 }
 
 // IsEnabled for usage
-func (m *TwitchModule) IsEnabled() bool {
+func (m *Module) IsEnabled() bool {
 	return m.settings.Enabled
 }
 
-// func (m *TwitchModule) ircMessage(e *irc.Event) {
+// func (m *Module) ircMessage(e *irc.Event) {
 // 	message := e.Message()
 
 // 	message = strings.Replace(message, m.config.Twitch.ChatName, m.coloredName, -1)
@@ -202,7 +203,7 @@ func (m *TwitchModule) IsEnabled() bool {
 // }
 
 // // Loop awaiting ticker
-// func (m *TwitchModule) Loop() {
+// func (m *Module) Loop() {
 // 	for {
 // 		select {
 // 		case <-m.Ticker.C:
@@ -212,13 +213,13 @@ func (m *TwitchModule) IsEnabled() bool {
 // }
 
 // // Poll For Updates
-// func (m *TwitchModule) Poll() {
+// func (m *Module) Poll() {
 // 	m.pollFollowers()
 // 	m.pollStream()
 // }
 
 // // Shutdown Module
-// func (m *TwitchModule) Shutdown() {
+// func (m *Module) Shutdown() {
 // 	if m != nil {
 // 		if m.Ticker != nil {
 // 			m.Ticker.Stop()
@@ -230,7 +231,7 @@ func (m *TwitchModule) IsEnabled() bool {
 // 	}
 // }
 
-// func (m *TwitchModule) consoleBan(input string) {
+// func (m *Module) consoleBan(input string) {
 // 	splitLocation := strings.Index(input, " ")
 // 	var user string
 // 	var message = "Bye Bye!"
@@ -249,7 +250,7 @@ func (m *TwitchModule) IsEnabled() bool {
 // 	Core.Log("TWITCH", "IMPORTANT", "Banned @"+user+" ("+message+")")
 // }
 
-// func (m *TwitchModule) consoleTimeout(input string) {
+// func (m *Module) consoleTimeout(input string) {
 // 	splitLocation := strings.Index(input, " ")
 // 	var user string
 // 	var timeout = "30"
@@ -267,7 +268,7 @@ func (m *TwitchModule) IsEnabled() bool {
 // 	m.irc.SendRaw("CLEARCHAT " + m.config.Twitch.ChatChannel + " :" + user)
 // 	Core.Log("TWITCH", "IMPORTANT", "Timedout @"+user+" ("+timeout+" seconds)")
 // }
-// func (m *TwitchModule) consoleKick(input string) {
+// func (m *Module) consoleKick(input string) {
 // 	splitLocation := strings.Index(input, " ")
 // 	var user string
 // 	var message = "Bye Bye!"
@@ -284,15 +285,15 @@ func (m *TwitchModule) IsEnabled() bool {
 // 	Core.Log("TWITCH", "IMPORTANT", "Kicked @"+user+" ("+message+")")
 // }
 
-// func (m *TwitchModule) consoleStats(input string) {
+// func (m *Module) consoleStats(input string) {
 // 	Core.Log("TWITCH", "LOG", "Current Viewers: "+fmt.Sprint(m.CurrentViewers)+"\tFollowers: "+fmt.Sprint(m.ChannelFollowers))
 // }
-// func (m *TwitchModule) consoleUpdate(input string) {
+// func (m *Module) consoleUpdate(input string) {
 // 	m.Poll()
 // 	Core.Log("TWITCH", "LOG", "Force Update")
 // }
 
-// func (m *TwitchModule) consoleWhisper(input string) {
+// func (m *Module) consoleWhisper(input string) {
 
 // 	splitLocation := strings.Index(input, " ")
 // 	var user string
@@ -309,15 +310,15 @@ func (m *TwitchModule) IsEnabled() bool {
 
 // }
 
-// func (m *TwitchModule) endpointLastFollower(w http.ResponseWriter, r *http.Request) {
+// func (m *Module) endpointLastFollower(w http.ResponseWriter, r *http.Request) {
 // 	fmt.Fprintf(w, string(m.LastFollower))
 // }
-// func (m *TwitchModule) endpointCurrentViewers(w http.ResponseWriter, r *http.Request) {
+// func (m *Module) endpointCurrentViewers(w http.ResponseWriter, r *http.Request) {
 // 	fmt.Fprintf(w, string(m.CurrentViewers))
 
 // }
 
-// func (m *TwitchModule) pollFollowers() {
+// func (m *Module) pollFollowers() {
 
 // 	followers, error := m.client.GetChannelFollows(strconv.Itoa(m.config.Twitch.ChannelID), "", m.config.Twitch.LastFollowersCount, "DESC")
 // 	if error != nil {
@@ -357,7 +358,7 @@ func (m *TwitchModule) IsEnabled() bool {
 // 	followers = nil
 // }
 
-// func (m *TwitchModule) pollStream() {
+// func (m *Module) pollStream() {
 // 	stream, err := m.client.GetStreamByChannel(strconv.Itoa(m.config.Twitch.ChannelID))
 
 // 	if err != nil {
@@ -414,12 +415,12 @@ func (m *TwitchModule) IsEnabled() bool {
 // }
 
 // // SendMessageToChannel on Twitch
-// func (m *TwitchModule) SendMessageToChannel(input string) {
+// func (m *Module) SendMessageToChannel(input string) {
 // 	m.irc.Privmsg(m.config.Twitch.ChatChannel, input)
 // 	Core.Log("TWITCH", "LOG", m.openBracket+m.config.Twitch.ChatName+m.closeBracket+" "+input)
 // }
 
-// // func (m *TwitchModule) pollSubscribers() {
+// // func (m *Module) pollSubscribers() {
 
 // // 	subscribers, error := m.client.GetChannelSubscribers(strconv.Itoa(m.config.Twitch.ChannelID), m.OAuth, 1, 0, "DESC")
 // // 	if error != nil {

@@ -6,16 +6,16 @@ import (
 	Core "../../core"
 )
 
-// SpotifyOutputs Pathing
-type StatsOutputs struct {
-	WorkingOnPath  string
-	CoffeeCountPath  string
-	SavesCountPath string
+// Outputs Pathing
+type Outputs struct {
+	WorkingOnPath   string
+	CoffeeCountPath string
+	SavesCountPath  string
 }
 
-func (m *StatsModule) setupOutputs() {
+func (m *Module) setupOutputs() {
 
-	m.outputs = new(StatsOutputs)
+	m.outputs = new(Outputs)
 
 	m.outputs.WorkingOnPath = filepath.Join(m.j.Config.GetOutputPath(), "Stats_WorkingOn.txt")
 	m.outputs.CoffeeCountPath = filepath.Join(m.j.Config.GetOutputPath(), "Stats_CoffeeCount.txt")

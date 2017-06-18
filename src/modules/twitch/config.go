@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 )
 
-// TwitchConfig elements
-type TwitchConfig struct {
+// Config elements
+type Config struct {
 	Channel            string
 	ChannelID          string
 	ChatSync           bool
@@ -16,14 +16,14 @@ type TwitchConfig struct {
 	LastFollowersCount int
 	PollingFrequency   int
 	Username           string
-	Emoji              string
+	Prefix             string
 }
 
 // Initialize the Logging Module
-func (m *TwitchModule) loadConfig() {
+func (m *Module) loadConfig() {
 
 	// Create default general settings
-	m.settings = new(TwitchConfig)
+	m.settings = new(Config)
 
 	// TWitch Default Config
 	m.settings.Channel = "#reapazor"
@@ -36,7 +36,7 @@ func (m *TwitchModule) loadConfig() {
 	m.settings.LastFollowersCount = 10
 	m.settings.PollingFrequency = 7
 	m.settings.Username = "mod_jarvis"
-	m.settings.Emoji = ":twitch:"
+	m.settings.Prefix = ":twitch: "
 
 	// Check Raw Data
 	if m.j.Config.IsInitialized() {

@@ -4,15 +4,15 @@ import (
 	irc "./irc"
 )
 
-func (m *TwitchModule) ircJoinChannels() {
+func (m *Module) ircJoinChannels() {
 	m.j.Log.Message("Twitch", "Joining IRC Channels ..")
 	m.irc.Join(m.settings.Channel)
 }
-func (m *TwitchModule) ircWelcomeMessage() {
+func (m *Module) ircWelcomeMessage() {
 	m.irc.Privmsg(m.settings.Channel, "Hello World!")
 }
 
-func (m *TwitchModule) connectIRC() {
+func (m *Module) connectIRC() {
 	// Create IRC Objects - Username must be LOWERCASE
 
 	m.j.Log.Message("Twitch", "Connecting to IRC ...")
@@ -63,7 +63,7 @@ func (m *TwitchModule) connectIRC() {
 // 	}
 // }
 
-// func (m *TwitchModule) handleConnected(event *irc.Event) {
+// func (m *Module) handleConnected(event *irc.Event) {
 // 	// Join the channel
 // 	m.j.Log.Message("Twitch", "Joining channel "+m.settings.Channel)
 // 	m.irc.Join(m.settings.Channel)
@@ -71,14 +71,14 @@ func (m *TwitchModule) connectIRC() {
 // }
 
 //:nickname!nickname@nickname.tmi.twitch.tv PRIVMSG #channel :message
-// func (m *TwitchModule) handleMessage(event *irc.Event) {
+// func (m *Module) handleMessage(event *irc.Event) {
 
 // 	m.j.Log.Message("Twitch", "Message Received "+event.Message())
 // 	if m.settings.ChatSync {
 // 		_, _ = m.discord.GetSession().ChannelMessageSend(m.settings.ChatSyncChannelID, Core.WrapNickname(event.Nick)+" "+event.Message())
 // 	}
 // }
-// func (m *TwitchModule) handleNotice(event *irc.Event) {
+// func (m *Module) handleNotice(event *irc.Event) {
 
 // 	// if m.settings.ChatSync {
 // 	// 	_, _ = m.discord.GetSession().ChannelMessageSend(m.settings.ChatSyncChannelID, "[NOTICE] "+Core.WrapNickname(event.Nick)+" "+event.Message())

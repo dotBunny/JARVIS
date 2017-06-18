@@ -6,13 +6,15 @@ import (
 	"strconv"
 )
 
-func (m *SpotifyModule) setupEndpoints() {
+func (m *Module) setupEndpoints() {
 	// Add Endpoints
 	m.j.WebServer.RegisterEndpoint("/spotify/track", m.endpointTrack)
 	m.j.WebServer.RegisterEndpoint("/spotify/image", m.endpointImage)
+	m.j.WebServer.RegisterEndpoint("/spotify/track/", m.endpointTrack)
+	m.j.WebServer.RegisterEndpoint("/spotify/image/", m.endpointImage)
 }
 
-func (m *SpotifyModule) endpointImage(w http.ResponseWriter, r *http.Request) {
+func (m *Module) endpointImage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "image/jpeg")
 	w.Header().Set("Content-Length", strconv.Itoa(len(m.data.LastImageData)))
 	if _, err := w.Write(m.data.LastImageData); err != nil {
@@ -20,6 +22,6 @@ func (m *SpotifyModule) endpointImage(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (m *SpotifyModule) endpointTrack(w http.ResponseWriter, r *http.Request) {
+func (m *Module) endpointTrack(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(m.data.CurrentlyPlayingTrack))
 }

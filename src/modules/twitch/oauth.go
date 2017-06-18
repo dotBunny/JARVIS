@@ -16,7 +16,7 @@ var (
 )
 
 // Initialize the Logging Module
-func (m *TwitchModule) authenticate() {
+func (m *Module) authenticate() {
 
 	// Create callback endpoint
 	m.j.WebServer.RegisterEndpoint("/twitch/callback", m.callbackAuthenticate)
@@ -62,7 +62,7 @@ func (m *TwitchModule) authenticate() {
 	m.j.Log.Warning("Twitch", "OAuth Complete.")
 }
 
-func (m *TwitchModule) callbackAuthenticate(w http.ResponseWriter, r *http.Request) {
+func (m *Module) callbackAuthenticate(w http.ResponseWriter, r *http.Request) {
 
 	code := r.FormValue("code")
 

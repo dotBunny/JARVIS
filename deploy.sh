@@ -5,7 +5,7 @@ cd "$(dirname "$0")"
 # Remove & Create Temp Folder
 rm -rf jarvis-build/
 mkdir -p jarvis-build
-mkdir -p jarvis-build/resources
+mkdir -p jarvis-build/www
 
 # Build OSX
 go build -o jarvis-build/jarvis ./src
@@ -19,8 +19,8 @@ rm -rf src/jarvis.syso
 rm -rf jarvis.zip
 
 # Copy Resources Over
-cp -rf resources/jarvis.toml jarvis-build/
-cp -rf resources/dashboard jarvis-build/resources
+cp -rf resources/jarvis.json jarvis-build/
+cp -rf resources/www jarvis-build/
 
 # Copy Over Instructions
 cp -rf README.md jarvis-build/

@@ -6,16 +6,16 @@ import (
 	Core "../../core"
 )
 
-// SpotifyOutputs Pathing
-type SpotifyOutputs struct {
+// Outputs Pathing
+type Outputs struct {
 	SongPath  string
 	LinkPath  string
 	ImagePath string
 }
 
-func (m *SpotifyModule) setupOutputs() {
+func (m *Module) setupOutputs() {
 
-	m.outputs = new(SpotifyOutputs)
+	m.outputs = new(Outputs)
 
 	m.outputs.SongPath = filepath.Join(m.j.Config.GetOutputPath(), "Spotify_LatestSong.txt")
 	m.outputs.LinkPath = filepath.Join(m.j.Config.GetOutputPath(), "Spotify_LatestURL.txt")
