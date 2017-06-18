@@ -13,6 +13,7 @@ import (
 // GeneralConfig Settings
 type GeneralConfig struct {
 	OutputPath string
+	Prefix     string
 }
 
 // ConfigCore holds general configuration information
@@ -33,6 +34,11 @@ func (m *ConfigCore) GetConfigData(key string) *json.RawMessage {
 // GetOutputPath base to use for files
 func (m *ConfigCore) GetOutputPath() string {
 	return m.settings.OutputPath
+}
+
+// GetPrefix for Discord
+func (m *ConfigCore) GetPrefix() string {
+	return m.settings.Prefix
 }
 
 // Initialize the Logging Module
@@ -73,6 +79,7 @@ func (m *ConfigCore) Initialize(jarvisInstance *JARVIS) {
 
 	// General Config
 	m.settings.OutputPath = path.Join(m.j.GetApplicationPath(), "output")
+	m.settings.Prefix = ":jarvis: "
 
 	// Check Raw Data
 	if m.dataSource["General"] == nil {

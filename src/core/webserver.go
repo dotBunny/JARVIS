@@ -144,6 +144,11 @@ func (m *WebServerCore) GetPort() string {
 	return strconv.Itoa(m.settings.ListenPort)
 }
 
+// GetPrefix for webserver
+func (m *WebServerCore) GetPrefix() string {
+	return m.settings.Prefix
+}
+
 // Initialize the Logging Module
 func (m *WebServerCore) Initialize(jarvisInstance *JARVIS) {
 
@@ -155,14 +160,14 @@ func (m *WebServerCore) Initialize(jarvisInstance *JARVIS) {
 	m.j = jarvisInstance
 
 	// Register Log Channel
-	m.j.Log.RegisterChannel("WebServer", "blue")
+	m.j.Log.RegisterChannel("WebServer", "blue", m.settings.Prefix)
 
 	// Create default general settings
 	m.settings = new(WebServerConfig)
 
 	// Web Server Config
 	m.settings.ListenPort = 8080
-	m.settings.Prefix = ":webserver: "
+	m.settings.Prefix = ":go: "
 
 	// TODO: Get default IP
 

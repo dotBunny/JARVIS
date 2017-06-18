@@ -11,6 +11,7 @@ import (
 // LogCore Class
 type LogCore struct {
 	channels map[string]string
+	prefix   map[string]string
 	logFile  *os.File
 	j        *JARVIS
 }
@@ -26,9 +27,10 @@ func (m *LogCore) Initialize(jarvisInstance *JARVIS) {
 	m.j = jarvisInstance
 
 	m.channels = make(map[string]string)
+	m.prefix = make(map[string]string)
 
-	m.RegisterChannel("Core", "white")
-	m.RegisterChannel("System", "grey")
+	m.RegisterChannel("Core", "white", m.j.Config.GetPrefix())
+	m.RegisterChannel("Core", "grey", m.j.Config.GetPrefix())
 
 	logFile, err := os.OpenFile(path.Join(m.j.Config.GetOutputPath(), "jarvis.log"), os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
@@ -45,7 +47,7 @@ func (m *LogCore) Initialize(jarvisInstance *JARVIS) {
 }
 
 // RegisterChannel for use with loggin
-func (m *LogCore) RegisterChannel(tag string, color string) {
+func (m *LogCore) RegisterChannel(tag string, color string, prefix string) {
 	m.channels[strings.ToUpper(tag)] = color
 }
 

@@ -146,7 +146,7 @@ func (m *DiscordCore) Initialize(jarvisInstance *JARVIS) {
 
 	m.loadConfig()
 
-	m.j.Log.RegisterChannel("Discord", "purple")
+	m.j.Log.RegisterChannel("Discord", "purple", m.settings.Prefix)
 }
 
 // IsConnected to Discord?

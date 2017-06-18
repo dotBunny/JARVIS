@@ -14,6 +14,6 @@ func (m *Module) Initialize(jarvisInstance *Core.JARVIS) {
 	// Assign JARVIS, the module is made we dont to create it like in core!
 	m.j = jarvisInstance
 
-	m.j.Log.RegisterChannel("Twitch", "blue")
+	m.j.Log.RegisterChannel("Dashboard", "blue", m.j.WebServer.GetPrefix())
 	m.setupEndpoints()
 }

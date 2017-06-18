@@ -9,7 +9,8 @@
     "Prefix":":discord: "
   },
   "General" : {
-    "OutputPath" : "/StreamingData/"
+    "OutputPath" : "/StreamingData/",
+    "Prefix": ":jarvis: "
   },
   "Spotify" : {
     "ClientID" : "<Your Spotify App ClientID>",
