@@ -10,6 +10,7 @@ import (
 func (m *Module) setupCommands() {
 	m.j.Discord.RegisterCommand("!coffee", m.commandCoffee, "How many coffees are you on for the day?", Core.CommandAccessPrivate)
 	m.j.Discord.RegisterCommand("!save", m.commandSave, "Did someone save your ass this stream?", Core.CommandAccessPrivate)
+	m.j.Discord.RegisterCommand("!work", m.commandWorkingOn, "What are you doing?", Core.CommandAccessPrivate)
 }
 
 func (m *Module) commandCoffee(message *Core.DiscordMessage) {
@@ -60,16 +61,11 @@ func (m *Module) commandSave(message *Core.DiscordMessage) {
 	Core.SaveFile([]byte(Core.Left(fmt.Sprintf("%d", m.data.SavesCount), m.settings.PadSavesOutput, "0")), m.outputs.SavesCountPath)
 }
 
-// TODO : Command WorkingOn
+func (m *Module) commandWorkingOn(message *Core.DiscordMessage) {
 
-// 	console.AddHandler("/workingon", "Set your currently working on text.", m.consoleWorkingOn)
-// 	console.AddAlias("/w", "/workingon")
-// }
+	m.data.WorkingOn = message.Content
 
-// func (m *WorkingOnModule) consoleWorkingOn(input string) {
-// 	m.Message = input
-// 	if m.config.WorkingOn.Output {
-// 		Core.SaveFile([]byte(input), m.TextPath)
-// 	}
-// 	Core.Log("WORKING", "LOG", "Set: "+input)
-// }
+	Core.SaveFile([]byte(m.data.WorkingOn), m.outputs.WorkingOnPath)
+	m.j.Discord.Announcement(m.j.Config.GetPrefix() + "Now working on " + m.data.WorkingOn)
+	m.j.Log.Message("Stats", "Working On: "+m.data.WorkingOn)
+}
