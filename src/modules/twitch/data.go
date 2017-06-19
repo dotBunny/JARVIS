@@ -2,9 +2,10 @@ package twitch
 
 // Data Structure
 type Data struct {
-	LastFollower   string
-	LastSubscriber string
-	LastFollowers  []string
+	LastFollower    string
+	LastSubscriber  string
+	LastSubscribers []string
+	LastFollowers   []string
 
 	ChannelFollowers uint
 	ChannelViews     uint

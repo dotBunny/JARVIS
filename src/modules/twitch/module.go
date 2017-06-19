@@ -6,10 +6,6 @@ package twitch
 // curl -H 'Accept: application/vnd.twitchtv.v5+json' -H 'Client-ID: <CLIENT ID>' -X GET https://api.twitch.tv/kraken/users?login=<USERNAME>
 
 import (
-	"encoding/json"
-	"io/ioutil"
-	"log"
-
 	"golang.org/x/oauth2"
 	// 	"net/http"
 	// 	"path/filepath"
@@ -40,7 +36,7 @@ type TwitchMessage struct {
 
 // Module Class
 type Module struct {
-	Ticker *time.Ticker
+	ticker *time.Ticker
 
 	authenticated bool
 	irc           *irc.Client
@@ -57,11 +53,10 @@ type Module struct {
 }
 
 // Initialize the Logging Module
-func (m *Module) Initialize(jarvisInstance *Core.JARVIS, discordInstance *Core.DiscordCore) {
+func (m *Module) Initialize(jarvisInstance *Core.JARVIS) {
 
 	// Assign JARVIS, the module is made we dont to create it like in core!
 	m.j = jarvisInstance
-	m.discord = discordInstance
 
 	// Load Configuration
 	m.loadConfig()
@@ -74,6 +69,8 @@ func (m *Module) Initialize(jarvisInstance *Core.JARVIS, discordInstance *Core.D
 
 	// Some cached settings
 	m.twitchStreamName = strings.TrimLeft(m.settings.Channel, "#")
+
+	m.setupPolling()
 }
 
 // Connect to Twitch
@@ -97,50 +94,38 @@ func (m *Module) Connect() {
 	//m.connectIRC()
 }
 
-func (m *Module) getJSON(url string) map[string]*json.RawMessage {
+func (m *Module) getResponse(url string) (*http.Response, error) {
 
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
-		log.Fatal(err)
+		m.j.Log.Error("Twitch", "Unable to create request: "+url+", "+err.Error())
+		return nil, nil
 	}
 
 	req.Header.Set("User-Agent", "JARVIS")
 	req.Header.Set("Client-ID", m.settings.ClientID)
+	req.Header.Set("Authorization", m.twitchToken)
 	req.Header.Set("Accept", "application/vnd.twitchtv.v5+json")
 
-	res, getErr := m.twitchClient.Do(req)
-	if getErr != nil {
-		log.Fatal(getErr)
-	}
-
-	body, readErr := ioutil.ReadAll(res.Body)
-	if readErr != nil {
-		log.Fatal(readErr)
-	}
-
-	var objmap map[string]*json.RawMessage
-
-	json.Unmarshal(body, &objmap)
-
-	return objmap
-}
-
-func (m *Module) getFollowers() {
-
-	data := m.getJSON(twitchRootURL + "channels/" + m.settings.ChannelID + "/follows/?limit=1")
-
-	var followerCount int
-	err := json.Unmarshal(*data["_total"], &followerCount)
-	if err != nil {
-		m.j.Log.Warning("Twitch", "Failed to update follower count.")
-	}
-	//log.Println("Followers: " + fmt.Sprintf("%d", followerCount))
-
+	return m.twitchClient.Do(req)
 }
 
 // IsEnabled for usage
 func (m *Module) IsEnabled() bool {
 	return m.settings.Enabled
+}
+
+// Shutdown Module
+func (m *Module) Shutdown() {
+	if m != nil {
+		if m.ticker != nil {
+			m.ticker.Stop()
+		}
+
+		// if m.irc != nil {
+		// 	m.irc.Disconnect()
+		// }
+	}
 }
 
 // func (m *Module) ircMessage(e *irc.Event) {
@@ -158,35 +143,6 @@ func (m *Module) IsEnabled() bool {
 
 // 	} else {
 // 		Core.Log("TWITCH", "IMPORTANT", "[DM] "+m.openBracket+e.Nick+m.closeBracket+" "+message)
-// 	}
-// }
-
-// // Loop awaiting ticker
-// func (m *Module) Loop() {
-// 	for {
-// 		select {
-// 		case <-m.Ticker.C:
-// 			m.Poll()
-// 		}
-// 	}
-// }
-
-// // Poll For Updates
-// func (m *Module) Poll() {
-// 	m.pollFollowers()
-// 	m.pollStream()
-// }
-
-// // Shutdown Module
-// func (m *Module) Shutdown() {
-// 	if m != nil {
-// 		if m.Ticker != nil {
-// 			m.Ticker.Stop()
-// 		}
-
-// 		if m.irc != nil {
-// 			m.irc.Disconnect()
-// 		}
 // 	}
 // }
 
@@ -269,134 +225,8 @@ func (m *Module) IsEnabled() bool {
 
 // }
 
-// func (m *Module) endpointLastFollower(w http.ResponseWriter, r *http.Request) {
-// 	fmt.Fprintf(w, string(m.LastFollower))
-// }
-// func (m *Module) endpointChannelViewers(w http.ResponseWriter, r *http.Request) {
-// 	fmt.Fprintf(w, string(m.ChannelViewers))
-
-// }
-
-// func (m *Module) pollFollowers() {
-
-// 	followers, error := m.client.GetChannelFollows(strconv.Itoa(m.config.Twitch.ChannelID), "", m.config.Twitch.LastFollowersCount, "DESC")
-// 	if error != nil {
-// 		Core.Log("TWITCH", "ERROR", error.Error())
-// 		return
-// 	}
-
-// 	if followers.Total > 0 {
-
-// 		// Handle Last Follower
-// 		if followers.Follows[0].User.DisplayName != m.LastFollower {
-// 			if m.config.Twitch.Output {
-// 				Core.SaveFile([]byte(followers.Follows[0].User.DisplayName), m.latestFollowerPath)
-// 			}
-
-// 			m.LastFollower = followers.Follows[0].User.DisplayName
-// 			Core.Log("TWITCH", "IMPORTANT", "New Follower "+followers.Follows[0].User.DisplayName)
-
-// 			// Because the latest isn't the same we know the last 10 is not accurate
-
-// 			var buffer bytes.Buffer
-// 			items := len(followers.Follows)
-// 			if items > m.config.Twitch.LastFollowersCount {
-// 				items = m.config.Twitch.LastFollowersCount
-// 			}
-// 			for i := 0; i < items; i++ {
-// 				buffer.WriteString(followers.Follows[i].User.DisplayName)
-// 				buffer.WriteString("\n")
-// 			}
-
-// 			m.LastFollowers = buffer.String()
-// 			if m.config.Twitch.Output {
-// 				Core.SaveFile(buffer.Bytes(), m.latestFollowersPath)
-// 			}
-// 		}
-// 	}
-// 	followers = nil
-// }
-
-// func (m *Module) pollStream() {
-// 	stream, err := m.client.GetStreamByChannel(strconv.Itoa(m.config.Twitch.ChannelID))
-
-// 	if err != nil {
-// 		Core.Log("TWITCH", "ERROR", "Polling Stream Error - "+err.Error())
-// 		return
-// 	} else if stream == nil {
-// 		Core.Log("TWITCH", "IMPORTANT", "Stream Offline")
-// 		return
-// 	} else if stream.Game == "" {
-// 		Core.Log("TWITCH", "IMPORTANT", "Stream Offline")
-// 		return
-// 	}
-
-// 	var workingString string
-
-// 	if stream.Channel.Followers != m.ChannelFollowers {
-// 		m.ChannelFollowers = stream.Channel.Followers
-// 		if m.config.Twitch.Output {
-// 			workingString = fmt.Sprint(m.ChannelFollowers)
-// 			Core.SaveFile([]byte(workingString), m.channelFollowersPath)
-// 		}
-// 	}
-
-// 	if stream.Channel.Views != m.ChannelViews {
-// 		m.ChannelViews = stream.Channel.Views
-// 		if m.config.Twitch.Output {
-// 			workingString = fmt.Sprint(m.ChannelViews)
-// 			Core.SaveFile([]byte(workingString), m.channelViewsPath)
-// 		}
-// 	}
-
-// 	if stream.Viewers != m.ChannelViewers {
-// 		m.ChannelViewers = stream.Viewers
-// 		if m.config.Twitch.Output {
-// 			workingString = fmt.Sprintf("%03d", m.ChannelViewers)
-// 			Core.SaveFile([]byte(workingString), m.currentViewersPath)
-// 		}
-// 	}
-
-// 	if stream.Channel.DisplayName != m.ChannelName {
-// 		m.ChannelName = stream.Channel.DisplayName
-// 		if m.config.Twitch.Output {
-// 			Core.SaveFile([]byte(m.ChannelName), m.currentDisplayNamePath)
-// 		}
-// 	}
-// 	if stream.Game != m.ChannelGame {
-// 		m.ChannelGame = stream.Game
-// 		if m.config.Twitch.Output {
-// 			Core.SaveFile([]byte(m.ChannelGame), m.currentGamePath)
-// 		}
-// 	}
-
-// 	stream = nil
-// }
-
 // // SendMessageToChannel on Twitch
 // func (m *Module) SendMessageToChannel(input string) {
 // 	m.irc.Privmsg(m.config.Twitch.ChatChannel, input)
 // 	Core.Log("TWITCH", "LOG", m.openBracket+m.config.Twitch.ChatName+m.closeBracket+" "+input)
 // }
-
-// // func (m *Module) pollSubscribers() {
-
-// // 	subscribers, error := m.client.GetChannelSubscribers(strconv.Itoa(m.config.Twitch.ChannelID), m.OAuth, 1, 0, "DESC")
-// // 	if error != nil {
-// // 		Core.Log("TWITCH", "ERROR", error.Error())
-// // 	}
-
-// // 	if subscribers.Total > 0 {
-// // 		if subscribers.Subscriptions[0].User.Name != m.LastSubscriber {
-
-// // 			if m.config.Twitch.Output {
-// // 				var buffer bytes.Buffer
-// // 				buffer.WriteString(subscribers.Subscriptions[0].User.Name)
-// // 				Core.SaveFile(buffer.Bytes(), m.latestSubscriberPath)
-// // 			}
-
-// // 			m.LastSubscriber = subscribers.Subscriptions[0].User.Name
-// // 			Core.Log("TWITCH", "IMPORTANT", "New Subscriber "+subscribers.Subscriptions[0].User.Name)
-// // 		}
-// // 	}
-// // }

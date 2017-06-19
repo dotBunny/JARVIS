@@ -6,17 +6,21 @@ import (
 
 // Config elements
 type Config struct {
-	Channel            string
-	ChannelID          string
-	ChatSync           bool
-	ChatSyncChannelID  string
-	ClientID           string
-	ClientSecret       string
-	Enabled            bool
-	LastFollowersCount int
-	PollingFrequency   int
-	Username           string
-	Prefix             string
+	Channel                     string
+	ChannelID                   string
+	ChatSync                    bool
+	ChatSyncChannelID           string
+	ClientID                    string
+	ClientSecret                string
+	Enabled                     bool
+	LastFollowersCount          int
+	LastSubscribersCount        int
+	PollingFrequency            int
+	Username                    string
+	Prefix                      string
+	PadChannelFollowersOutput   int
+	PadChannelViewersOutput     int
+	PadChannelSubscribersOutput int
 }
 
 // Initialize the Logging Module
@@ -34,9 +38,13 @@ func (m *Module) loadConfig() {
 	m.settings.ClientSecret = "You need to set your ClientSecret"
 	m.settings.Enabled = true
 	m.settings.LastFollowersCount = 10
+	m.settings.LastSubscribersCount = 10
 	m.settings.PollingFrequency = 7
 	m.settings.Username = "mod_jarvis"
 	m.settings.Prefix = ":twitch: "
+	m.settings.PadChannelFollowersOutput = 3
+	m.settings.PadChannelViewersOutput = 3
+	m.settings.PadChannelSubscribersOutput = 3
 
 	// Check Raw Data
 	if m.j.Config.IsInitialized() {

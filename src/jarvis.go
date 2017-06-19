@@ -58,6 +58,10 @@ func onReady() {
 		spotifyModule := new(Spotify.Module)
 		spotifyModule.Initialize(j)
 
+		// Twitch Module
+		twitchModule := new(Twitch.Module)
+		twitchModule.Initialize(j)
+
 		// Overlay Module
 		overlayModule := new(Overlay.Module)
 		overlayModule.Initialize(j)
@@ -71,6 +75,7 @@ func onReady() {
 func Shutdown() {
 
 	spotifyModule.Shutdown()
+	twitchModule.Shutdown()
 
 	j.Shutdown()
 	log.Println("[SYSTEM]\tShutdown.")

@@ -45,8 +45,12 @@
     "ClientSecret" : "<Your Twitch App ClientSecret>",
     "Enabled" : true,
     "LastFollowersCount" : 10,
+    "LastSubscribersCount" : 10,
     "PollingFrequency" : 7,
     "Username" : "mod_jarvis",
-    "Prefix" : "<:twitch:326026029946765324> "
+    "Prefix" : "<:twitch:326026029946765324> ",
+    "PadChannelFollowersOutput" : 3,
+    "PadChannelViewersOutput" : 3,
+    "PadChannelSubscribersOutput " : 3
   }
 }

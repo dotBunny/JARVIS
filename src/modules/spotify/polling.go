@@ -17,7 +17,7 @@ func (m *Module) setupPolling() {
 	}
 	m.j.Log.Message("Spotify", "Starting polling at "+spotifyPollingFrequency.String())
 	m.ticker = time.NewTicker(spotifyPollingFrequency)
-
+	m.Poll()
 	go m.loop()
 }
 
