@@ -6,7 +6,12 @@
     "Username" : "JARVIS#1070",
     "PrivateChannelID": "324983244326043648",
     "LogChannelID": "325784977415340043",
-    "Prefix":"<:discord:326026030735294465> "
+    "Prefix":"<:discord:326026030735294465> ",
+    "AnnouncementChannels" : [
+      "324979047396540418",
+      "325241876758396928",
+      "326010201427804180"
+    ]
   },
   "General" : {
     "OutputPath" : "/StreamingData/",

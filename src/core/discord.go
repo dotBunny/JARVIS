@@ -11,14 +11,15 @@ import (
 
 // DiscordConfig Settings
 type DiscordConfig struct {
-	ClientID         uint
-	ClientSecret     string
-	RedirectURI      string
-	Token            string
-	Username         string
-	PrivateChannelID string
-	LogChannelID     string
-	Prefix           string
+	ClientID             uint
+	ClientSecret         string
+	RedirectURI          string
+	Token                string
+	Username             string
+	PrivateChannelID     string
+	LogChannelID         string
+	Prefix               string
+	AnnouncementChannels []string
 }
 
 func (m *DiscordCore) loadConfig() {
@@ -34,6 +35,8 @@ func (m *DiscordCore) loadConfig() {
 	m.settings.PrivateChannelID = "324983244326043648"
 	m.settings.LogChannelID = "325784977415340043"
 	m.settings.Prefix = ":discord: "
+
+	// TODO Add default annoucnemet channels
 
 	// Check Raw Data
 	if m.j.Config.IsInitialized() {
@@ -62,17 +65,18 @@ type DiscordMessage struct {
 
 // DiscordCore facilitates the callback/web related hosting
 type DiscordCore struct {
-	botID          string
-	channelCache   map[string]int
-	commandAliases map[string]string
-	commandCache   []string
-	commands       map[string]DiscordFunc
-	connected      bool
-	descriptions   map[string]string
-	settings       *DiscordConfig
-	session        *discordgo.Session
-	user           *discordgo.User
-	j              *JARVIS
+	botID               string
+	channelCache        map[string]int
+	commandAliases      map[string]string
+	commandAccessLevels map[string]int
+	commandCache        []string
+	commands            map[string]DiscordFunc
+	connected           bool
+	descriptions        map[string]string
+	settings            *DiscordConfig
+	session             *discordgo.Session
+	user                *discordgo.User
+	j                   *JARVIS
 }
 
 // Connect to Discord Server
@@ -143,6 +147,7 @@ func (m *DiscordCore) Initialize(jarvisInstance *JARVIS) {
 	m.commands = make(map[string]DiscordFunc)
 	m.descriptions = make(map[string]string)
 	m.channelCache = make(map[string]int)
+	m.commandAccessLevels = make(map[string]int)
 
 	m.loadConfig()
 
@@ -159,8 +164,15 @@ func (m *DiscordCore) RegisterAlias(alias string, command string) {
 	m.commandAliases[command] = alias
 }
 
+// Announcement sends a message to all channels flagged in settings
+func (m *DiscordCore) Announcement(message string) {
+	for _, element := range m.settings.AnnouncementChannels {
+		m.session.ChannelMessageSend(element, message)
+	}
+}
+
 // RegisterCommand to use with bot
-func (m *DiscordCore) RegisterCommand(command string, function DiscordFunc, description string) {
+func (m *DiscordCore) RegisterCommand(command string, function DiscordFunc, description string, accessLevel int) {
 
 	// Sanitize
 	command = strings.ToLower(command)
@@ -174,6 +186,7 @@ func (m *DiscordCore) RegisterCommand(command string, function DiscordFunc, desc
 	// Add to command buffer and save description
 	m.commands[command] = function
 	m.descriptions[command] = description
+	m.commandAccessLevels[command] = accessLevel
 
 	// Add to command cache for easier lookup
 	m.commandCache = append(m.commandCache, command)
@@ -199,7 +212,22 @@ func (m *DiscordCore) messageHandler(session *discordgo.Session, message *discor
 		targetCommand = m.commandAliases[command]
 	}
 
-	if m.commands[command] != nil {
+	if execCommand, ok := m.commands[command]; ok {
+
+		// Log Channel Access Only
+		if m.commandAccessLevels[command] == CommandAccessLog && message.ChannelID != m.GetLogChannelID() {
+			return
+		}
+
+		// Check Private/Log Only
+		if m.commandAccessLevels[command] == CommandAccessPrivate {
+			if message.ChannelID == m.GetPrivateChannelID() {
+			} else if message.ChannelID == m.GetLogChannelID() {
+
+			} else {
+				return
+			}
+		}
 
 		// Create new Discord transport message
 		var newMessage DiscordMessage
@@ -208,10 +236,6 @@ func (m *DiscordCore) messageHandler(session *discordgo.Session, message *discor
 		newMessage.Content = strings.TrimLeft(message.Content, command)
 		newMessage.Raw = message
 
-		// Reference command
-		execCommand := m.commands[targetCommand]
-
-		// Execute it!
 		execCommand(&newMessage)
 	}
 }

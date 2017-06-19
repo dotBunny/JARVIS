@@ -9,6 +9,15 @@ const LetterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 //CommandPrefix for commands in channel
 const CommandPrefix = "!"
 
+// CommandAccessPublic sets the command to be accessible across all channels the bot is in
+const CommandAccessPublic = 1
+
+// CommandAccessPrivate sets the command to be accessible in the private channel
+const CommandAccessPrivate = 2
+
+// CommandAccessLog sets the command to be accessible in the log channel only
+const CommandAccessLog = 3
+
 // var (
 // 	// GameDevMeetupIconURI - PTBO Game Dev Thumbnail
 // 	LineSpacer = func() string { return "\t\t\t\t" }
