@@ -91,7 +91,7 @@ func (m *Module) pollFollowers() {
 
 			var buffer bytes.Buffer
 			for i := 0; i < itemLength; i++ {
-				m.data.LastFollowers[i] = followers.Follows[i].User.DisplayName
+				m.data.LastFollowers = append(m.data.LastFollowers, followers.Follows[i].User.DisplayName)
 				buffer.WriteString(followers.Follows[i].User.DisplayName)
 				buffer.WriteString("\n")
 			}

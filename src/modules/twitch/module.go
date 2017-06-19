@@ -38,8 +38,7 @@ type TwitchMessage struct {
 type Module struct {
 	ticker *time.Ticker
 
-	authenticated bool
-	irc           *irc.Client
+	irc *irc.Client
 
 	discord          *Core.DiscordCore
 	settings         *Config
@@ -65,6 +64,9 @@ func (m *Module) Initialize(jarvisInstance *Core.JARVIS) {
 
 	m.setupData()
 	m.setupOutputs()
+
+	m.authenticate()
+
 	m.setupEndpoints()
 
 	// Some cached settings
@@ -73,29 +75,7 @@ func (m *Module) Initialize(jarvisInstance *Core.JARVIS) {
 	m.setupPolling()
 }
 
-// Connect to Twitch
-func (m *Module) Connect() {
-
-	if !m.IsEnabled() {
-		return
-	}
-	// Make sure flag is toggled off
-	m.authenticated = false
-
-	// Start OAuth2 Procedure
-	m.authenticate()
-	//go m.getFollowers()
-
-	// Create Poller
-	// twitchPollingFrequency, _ := time.ParseDuration(fmt.Sprintf("%ds", m.settings.PollingFrequency))
-	// m.Ticker = time.NewTicker(twitchPollingFrequency)
-
-	// Dont connect twich
-	//m.connectIRC()
-}
-
 func (m *Module) getResponse(url string) (*http.Response, error) {
-
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		m.j.Log.Error("Twitch", "Unable to create request: "+url+", "+err.Error())

@@ -16,7 +16,6 @@ type Module struct {
 	spotifyOAuth  spotify.Authenticator
 	spotifyClient *spotify.Client
 	stateHash     string
-	authenticated bool
 	settings      *Config
 	outputs       *Outputs
 	data          *Data
@@ -39,8 +38,6 @@ func (m *Module) Initialize(jarvisInstance *Core.JARVIS) {
 	m.j = jarvisInstance
 
 	// Make sure flag is toggled off
-	m.authenticated = false
-
 	m.loadConfig()
 
 	m.j.Log.RegisterChannel("Spotify", "green", m.settings.Prefix)
