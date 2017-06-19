@@ -40,31 +40,15 @@ type TwitchMessage struct {
 
 // Module Class
 type Module struct {
-	// LastFollower   string
-	// LastSubscriber string
-	// LastFollowers  string
-
-	// ChannelFollowers   uint
-	// ChannelViews       uint
-	// ChannelDisplayName string
-	// CurrentViewers     uint
-	// CurrentGame        string
-
 	Ticker *time.Ticker
 
-	// latestFollowerPath     string
-	// latestFollowersPath    string
-	// latestSubscriberPath   string
-	// currentGamePath        string
-	// currentViewersPath     string
-	// currentDisplayNamePath string
-	// channelViewsPath       string
-	// channelFollowersPath   string
 	authenticated bool
 	irc           *irc.Client
 
 	discord          *Core.DiscordCore
 	settings         *Config
+	outputs          *Outputs
+	data             *Data
 	twitchClient     *http.Client
 	twitchOAuth      oauth2.Config
 	twitchToken      string
@@ -84,37 +68,12 @@ func (m *Module) Initialize(jarvisInstance *Core.JARVIS, discordInstance *Core.D
 
 	m.j.Log.RegisterChannel("Twitch", "purple", m.settings.Prefix)
 
+	m.setupData()
+	m.setupOutputs()
+	m.setupEndpoints()
+
 	// Some cached settings
 	m.twitchStreamName = strings.TrimLeft(m.settings.Channel, "#")
-
-	// HANDLE OUT PUTS
-	// 	// Only do this if we are going to write files
-	// 	if m.config.Twitch.Output {
-
-	// 		// Create our output paths
-	// 		m.latestFollowerPath = filepath.Join(m.config.General.OutputPath, "Twitch_LatestFollower.txt")
-	// 		m.latestFollowersPath = filepath.Join(m.config.General.OutputPath, "Twitch_LatestFollowers.txt")
-	// 		m.latestSubscriberPath = filepath.Join(m.config.General.OutputPath, "Twitch_LatestSubscriber.txt")
-	// 		m.currentGamePath = filepath.Join(m.config.General.OutputPath, "Twitch_CurrentGame.txt")
-	// 		m.currentViewersPath = filepath.Join(m.config.General.OutputPath, "Twitch_CurrentViewers.txt")
-	// 		m.currentDisplayNamePath = filepath.Join(m.config.General.OutputPath, "Twitch_CurrentDisplayName.txt")
-	// 		m.channelViewsPath = filepath.Join(m.config.General.OutputPath, "Twitch_ChannelViews.txt")
-	// 		m.channelFollowersPath = filepath.Join(m.config.General.OutputPath, "Twitch_ChannelFollowers.txt")
-
-	// 		// Check latestFollowerPath
-	// 		Core.Touch(m.latestFollowerPath)
-	// 		Core.Touch(m.latestSubscriberPath)
-	// 		Core.Touch(m.currentGamePath)
-	// 		Core.Touch(m.currentViewersPath)
-	// 		Core.Touch(m.currentDisplayNamePath)
-	// 		Core.Touch(m.channelViewsPath)
-	// 		Core.Touch(m.channelFollowersPath)
-	// 	}
-
-	// 	// Add Endpoints
-	// 	Core.RegisterEndpoint("/twitch/follower/last", m.endpointLastFollower)
-	// 	Core.RegisterEndpoint("/twitch/viewers/current", m.endpointCurrentViewers)
-
 }
 
 // Connect to Twitch
@@ -286,7 +245,7 @@ func (m *Module) IsEnabled() bool {
 // }
 
 // func (m *Module) consoleStats(input string) {
-// 	Core.Log("TWITCH", "LOG", "Current Viewers: "+fmt.Sprint(m.CurrentViewers)+"\tFollowers: "+fmt.Sprint(m.ChannelFollowers))
+// 	Core.Log("TWITCH", "LOG", "Current Viewers: "+fmt.Sprint(m.ChannelViewers)+"\tFollowers: "+fmt.Sprint(m.ChannelFollowers))
 // }
 // func (m *Module) consoleUpdate(input string) {
 // 	m.Poll()
@@ -313,8 +272,8 @@ func (m *Module) IsEnabled() bool {
 // func (m *Module) endpointLastFollower(w http.ResponseWriter, r *http.Request) {
 // 	fmt.Fprintf(w, string(m.LastFollower))
 // }
-// func (m *Module) endpointCurrentViewers(w http.ResponseWriter, r *http.Request) {
-// 	fmt.Fprintf(w, string(m.CurrentViewers))
+// func (m *Module) endpointChannelViewers(w http.ResponseWriter, r *http.Request) {
+// 	fmt.Fprintf(w, string(m.ChannelViewers))
 
 // }
 
@@ -390,24 +349,24 @@ func (m *Module) IsEnabled() bool {
 // 		}
 // 	}
 
-// 	if stream.Viewers != m.CurrentViewers {
-// 		m.CurrentViewers = stream.Viewers
+// 	if stream.Viewers != m.ChannelViewers {
+// 		m.ChannelViewers = stream.Viewers
 // 		if m.config.Twitch.Output {
-// 			workingString = fmt.Sprintf("%03d", m.CurrentViewers)
+// 			workingString = fmt.Sprintf("%03d", m.ChannelViewers)
 // 			Core.SaveFile([]byte(workingString), m.currentViewersPath)
 // 		}
 // 	}
 
-// 	if stream.Channel.DisplayName != m.ChannelDisplayName {
-// 		m.ChannelDisplayName = stream.Channel.DisplayName
+// 	if stream.Channel.DisplayName != m.ChannelName {
+// 		m.ChannelName = stream.Channel.DisplayName
 // 		if m.config.Twitch.Output {
-// 			Core.SaveFile([]byte(m.ChannelDisplayName), m.currentDisplayNamePath)
+// 			Core.SaveFile([]byte(m.ChannelName), m.currentDisplayNamePath)
 // 		}
 // 	}
-// 	if stream.Game != m.CurrentGame {
-// 		m.CurrentGame = stream.Game
+// 	if stream.Game != m.ChannelGame {
+// 		m.ChannelGame = stream.Game
 // 		if m.config.Twitch.Output {
-// 			Core.SaveFile([]byte(m.CurrentGame), m.currentGamePath)
+// 			Core.SaveFile([]byte(m.ChannelGame), m.currentGamePath)
 // 		}
 // 	}
 
