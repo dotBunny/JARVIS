@@ -37,6 +37,29 @@ func (m *Module) commandCoffee(message *Core.DiscordMessage) {
 	Core.SaveFile([]byte(Core.Left(fmt.Sprintf("%d", m.data.CoffeeCount), m.settings.PadCoffeeOutput, "0")), m.outputs.CoffeeCountPath)
 }
 
+func (m *Module) commandCrash(message *Core.DiscordMessage) {
+
+	if len(message.Content) > 0 {
+		i, err := strconv.Atoi(message.Content)
+		if err == nil {
+			m.data.CrashCount = i
+			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "Crashes set to " + fmt.Sprintf("%d", m.data.SavesCount) + "!")
+		}
+	} else {
+		m.data.CrashCount++
+
+		if m.data.CrashCount == 1 {
+			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "Our first crash of the day :(")
+		} else {
+			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "CRASHED! (and or burned!) - That's number " + fmt.Sprintf("%d", m.data.CrashCount) + " of the day.")
+		}
+
+		// Record in Log
+		m.j.Log.Message("Stats", "Crash Recorded ("+fmt.Sprintf("%d", m.data.CrashCount)+")")
+	}
+
+	Core.SaveFile([]byte(Core.Left(fmt.Sprintf("%d", m.data.CrashCount), m.settings.PadCrashOutput, "0")), m.outputs.CrashCountPath)
+}
 func (m *Module) commandSave(message *Core.DiscordMessage) {
 
 	if len(message.Content) > 0 {
@@ -49,9 +72,9 @@ func (m *Module) commandSave(message *Core.DiscordMessage) {
 		m.data.SavesCount++
 
 		if m.data.SavesCount == 1 {
-			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "A save has been registered! The first of the day!")
+			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "The first save of the day!")
 		} else {
-			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "A save has been registered! We are up to " + fmt.Sprintf("%d", m.data.SavesCount) + "!")
+			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "SAVED!!! We are up to " + fmt.Sprintf("%d", m.data.SavesCount) + "!")
 		}
 
 		// Record in Log

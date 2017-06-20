@@ -7,6 +7,7 @@ import (
 // Config elements
 type Config struct {
 	PadCoffeeOutput int
+	PadCrashOutput  int
 	PadSavesOutput  int
 }
 
@@ -17,6 +18,7 @@ func (m *Module) loadConfig() {
 
 	m.settings.PadCoffeeOutput = 2
 	m.settings.PadSavesOutput = 2
+	m.settings.PadCrashOutput = 2
 
 	// Check Raw Data
 	if m.j.Config.IsInitialized() {

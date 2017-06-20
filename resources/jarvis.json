@@ -28,6 +28,7 @@
   },
   "Stats" : {
     "PadCoffeeOutput" : 2,
+    "PadCrashesOutput" : 2,
     "PadSavesOutput" : 2
   },
   "WebServer" : {
