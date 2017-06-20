@@ -17,6 +17,7 @@ func (m *Module) setupCommands() {
 func (m *Module) commandCoffee(message *Core.DiscordMessage) {
 
 	if len(message.Content) > 0 {
+
 		i, err := strconv.Atoi(message.Content)
 		if err == nil {
 			m.data.CoffeeCount = i
@@ -32,9 +33,10 @@ func (m *Module) commandCoffee(message *Core.DiscordMessage) {
 		}
 
 		// Record in Log
-		m.j.Log.Message("Stats", "Coffee Recorded ("+fmt.Sprintf("%d", m.data.CoffeeCount)+")")
+
 	}
 
+	m.j.Log.Message("Stats", "Coffee Recorded ("+fmt.Sprintf("%d", m.data.CoffeeCount)+")")
 	Core.SaveFile([]byte(Core.Left(fmt.Sprintf("%d", m.data.CoffeeCount), m.settings.PadCoffeeOutput, "0")), m.outputs.CoffeeCountPath)
 }
 
@@ -56,9 +58,9 @@ func (m *Module) commandCrash(message *Core.DiscordMessage) {
 		}
 
 		// Record in Log
-		m.j.Log.Message("Stats", "Crash Recorded ("+fmt.Sprintf("%d", m.data.CrashCount)+")")
-	}
 
+	}
+	m.j.Log.Message("Stats", "Crash Recorded ("+fmt.Sprintf("%d", m.data.CrashCount)+")")
 	Core.SaveFile([]byte(Core.Left(fmt.Sprintf("%d", m.data.CrashCount), m.settings.PadCrashOutput, "0")), m.outputs.CrashCountPath)
 }
 func (m *Module) commandSave(message *Core.DiscordMessage) {
@@ -79,9 +81,9 @@ func (m *Module) commandSave(message *Core.DiscordMessage) {
 		}
 
 		// Record in Log
-		m.j.Log.Message("Stats", "Save Recorded ("+fmt.Sprintf("%d", m.data.SavesCount)+")")
-	}
 
+	}
+	m.j.Log.Message("Stats", "Save Recorded ("+fmt.Sprintf("%d", m.data.SavesCount)+")")
 	Core.SaveFile([]byte(Core.Left(fmt.Sprintf("%d", m.data.SavesCount), m.settings.PadSavesOutput, "0")), m.outputs.SavesCountPath)
 }
 

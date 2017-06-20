@@ -206,8 +206,7 @@ func (m *DiscordCore) messageHandler(session *discordgo.Session, message *discor
 	if message.Author.ID == m.botID {
 		return
 	}
-
-	contentSplit := strings.Split(message.Content, ",")
+	contentSplit := strings.Split(message.Content, " ")
 	command := strings.ToLower(contentSplit[0])
 
 	// Assign the command we theorehtically will be processing
@@ -219,29 +218,29 @@ func (m *DiscordCore) messageHandler(session *discordgo.Session, message *discor
 		targetCommand = m.commandAliases[command]
 	}
 
-	if execCommand, ok := m.commands[command]; ok {
-
+	if execCommand, ok := m.commands[targetCommand]; ok {
 		// Log Channel Access Only
-		if m.commandAccessLevels[command] == CommandAccessLog && message.ChannelID != m.GetLogChannelID() {
-			return
+		var accessLevelCheck = true
+		if m.commandAccessLevels[targetCommand] == CommandAccessLog && message.ChannelID != m.GetLogChannelID() {
+
+			accessLevelCheck = false
 		}
 
 		// Check Private/Log Only
-		if m.commandAccessLevels[command] == CommandAccessPrivate {
-			if message.ChannelID == m.GetPrivateChannelID() {
-			} else if message.ChannelID == m.GetLogChannelID() {
+		if m.commandAccessLevels[targetCommand] == CommandAccessPrivate && message.ChannelID != m.GetPrivateChannelID() {
+			accessLevelCheck = false
+		}
 
-			} else {
-				return
-			}
+		if !accessLevelCheck {
+			return
 		}
 
 		// Create new Discord transport message
-		var newMessage DiscordMessage
-		newMessage.Author = message.Author.Username
-		newMessage.Command = targetCommand
-		newMessage.Content = strings.TrimLeft(message.Content, command)
-		newMessage.Raw = message
+		newMessage := DiscordMessage{
+			Author:  message.Author.Username,
+			Command: targetCommand,
+			Content: strings.TrimLeft(strings.TrimLeft(message.Content, command), " "),
+			Raw:     message}
 
 		execCommand(&newMessage)
 	}
