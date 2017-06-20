@@ -21,20 +21,26 @@ type WebServerConfig struct {
 
 // WebServerCore facilitates the callback/web related hosting
 type WebServerCore struct {
-	externalIP  string
-	settings    *WebServerConfig
-	contentPath string
-	pagePath    string
+	externalIP string
+	settings   *WebServerConfig
+	webPath    string
 
 	j *JARVIS
 }
 
-func (m *WebServerCore) endpointContent(w http.ResponseWriter, r *http.Request) {
+func (m *WebServerCore) endpointBase(w http.ResponseWriter, r *http.Request) {
 
 	// Santize query (just incase)
-	var query = strings.Replace(r.URL.RawQuery, "..", "/", -1)
+	var query = strings.Replace(r.URL.RequestURI(), "..", "/", -1)
+
+	// Remove query
+	var queryIndex = strings.Index(query, "?")
+	if queryIndex > 0 {
+		query = query[:queryIndex]
+	}
+
 	// Build File Path
-	filePath := path.Join(m.contentPath, query)
+	filePath := path.Join(m.webPath, query)
 
 	// Check Existence
 	_, err := os.Stat(filePath)
@@ -55,23 +61,44 @@ func (m *WebServerCore) endpointContent(w http.ResponseWriter, r *http.Request) 
 	w.Header().Set("Cache-Control", "no-cache, must-revalidate")
 
 	// Check MIME Type
-	last3 := filePath[len(filePath)-3:]
-	switch last3 {
-	case "png":
+	ext := filePath[strings.LastIndex(filePath, "."):]
+
+	switch ext {
+	case ".png":
 		w.Header().Set("Content-Type", "image/png")
 		break
-	case "gif":
+	case ".gif":
 		w.Header().Set("Content-Type", "image/gif")
 		break
 	case ".js":
 		w.Header().Set("Content-Type", "application/javascript")
 		break
-	case "css":
+	case ".css":
 		w.Header().Set("Content-Type", "text/css")
 		break
-	case "jpg":
-	case "peg":
+	case ".jpg":
+	case ".jpeg":
 		w.Header().Set("Content-Type", "image/jpeg")
+		break
+	case ".svg":
+		w.Header().Set("Content-Type", "image/svg+xml")
+		break
+	case ".html":
+	case ".htm":
+		w.Header().Set("Content-Type", "text/html")
+		break
+	case ".eot":
+		w.Header().Set("Content-Type", "application/vnd.ms-fontobject")
+		break
+	case ".otf":
+	case ".ttf":
+		w.Header().Set("Content-Type", "application/font-sfnt")
+		break
+	case ".woff":
+		w.Header().Set("Content-Type", "application/font-woff")
+		break
+	case ".woff2":
+		w.Header().Set("Content-Type", "font/woff2")
 		break
 	default:
 		w.Header().Set("Content-Type", "text/plain")
@@ -79,59 +106,16 @@ func (m *WebServerCore) endpointContent(w http.ResponseWriter, r *http.Request) 
 	}
 
 	w.Header().Set("Content-Length", strconv.Itoa(len(fileData)))
+
 	if _, err := w.Write(fileData); err != nil {
 		m.j.Log.Error("WebServer", "Unable to  serve file: "+filePath+", "+err.Error())
 	}
-}
 
-// DefaultEndpoint to use
-func (m *WebServerCore) endpointDefault(w http.ResponseWriter, r *http.Request) {
-	// Dashboard redirect?
-	//m.j.Log.Message("WebServer", "Request Received\n"+r.URL.String())
-}
-
-// TODO PAGE SERVING
-func (m *WebServerCore) endpointPage(w http.ResponseWriter, r *http.Request) {
-
-	// Sanatize
-	var query = strings.Replace(r.URL.RawQuery, "..", "/", -1)
-
-	// Build File Path
-	filePath := path.Join(m.j.WebServer.GetPagePath(), query)
-
-	// Check Existence
-	_, err := os.Stat(filePath)
-	if err != nil {
-		m.j.Log.Error("WebServer", "Unable to find file: "+filePath)
-		fmt.Fprintf(w, "Content Not Found")
-		return
-	}
-
-	pageData, err := ioutil.ReadFile(filePath)
-	if err != nil {
-		m.j.Log.Error("WebServer", "Unable to read file: "+filePath)
-		fmt.Fprintf(w, "Content Not Readable")
-		return
-	}
-
-	if len(pageData) <= 0 {
-		m.j.Log.Error("WebServer", "No data to serve. Length is off.")
-		fmt.Fprintf(w, "No Overlay Found")
-	} else {
-		w.Header().Set("Content-Length", strconv.Itoa(len(pageData)))
-		fmt.Fprintf(w, string(pageData))
-	}
-
-}
-
-// GetContentPath for pathing
-func (m *WebServerCore) GetContentPath() string {
-	return m.contentPath
 }
 
 // GetPagePath for pathing
 func (m *WebServerCore) GetPagePath() string {
-	return m.pagePath
+	return m.webPath
 }
 
 // GetIPAddress server is listening on
@@ -184,15 +168,10 @@ func (m *WebServerCore) Initialize(jarvisInstance *JARVIS) {
 		}
 	}
 
-	m.pagePath = path.Join(m.j.GetApplicationPath(), "www")
-	m.contentPath = path.Join(m.pagePath, "content")
+	m.webPath = path.Join(m.j.GetApplicationPath(), "www")
 
 	// Register default endpoint
-	m.RegisterEndpoint("/", m.endpointDefault)
-	m.RegisterEndpoint("/content", m.endpointContent)
-	m.RegisterEndpoint("/content/", m.endpointContent)
-	m.RegisterEndpoint("/page", m.endpointPage)
-	m.RegisterEndpoint("/page/", m.endpointPage)
+	m.RegisterEndpoint("/", m.endpointBase)
 
 	// Start Server
 	go http.ListenAndServe(":"+strconv.Itoa(m.settings.ListenPort), nil)
