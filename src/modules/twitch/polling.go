@@ -18,7 +18,7 @@ func (m *Module) setupPolling() {
 	}
 	m.j.Log.Message("Twitch", "Starting polling at "+twitchPollingFrequency.String())
 	m.ticker = time.NewTicker(twitchPollingFrequency)
-	m.Poll()
+	m.Poll(false)
 	go m.loop()
 }
 
@@ -27,19 +27,19 @@ func (m *Module) loop() {
 	for {
 		select {
 		case <-m.ticker.C:
-			m.Poll()
+			m.Poll(true)
 		}
 	}
 }
 
 // Poll For Updates
-func (m *Module) Poll() {
-	m.pollFollowers()
-	m.pollStream()
-	m.pollSubscribers()
+func (m *Module) Poll(notify bool) {
+	m.pollFollowers(notify)
+	m.pollStream(notify)
+	m.pollSubscribers(notify)
 }
 
-func (m *Module) pollFollowers() {
+func (m *Module) pollFollowers(notify bool) {
 
 	// Sanitize settings (based on Twitch rules)
 	var limit = m.settings.LastFollowersCount
@@ -72,9 +72,11 @@ func (m *Module) pollFollowers() {
 			Core.SaveFile([]byte(followers.Follows[0].User.DisplayName), m.outputs.LastFollowerPath)
 			m.data.LastFollower = followers.Follows[0].User.DisplayName
 
-			m.j.Discord.GetSession().ChannelMessageSend(
-				m.j.Discord.GetPrivateChannelID(),
-				m.settings.Prefix+"New Twitch Follower "+followers.Follows[0].User.DisplayName)
+			if notify {
+				m.j.Discord.GetSession().ChannelMessageSend(
+					m.j.Discord.GetPrivateChannelID(),
+					m.settings.Prefix+"New Twitch Follower "+followers.Follows[0].User.DisplayName)
+			}
 
 			// TODO: Need to make it so it loads so this doesnt ding
 			m.j.Log.Message("Twitch", "New Twitch Follower "+followers.Follows[0].User.DisplayName)
@@ -101,7 +103,7 @@ func (m *Module) pollFollowers() {
 	followers = nil
 }
 
-func (m *Module) pollStream() {
+func (m *Module) pollStream(notify bool) {
 
 	// Query for data
 	var url = twitchRootURL + "streams/" + m.settings.ChannelID
@@ -151,7 +153,7 @@ func (m *Module) pollStream() {
 	stream = nil
 }
 
-func (m *Module) pollSubscribers() {
+func (m *Module) pollSubscribers(notify bool) {
 
 	// Sanitize settings (based on Twitch rules)
 	var limit = m.settings.LastSubscribersCount
@@ -181,9 +183,11 @@ func (m *Module) pollSubscribers() {
 			m.data.LastSubscriber = subscribers.Subscriptions[0].User.Name
 			Core.SaveFile([]byte(m.data.LastSubscriber), m.outputs.LastSubscriberPath)
 
-			m.j.Discord.GetSession().ChannelMessageSend(
-				m.j.Discord.GetPrivateChannelID(),
-				m.settings.Prefix+"New Twitch Subscriber "+m.data.LastSubscriber)
+			if notify {
+				m.j.Discord.GetSession().ChannelMessageSend(
+					m.j.Discord.GetPrivateChannelID(),
+					m.settings.Prefix+"New Twitch Subscriber "+m.data.LastSubscriber)
+			}
 
 			// TODO: Need to make it so it loads so this doesnt ding
 			m.j.Log.Message("Twitch", "New Twitch Subscriber "+m.data.LastSubscriber)

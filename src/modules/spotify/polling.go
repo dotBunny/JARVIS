@@ -6,6 +6,8 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/bwmarrin/discordgo"
+
 	Core "../../core"
 )
 
@@ -17,7 +19,7 @@ func (m *Module) setupPolling() {
 	}
 	m.j.Log.Message("Spotify", "Starting polling at "+spotifyPollingFrequency.String())
 	m.ticker = time.NewTicker(spotifyPollingFrequency)
-	m.Poll()
+	m.Poll(false)
 	go m.loop()
 }
 
@@ -26,17 +28,17 @@ func (m *Module) loop() {
 	for {
 		select {
 		case <-m.ticker.C:
-			m.Poll()
+			m.Poll(true)
 		}
 	}
 }
 
 // Poll For Updates
-func (m *Module) Poll() {
-	m.pollCurrentlyPlaying()
+func (m *Module) Poll(notify bool) {
+	m.pollCurrentlyPlaying(notify)
 }
 
-func (m *Module) pollCurrentlyPlaying() {
+func (m *Module) pollCurrentlyPlaying(notify bool) {
 
 	state, err := m.spotifyClient.PlayerCurrentlyPlaying()
 
@@ -53,6 +55,8 @@ func (m *Module) pollCurrentlyPlaying() {
 				buffer.WriteString(", ")
 			}
 		}
+		var artistLine = buffer.String()
+
 		buffer.WriteString(" - ")
 		buffer.WriteString(state.Item.Name)
 
@@ -74,6 +78,24 @@ func (m *Module) pollCurrentlyPlaying() {
 			// Get/Save Currently Playing URL
 			m.data.CurrentlyPlayingURL = state.Item.ExternalURLs["spotify"]
 			Core.SaveFile([]byte(m.data.CurrentlyPlayingURL), m.outputs.LinkPath)
+
+			if notify {
+				var message = discordgo.MessageEmbed{
+					Type:  "rich",
+					Title: "Now Playing On Spotify",
+					URL:   m.data.CurrentlyPlayingURL,
+					//Description: ,
+					Color:     1947988,
+					Thumbnail: &discordgo.MessageEmbedThumbnail{URL: state.Item.Album.Images[0].URL},
+					Fields: []*discordgo.MessageEmbedField{
+						&discordgo.MessageEmbedField{
+							Name:   state.Item.Name,
+							Value:  artistLine,
+							Inline: true},
+					},
+				}
+				m.j.Discord.AnnoucementEmbed(&message)
+			}
 
 			// New Artwork
 			if len(state.Item.Album.Images) > 0 {

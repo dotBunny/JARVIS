@@ -62,8 +62,8 @@ func (m *Module) Initialize(jarvisInstance *Core.JARVIS) {
 
 	m.j.Log.RegisterChannel("Twitch", "purple", m.settings.Prefix)
 
-	m.setupData()
 	m.setupOutputs()
+	m.setupData()
 
 	m.authenticate()
 

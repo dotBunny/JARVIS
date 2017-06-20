@@ -171,6 +171,13 @@ func (m *DiscordCore) Announcement(message string) {
 	}
 }
 
+// AnnoucementEmbed sends an embed message to all channels flagged in settings
+func (m *DiscordCore) AnnoucementEmbed(message *discordgo.MessageEmbed) {
+	for _, element := range m.settings.AnnouncementChannels {
+		m.session.ChannelMessageSendEmbed(element, message)
+	}
+}
+
 // RegisterCommand to use with bot
 func (m *DiscordCore) RegisterCommand(command string, function DiscordFunc, description string, accessLevel int) {
 
