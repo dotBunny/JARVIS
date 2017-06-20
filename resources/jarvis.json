@@ -22,7 +22,7 @@
     }
   },
   "General" : {
-    "OutputPath" : "/StreamingData/",
+    "OutputPath" : "<Absolute Path To Where To Store Files>",
     "Prefix": "<:jarvis:326026030458601472> "
   },
   "Spotify" : {
@@ -41,7 +41,7 @@
   },
   "WebServer" : {
     "Enabled" : true,
-    "IPAddress" : "localhost", // Not used currently
+    "IPAddress" : "localhost",
     "ListeningPort" : 8080,
     "Prefix":"<:go:326026030072594432> "
   },

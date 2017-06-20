@@ -93,6 +93,10 @@ func (m *ConfigCore) Initialize(jarvisInstance *JARVIS) {
 		}
 	}
 
+	if m.settings.OutputPath == "<Absolute Path To Where To Store Files>" {
+		m.settings.OutputPath = path.Join(m.j.GetApplicationPath(), "output")
+	}
+
 	// Make sure our output path base is good and ready
 
 	os.MkdirAll(filepath.Dir(m.GetOutputPath()), 0755)

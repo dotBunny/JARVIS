@@ -8,7 +8,9 @@ mkdir -p jarvis-build
 mkdir -p jarvis-build/www
 
 # Build OSX
-go build -o jarvis-build/jarvis ./src
+cp -rf resources/build/macos/JARVIS.app jarvis-build/
+cp -rf resources/jarvis.json jarvis-build/JARVIS.app/Contents/MacOS/
+go build -o jarvis-build/JARVIS.app/Contents/MacOS/jarvis ./src
 
 # Build For Windows
 rsrc -manifest resources/build/windows/jarvis.exe.manifest -ico resources/build/windows/jarvis.ico -o src/jarvis.syso

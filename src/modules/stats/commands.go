@@ -8,6 +8,7 @@ import (
 )
 
 func (m *Module) setupCommands() {
+	m.j.Discord.RegisterCommand("!reset", m.commandReset, "Reset stats for the day.", Core.CommandAccessAdmin)
 	m.j.Discord.RegisterCommand("!coffee", m.commandCoffee, "How many coffees are you on for the day?", Core.CommandAccessAdmin)
 	m.j.Discord.RegisterCommand("!save", m.commandSave, "Did someone save your ass this stream?", Core.CommandAccessModerator)
 	m.j.Discord.RegisterCommand("!work", m.commandWorkingOn, "What are you doing?", Core.CommandAccessAdmin)
@@ -84,4 +85,17 @@ func (m *Module) commandWorkingOn(message *Core.DiscordMessage) {
 	Core.SaveFile([]byte(m.data.WorkingOn), m.outputs.WorkingOnPath)
 	m.j.Discord.Announcement(m.j.Config.GetPrefix() + "Now working on " + m.data.WorkingOn)
 	m.j.Log.Message("Stats", "Working On: "+m.data.WorkingOn)
+}
+
+func (m *Module) commandReset(message *Core.DiscordMessage) {
+
+	m.j.Log.Message("Stats", "Stats Reset")
+
+	m.data.CoffeeCount = 0
+	m.data.SavesCount = 0
+	m.data.CrashCount = 0
+
+	Core.SaveFile([]byte(Core.Left(fmt.Sprintf("%d", m.data.CoffeeCount), m.settings.PadCoffeeOutput, "0")), m.outputs.CoffeeCountPath)
+	Core.SaveFile([]byte(Core.Left(fmt.Sprintf("%d", m.data.CrashCount), m.settings.PadCrashOutput, "0")), m.outputs.CrashCountPath)
+	Core.SaveFile([]byte(Core.Left(fmt.Sprintf("%d", m.data.SavesCount), m.settings.PadSavesOutput, "0")), m.outputs.SavesCountPath)
 }
