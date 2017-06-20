@@ -31,9 +31,6 @@ func (m *Module) commandCoffee(message *Core.DiscordMessage) {
 		} else {
 			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "Coffee #" + fmt.Sprintf("%d", m.data.CoffeeCount) + "!")
 		}
-
-		// Record in Log
-
 	}
 
 	m.j.Log.Message("Stats", "Coffee Recorded ("+fmt.Sprintf("%d", m.data.CoffeeCount)+")")
@@ -56,9 +53,6 @@ func (m *Module) commandCrash(message *Core.DiscordMessage) {
 		} else {
 			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "CRASHED! (and or burned!) - That's number " + fmt.Sprintf("%d", m.data.CrashCount) + " of the day.")
 		}
-
-		// Record in Log
-
 	}
 	m.j.Log.Message("Stats", "Crash Recorded ("+fmt.Sprintf("%d", m.data.CrashCount)+")")
 	Core.SaveFile([]byte(Core.Left(fmt.Sprintf("%d", m.data.CrashCount), m.settings.PadCrashOutput, "0")), m.outputs.CrashCountPath)
@@ -79,9 +73,6 @@ func (m *Module) commandSave(message *Core.DiscordMessage) {
 		} else {
 			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "SAVED!!! We are up to " + fmt.Sprintf("%d", m.data.SavesCount) + "!")
 		}
-
-		// Record in Log
-
 	}
 	m.j.Log.Message("Stats", "Save Recorded ("+fmt.Sprintf("%d", m.data.SavesCount)+")")
 	Core.SaveFile([]byte(Core.Left(fmt.Sprintf("%d", m.data.SavesCount), m.settings.PadSavesOutput, "0")), m.outputs.SavesCountPath)
