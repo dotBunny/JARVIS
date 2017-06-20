@@ -75,3 +75,63 @@ func (m *Module) setupData() {
 		Core.SaveFile([]byte(Core.Left(fmt.Sprintf("%d", m.data.SavesCount), m.settings.PadSavesOutput, "0")), m.outputs.SavesCountPath)
 	}
 }
+
+// ChangeCoffeeCount to specific value
+func (m *Module) ChangeCoffeeCount(value int, notify bool) {
+	// Set Value
+	m.data.CoffeeCount = value
+
+	// Save File
+	Core.SaveFile([]byte(Core.Left(fmt.Sprintf("%d", m.data.CoffeeCount), m.settings.PadCoffeeOutput, "0")), m.outputs.CoffeeCountPath)
+
+	if notify {
+		if m.data.CoffeeCount == 1 {
+			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "We are on the first cup of coffee for the day! Watch out!")
+		} else {
+			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "Coffee #" + fmt.Sprintf("%d", m.data.CoffeeCount) + "!")
+		}
+	}
+
+	// Log Change
+	m.j.Log.Message("Stats", "Coffee Count set to "+fmt.Sprintf("%d", m.data.CoffeeCount))
+}
+
+// ChangeCrashCount to specific value
+func (m *Module) ChangeCrashesCount(value int, notify bool) {
+	// Set Value
+	m.data.CrashCount = value
+
+	// Save File
+	Core.SaveFile([]byte(Core.Left(fmt.Sprintf("%d", m.data.CrashCount), m.settings.PadCrashOutput, "0")), m.outputs.CrashCountPath)
+
+	if notify {
+		if m.data.CrashCount == 1 {
+			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "Our first crash of the day :(")
+		} else {
+			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "CRASHED! (and or burned!) - That's number " + fmt.Sprintf("%d", m.data.CrashCount) + " of the day.")
+		}
+	}
+
+	// Log Change
+	m.j.Log.Message("Stats", "Crash Count set to "+fmt.Sprintf("%d", m.data.CrashCount))
+}
+
+// ChangeSavesCount to specific value
+func (m *Module) ChangeSavesCount(value int, notify bool) {
+	// Set Value
+	m.data.SavesCount = value
+
+	// Save File
+	Core.SaveFile([]byte(Core.Left(fmt.Sprintf("%d", m.data.SavesCount), m.settings.PadSavesOutput, "0")), m.outputs.SavesCountPath)
+
+	if notify {
+		if m.data.SavesCount == 1 {
+			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "The first save of the day!")
+		} else {
+			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "SAVED!!! We are up to " + fmt.Sprintf("%d", m.data.SavesCount) + "!")
+		}
+	}
+
+	// Log Change
+	m.j.Log.Message("Stats", "Save Count set to "+fmt.Sprintf("%d", m.data.SavesCount))
+}

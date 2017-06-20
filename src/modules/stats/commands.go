@@ -1,7 +1,6 @@
 package stats
 
 import (
-	"fmt"
 	"strconv"
 
 	Core "../../core"
@@ -16,67 +15,36 @@ func (m *Module) setupCommands() {
 }
 
 func (m *Module) commandCoffee(message *Core.DiscordMessage) {
-
 	if len(message.Content) > 0 {
-
 		i, err := strconv.Atoi(message.Content)
 		if err == nil {
-			m.data.CoffeeCount = i
-			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "Coffees set to " + fmt.Sprintf("%d", m.data.CoffeeCount) + "!")
+			m.ChangeCoffeeCount(i, true)
 		}
 	} else {
-		m.data.CoffeeCount++
-
-		if m.data.CoffeeCount == 1 {
-			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "We are on the first cup of coffee for the day! Watch out!")
-		} else {
-			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "Coffee #" + fmt.Sprintf("%d", m.data.CoffeeCount) + "!")
-		}
+		m.ChangeCoffeeCount(m.data.CoffeeCount+1, true)
 	}
-
-	m.j.Log.Message("Stats", "Coffee Recorded ("+fmt.Sprintf("%d", m.data.CoffeeCount)+")")
-	Core.SaveFile([]byte(Core.Left(fmt.Sprintf("%d", m.data.CoffeeCount), m.settings.PadCoffeeOutput, "0")), m.outputs.CoffeeCountPath)
 }
 
 func (m *Module) commandCrash(message *Core.DiscordMessage) {
-
 	if len(message.Content) > 0 {
 		i, err := strconv.Atoi(message.Content)
 		if err == nil {
-			m.data.CrashCount = i
-			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "Crashes set to " + fmt.Sprintf("%d", m.data.SavesCount) + "!")
+			m.ChangeCrashesCount(i, true)
 		}
 	} else {
-		m.data.CrashCount++
-
-		if m.data.CrashCount == 1 {
-			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "Our first crash of the day :(")
-		} else {
-			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "CRASHED! (and or burned!) - That's number " + fmt.Sprintf("%d", m.data.CrashCount) + " of the day.")
-		}
+		m.ChangeCrashesCount(m.data.CrashCount+1, true)
 	}
-	m.j.Log.Message("Stats", "Crash Recorded ("+fmt.Sprintf("%d", m.data.CrashCount)+")")
-	Core.SaveFile([]byte(Core.Left(fmt.Sprintf("%d", m.data.CrashCount), m.settings.PadCrashOutput, "0")), m.outputs.CrashCountPath)
 }
-func (m *Module) commandSave(message *Core.DiscordMessage) {
 
+func (m *Module) commandSave(message *Core.DiscordMessage) {
 	if len(message.Content) > 0 {
 		i, err := strconv.Atoi(message.Content)
 		if err == nil {
-			m.data.SavesCount = i
-			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "Saves set to " + fmt.Sprintf("%d", m.data.SavesCount) + "!")
+			m.ChangeSavesCount(i, true)
 		}
 	} else {
-		m.data.SavesCount++
-
-		if m.data.SavesCount == 1 {
-			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "The first save of the day!")
-		} else {
-			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "SAVED!!! We are up to " + fmt.Sprintf("%d", m.data.SavesCount) + "!")
-		}
+		m.ChangeSavesCount(m.data.SavesCount+1, true)
 	}
-	m.j.Log.Message("Stats", "Save Recorded ("+fmt.Sprintf("%d", m.data.SavesCount)+")")
-	Core.SaveFile([]byte(Core.Left(fmt.Sprintf("%d", m.data.SavesCount), m.settings.PadSavesOutput, "0")), m.outputs.SavesCountPath)
 }
 
 func (m *Module) commandWorkingOn(message *Core.DiscordMessage) {
@@ -89,13 +57,9 @@ func (m *Module) commandWorkingOn(message *Core.DiscordMessage) {
 
 func (m *Module) commandReset(message *Core.DiscordMessage) {
 
+	m.ChangeCoffeeCount(0, false)
+	m.ChangeSavesCount(0, false)
+	m.ChangeCrashesCount(0, false)
+
 	m.j.Log.Message("Stats", "Stats Reset")
-
-	m.data.CoffeeCount = 0
-	m.data.SavesCount = 0
-	m.data.CrashCount = 0
-
-	Core.SaveFile([]byte(Core.Left(fmt.Sprintf("%d", m.data.CoffeeCount), m.settings.PadCoffeeOutput, "0")), m.outputs.CoffeeCountPath)
-	Core.SaveFile([]byte(Core.Left(fmt.Sprintf("%d", m.data.CrashCount), m.settings.PadCrashOutput, "0")), m.outputs.CrashCountPath)
-	Core.SaveFile([]byte(Core.Left(fmt.Sprintf("%d", m.data.SavesCount), m.settings.PadSavesOutput, "0")), m.outputs.SavesCountPath)
 }

@@ -133,14 +133,8 @@
                     </ul>
                 </li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> John Smith <b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> Admin<b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li>
-                            <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa fa-fw fa-envelope"></i> Inbox</a>
-                        </li>
                         <li>
                             <a href="#"><i class="fa fa-fw fa-gear"></i> Settings</a>
                         </li>
@@ -184,9 +178,9 @@
                 
                 <div class="row">
 
-                    <!-- TWITCH Viewers -->
-                    <div class="col-lg-3 col-md-6">
-                        <div class="panel panel-red crashes">
+                    <!-- WIDGET: Crashes -->
+                    <div class="col-lg-3 col-md-6 widget-crashes">
+                        <div class="panel panel-red">
                             <div class="panel-heading">
                                 <div class="row">
                                     <div class="col-xs-3">
@@ -198,18 +192,19 @@
                                     </div>
                                 </div>
                             </div>
-                            <a href="https://www.twitch.tv/reapazor/dashboard">
-                                <div class="panel-footer">
-                                    <span class="pull-left">View Details</span>
-                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </a>
+                            <div class="panel-footer">
+                                <!--<span class="pull-left">View Details</span>-->
+                                <span class="pull-right">
+                                    <a href="#" onClick='HitAPI("http://localhost:8080/stats/crashes/plus");'><i class="fa fa-plus-circle"></i></a>
+                                    <a href="#" onClick='HitAPI("http://localhost:8080/stats/crashes/minus");'><i class="fa fa-minus-circle"></i></a>
+                                </span>
+                                <div class="clearfix"></div>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Coffee Count -->
-                    <div class="col-lg-3 col-md-6">
+                    <!-- WIDGET: Coffee -->
+                    <div class="col-lg-3 col-md-6 widget-coffee">
                         <div class="panel panel-yellow">
                             <div class="panel-heading">
                                 <div class="row">
@@ -225,16 +220,16 @@
                             <div class="panel-footer">
                                 <!--<span class="pull-left">View Details</span>-->
                                 <span class="pull-right">
-                                    <a href="#" onClick='HitAPI("http://localhost:8080/stats/coffee/plus");'><i class="fa fa-plus-circle fa-2x api-button"></i></a>
-                                    <a href="#" onClick='HitAPI("http://localhost:8080/stats/coffee/minus");'><i class="fa fa-minus-circle fa-2x api-button"></i></a>
+                                    <a href="#" onClick='HitAPI("http://localhost:8080/stats/coffee/plus");'><i class="fa fa-plus-circle"></i></a>
+                                    <a href="#" onClick='HitAPI("http://localhost:8080/stats/coffee/minus");'><i class="fa fa-minus-circle"></i></a>
                                 </span>
                                 <div class="clearfix"></div>
                             </div>                          
                         </div>
                     </div>
 
-                    <!-- Saves Count -->
-                    <div class="col-lg-3 col-md-6">
+                    <!-- WIDGET: Saves -->
+                    <div class="col-lg-3 col-md-6 widget-saves">
                         <div class="panel panel-red">
                             <div class="panel-heading">
                                 <div class="row">
@@ -247,19 +242,20 @@
                                     </div>
                                 </div>
                             </div>
-                            <a href="#">
-                                <div class="panel-footer">
-                                    <span class="pull-left">View Details</span>
-                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </a>
+                            <div class="panel-footer">
+                                <!--<span class="pull-left">View Details</span>-->
+                                <span class="pull-right">
+                                    <a href="#" onClick='HitAPI("http://localhost:8080/stats/saves/plus");'><i class="fa fa-plus-circle"></i></a>
+                                    <a href="#" onClick='HitAPI("http://localhost:8080/stats/saves/minus");'><i class="fa fa-minus-circle"></i></a>
+                                </span>
+                                <div class="clearfix"></div>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Viewers Count -->
-                    <div class="col-lg-3 col-md-6 twitch">
-                        <div class="panel panel-red twitch">
+                    <!-- WIDGET: Viewers -->
+                    <div class="col-lg-3 col-md-6 widget-viewers">
+                        <div class="panel panel-red">
                             <div class="panel-heading">
                                 <div class="row">
                                     <div class="col-xs-3">
@@ -283,6 +279,23 @@
                 </div>
                 <!-- /.row -->
 
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-clock-o fa-fw"></i> Latest Twitch Followers (<span id="twitch-follower-count">0</span>)</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="list-group" id="twitch-followers">
+                                    
+                                </div>
+                                <div class="text-right">
+                                    <a href="https://www.twitch.tv/reapazor/followers">View All Activity <i class="fa fa-arrow-circle-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
             </div>
             <!-- /.container-fluid -->
@@ -306,9 +319,14 @@
     <script type="application/javascript" src="content/js/jarvis.js" /></script>
     <script type="application/javascript">
         getInfo("twitch-channel-viewers", "http://localhost:8080/twitch/channel/viewers", 5);
-        getInfo("stats-coffee", "http://localhost:8080/stats/coffee", 5);
-        getInfo("stats-crashes", "http://localhost:8080/stats/crashes", 5);
-        getInfo("stats-saves", "http://localhost:8080/stats/saves", 5);
+        getInfo("stats-coffee", "http://localhost:8080/stats/coffee", 10);
+        getInfo("stats-crashes", "http://localhost:8080/stats/crashes", 10);
+        getInfo("stats-saves", "http://localhost:8080/stats/saves", 10);
+        getInfo("twitch-follower-count", "http://localhost:8080/twitch/followers/total", 10);
+        function renderLatestFollower(follower) {
+            return '<a href="https://www.twitch.tv/' + follower +'" class="list-group-item"><i class="fa fa-fw fa-user"></i> ' + follower + '</a>';
+        }
+        getList("twitch-followers", "http://localhost:8080/twitch/followers/list", renderLatestFollower, 10);
     </script>
 </body>
 

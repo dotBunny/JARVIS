@@ -1,55 +1,59 @@
 
-.twitch {
-    border-color: #6441A4;
+.widget-viewers a, 
+.widget-crashes a, 
+.widget-coffee a, 
+.widget-saves a{
+    color: #777;
 }
 
-.twitch a {
-    color: #6441A4;
-}
-
-.twitch .panel-primary {
-    border-color: #6441A4;
-}
-.twitch .panel-heading {
-    background-color: #6441A4;
-    border-color: #6441A4;
-}
-
-
-
-.crashes {
+.widget-crashes {
     border-color: #da751c;
 }
 
-.crashes a {
+.widget-crashes a:hover {
     color: #da751c;
 }
 
-.crashes .panel-primary {
+.widget-crashes .panel {
     border-color: #da751c;
 }
-.crashes .panel-heading {
+
+.widget-crashes .panel-primary {
+    border-color: #da751c;
+}
+.widget-crashes .panel-heading {
     background-color: #da751c;
     border-color: #da751c;
 }
 
 
-.coffee {
-    border-color: #e6e57b;
+.widget-coffee a:hover {
+    color: #f0ad4e;
+    
 }
 
-.coffee a {
-    color: #e6e57b;
+.widget-saves a:hover {
+    color: #d9534f
 }
 
-.coffee .panel-primary {
-    border-color: #e6e57b;
-}
-.coffee .panel-heading {
-    background-color: #e6e57b;
-    border-color: #e6e57b;
+
+.widget-viewers {
+    border-color: #6441A4;
 }
 
- .api-button {
-     cursor: hand
- }
+.widget-viewers .panel {
+    border-color: #6441A4;
+}
+
+
+.widget-viewers a:hover {
+    color: #6441A4;
+}
+
+.widget-viewers .panel-primary {
+    border-color: #6441A4;
+}
+.widget-viewers .panel-heading {
+    background-color: #6441A4;
+    border-color: #6441A4;
+}

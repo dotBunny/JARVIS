@@ -52,3 +52,35 @@ function HitAPI(endpointURI) {
     xmlhttp.open("GET", endpointURI, true);
     xmlhttp.send();
 }
+
+
+function getList(elementID, endpointURI, renderElement, everySeconds) {
+    
+    // Initial Populate
+    _getList(elementID, endpointURI, renderElement);
+
+    if (everySeconds > 0) {
+        setInterval(function () {
+            _getList(elementID, endpointURI, renderElement);
+        }, (everySeconds * 1000));
+    } else {
+        _getList(elementID, endpointURI,renderElement);
+    }
+}
+function _getList(elementID, endpointURI, renderElement) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == XMLHttpRequest.DONE ) {
+            if (xmlhttp.status == 200) {
+                var items = xmlhttp.responseText.split(",");
+                var output = ""
+                for (var i = 0; i < items.length; i++) {
+                    output = output.concat(renderElement(items[i]))
+                }
+               document.getElementById(elementID).innerHTML = output
+           }
+        }
+    }
+    xmlhttp.open("GET", endpointURI, true);
+    xmlhttp.send();
+}
