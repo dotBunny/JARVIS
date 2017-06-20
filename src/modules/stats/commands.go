@@ -11,6 +11,7 @@ func (m *Module) setupCommands() {
 	m.j.Discord.RegisterCommand("!coffee", m.commandCoffee, "How many coffees are you on for the day?", Core.CommandAccessPrivate)
 	m.j.Discord.RegisterCommand("!save", m.commandSave, "Did someone save your ass this stream?", Core.CommandAccessPrivate)
 	m.j.Discord.RegisterCommand("!work", m.commandWorkingOn, "What are you doing?", Core.CommandAccessPrivate)
+	m.j.Discord.RegisterCommand("!crash", m.commandCrash, "A crash happened didn't it?", Core.CommandAccessPrivate)
 }
 
 func (m *Module) commandCoffee(message *Core.DiscordMessage) {
