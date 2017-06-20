@@ -9,6 +9,12 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
+// DiscordPermissions Set
+type DiscordPermissions struct {
+	Moderator []string
+	Admin     []string
+}
+
 // DiscordConfig Settings
 type DiscordConfig struct {
 	ClientID             uint
@@ -21,6 +27,7 @@ type DiscordConfig struct {
 	LogChannelID         string
 	Prefix               string
 	AnnouncementChannels []string
+	Permissions          DiscordPermissions
 }
 
 func (m *DiscordCore) loadConfig() {
@@ -77,6 +84,7 @@ type DiscordCore struct {
 	settings            *DiscordConfig
 	session             *discordgo.Session
 	user                *discordgo.User
+	privateUsers        []string
 	j                   *JARVIS
 }
 
@@ -118,7 +126,6 @@ func (m *DiscordCore) Connect() {
 		// We're connected
 		m.connected = true
 	}
-
 }
 
 // GetSession of Discord
@@ -212,6 +219,7 @@ func (m *DiscordCore) messageHandler(session *discordgo.Session, message *discor
 	if message.Author.ID == m.botID {
 		return
 	}
+
 	contentSplit := strings.Split(message.Content, " ")
 	command := strings.ToLower(contentSplit[0])
 
@@ -232,9 +240,24 @@ func (m *DiscordCore) messageHandler(session *discordgo.Session, message *discor
 			accessLevelCheck = false
 		}
 
-		// Check Private/Log Only
-		if m.commandAccessLevels[targetCommand] == CommandAccessPrivate && message.ChannelID != m.GetPrivateChannelID() {
+		// Check Permission level Command
+		if m.commandAccessLevels[targetCommand] == CommandAccessModerator {
 			accessLevelCheck = false
+			for i := range m.settings.Permissions.Moderator {
+				if m.settings.Permissions.Moderator[i] == message.Author.ID {
+					accessLevelCheck = true
+				}
+			}
+		}
+
+		// Check Permission level Command
+		if m.commandAccessLevels[targetCommand] == CommandAccessAdmin {
+			accessLevelCheck = false
+			for i := range m.settings.Permissions.Admin {
+				if m.settings.Permissions.Admin[i] == message.Author.ID {
+					accessLevelCheck = true
+				}
+			}
 		}
 
 		if !accessLevelCheck {
