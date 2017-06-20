@@ -3,13 +3,15 @@ package twitch
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
 func (m *Module) setupEndpoints() {
 	m.j.WebServer.RegisterEndpoint("/twitch/channel/game", m.endpointChannelGame)
-	m.j.WebServer.RegisterEndpoint("/twitch/channel/name", m.endpointChannelViews)
+	m.j.WebServer.RegisterEndpoint("/twitch/channel/name", m.endpointChannelName)
 	m.j.WebServer.RegisterEndpoint("/twitch/channel/views", m.endpointChannelViews)
+	m.j.WebServer.RegisterEndpoint("/twitch/channel/viewers", m.endpointChannelViewers)
 	m.j.WebServer.RegisterEndpoint("/twitch/followers/last", m.endpointFollowersLast)
 	m.j.WebServer.RegisterEndpoint("/twitch/followers/list", m.endpointFollowersList)
 	m.j.WebServer.RegisterEndpoint("/twitch/followers/total", m.endpointFollowersTotal)
@@ -17,28 +19,44 @@ func (m *Module) setupEndpoints() {
 }
 
 func (m *Module) endpointChannelGame(w http.ResponseWriter, r *http.Request) {
+	m.j.WebServer.DefaultHeader(w)
+	w.Header().Set("Content-Length", strconv.Itoa(len(m.data.ChannelGame)))
 	fmt.Fprintf(w, m.data.ChannelGame)
 }
 func (m *Module) endpointChannelName(w http.ResponseWriter, r *http.Request) {
+	m.j.WebServer.DefaultHeader(w)
+	w.Header().Set("Content-Length", strconv.Itoa(len(m.data.ChannelName)))
 	fmt.Fprintf(w, m.data.ChannelName)
 }
 func (m *Module) endpointChannelViews(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, fmt.Sprintln("%d", m.data.ChannelViews))
+	m.j.WebServer.DefaultHeader(w)
+	w.Header().Set("Content-Length", strconv.Itoa(len(fmt.Sprintf("%d", m.data.ChannelViews))))
+	fmt.Fprintf(w, fmt.Sprintf("%d", m.data.ChannelViews))
 }
 func (m *Module) endpointChannelViewers(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, fmt.Sprintln("%d", m.data.ChannelViewers))
+	m.j.WebServer.DefaultHeader(w)
+	w.Header().Set("Content-Length", strconv.Itoa(len(fmt.Sprintf("%d", m.data.ChannelViewers))))
+	fmt.Fprintf(w, fmt.Sprintf("%d", m.data.ChannelViewers))
 }
 func (m *Module) endpointFollowersLast(w http.ResponseWriter, r *http.Request) {
+	m.j.WebServer.DefaultHeader(w)
+	w.Header().Set("Content-Length", strconv.Itoa(len(m.data.LastFollower)))
 	fmt.Fprintf(w, string(m.data.LastFollower))
 }
 func (m *Module) endpointFollowersList(w http.ResponseWriter, r *http.Request) {
-
+	m.j.WebServer.DefaultHeader(w)
 	followers := strings.Join(m.data.LastFollowers[:], ",")
-	fmt.Fprintf(w, string(followers))
+	w.Header().Set("Content-Length", strconv.Itoa(len(followers)))
+	fmt.Fprintf(w, followers)
 }
 func (m *Module) endpointFollowersTotal(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, fmt.Sprintln("%d", m.data.ChannelFollowers))
+	m.j.WebServer.DefaultHeader(w)
+	w.Header().Set("Content-Length", strconv.Itoa(len(fmt.Sprintf("%d", m.data.ChannelFollowers))))
+	fmt.Fprintf(w, fmt.Sprintf("%d", m.data.ChannelFollowers))
 }
 func (m *Module) endpointSubscribersLast(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, string(m.data.LastSubscriber))
+	m.j.WebServer.DefaultHeader(w)
+	w.Header().Set("Content-Length", strconv.Itoa(len(m.data.LastSubscriber)))
+	fmt.Fprintf(w, m.data.LastSubscriber)
+
 }

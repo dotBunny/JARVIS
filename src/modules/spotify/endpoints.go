@@ -23,5 +23,7 @@ func (m *Module) endpointImage(w http.ResponseWriter, r *http.Request) {
 }
 
 func (m *Module) endpointTrack(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, string(m.data.CurrentlyPlayingTrack))
+	m.j.WebServer.DefaultHeader(w)
+	w.Header().Set("Content-Length", strconv.Itoa(len(m.data.CurrentlyPlayingTrack)))
+	fmt.Fprintf(w, m.data.CurrentlyPlayingTrack)
 }

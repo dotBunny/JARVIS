@@ -59,6 +59,7 @@ func (m *WebServerCore) endpointBase(w http.ResponseWriter, r *http.Request) {
 
 	// No need to cache locally
 	w.Header().Set("Cache-Control", "no-cache, must-revalidate")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	// Check MIME Type
 	ext := filePath[strings.LastIndex(filePath, "."):]
@@ -111,6 +112,11 @@ func (m *WebServerCore) endpointBase(w http.ResponseWriter, r *http.Request) {
 		m.j.Log.Error("WebServer", "Unable to  serve file: "+filePath+", "+err.Error())
 	}
 
+}
+
+// DefaultHeader to be used
+func (m *WebServerCore) DefaultHeader(w http.ResponseWriter) {
+	w.Header().Set("Content-Type", "text/plain")
 }
 
 // GetPagePath for pathing

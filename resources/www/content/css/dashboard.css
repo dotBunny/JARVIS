@@ -1,0 +1,55 @@
+
+.twitch {
+    border-color: #6441A4;
+}
+
+.twitch a {
+    color: #6441A4;
+}
+
+.twitch .panel-primary {
+    border-color: #6441A4;
+}
+.twitch .panel-heading {
+    background-color: #6441A4;
+    border-color: #6441A4;
+}
+
+
+
+.crashes {
+    border-color: #da751c;
+}
+
+.crashes a {
+    color: #da751c;
+}
+
+.crashes .panel-primary {
+    border-color: #da751c;
+}
+.crashes .panel-heading {
+    background-color: #da751c;
+    border-color: #da751c;
+}
+
+
+.coffee {
+    border-color: #e6e57b;
+}
+
+.coffee a {
+    color: #e6e57b;
+}
+
+.coffee .panel-primary {
+    border-color: #e6e57b;
+}
+.coffee .panel-heading {
+    background-color: #e6e57b;
+    border-color: #e6e57b;
+}
+
+ .api-button {
+     cursor: hand
+ }

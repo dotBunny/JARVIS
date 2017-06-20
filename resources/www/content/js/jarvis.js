@@ -38,11 +38,17 @@ function _getInfo(elementID, endpointURI) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState == XMLHttpRequest.DONE ) {
-           if (xmlhttp.status == 200) {
+            if (xmlhttp.status == 200) {
                document.getElementById(elementID).innerHTML = xmlhttp.responseText;
            }
         }
     }
+    xmlhttp.open("GET", endpointURI, true);
+    xmlhttp.send();
+}
+
+function HitAPI(endpointURI) {
+    var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("GET", endpointURI, true);
     xmlhttp.send();
 }
