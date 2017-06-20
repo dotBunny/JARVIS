@@ -1,5 +1,11 @@
 package twitch
 
+import (
+	"fmt"
+
+	Core "../../core"
+)
+
 // Data Structure
 type Data struct {
 	LastFollower    string
@@ -17,4 +23,7 @@ type Data struct {
 
 func (m *Module) setupData() {
 	m.data = new(Data)
+
+	m.data.ChannelViewers = 0
+	Core.SaveFile([]byte(Core.Left(fmt.Sprintf("%d", m.data.ChannelViewers), m.settings.PadChannelViewersOutput, "0")), m.outputs.ChannelViewersPath)
 }

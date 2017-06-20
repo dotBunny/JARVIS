@@ -81,7 +81,6 @@ func (m *Module) commandSave(message *Core.DiscordMessage) {
 func (m *Module) commandWorkingOn(message *Core.DiscordMessage) {
 
 	m.data.WorkingOn = message.Content
-
 	Core.SaveFile([]byte(m.data.WorkingOn), m.outputs.WorkingOnPath)
 	m.j.Discord.Announcement(m.j.Config.GetPrefix() + "Now working on " + m.data.WorkingOn)
 	m.j.Log.Message("Stats", "Working On: "+m.data.WorkingOn)
