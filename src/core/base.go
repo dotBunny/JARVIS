@@ -21,7 +21,7 @@ type JARVIS struct {
 }
 
 // Version Number
-const Version string = "1.0"
+const Version string = "0.5.0"
 
 // HireJarvis to work for you!
 func HireJarvis() *JARVIS {

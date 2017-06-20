@@ -52,6 +52,7 @@ go get github.com/fatih/color
 go get github.com/atotto/clipboard
 go get github.com/akavel/rsrc
 go get github.com/skratchdot/open-golang/open
+go get github.com/getlantern/filepersist
 go get github.com/thoj/go-ircevent
 go get github.com/getlantern/systray
 ```

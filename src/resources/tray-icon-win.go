@@ -1,4 +1,4 @@
-//+build win
+//+build windows
 
 package resources
 
