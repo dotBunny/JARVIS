@@ -36,10 +36,15 @@ func main() {
 
 func onReady() {
 	systray.SetIcon(Resources.TrayIcon)
+	mDashboard := systray.AddMenuItem("Dashboard", "Show Dashboard")
 	mQuit := systray.AddMenuItem("Quit", "Shutdown JARVIS")
 	go func() {
 		<-mQuit.ClickedCh
 		Shutdown()
+	}()
+	go func() {
+		<-mDashboard.ClickedCh
+		dashboardModule.Show()
 	}()
 
 	go func() {
