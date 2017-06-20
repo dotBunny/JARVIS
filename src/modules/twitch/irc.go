@@ -1,7 +1,8 @@
 package twitch
 
 import (
-	irc "./irc"
+	Core "../../core"
+	irc "github.com/thoj/go-ircevent"
 )
 
 func (m *Module) ircJoinChannels() {
@@ -16,71 +17,47 @@ func (m *Module) connectIRC() {
 	// Create IRC Objects - Username must be LOWERCASE
 
 	m.j.Log.Message("Twitch", "Connecting to IRC ...")
-	m.irc = irc.NewClient(m.settings.Username, m.settings.Username)
+	m.irc = irc.IRC(m.settings.ChatUsername, m.settings.ChatUsername)
 
-	m.irc.TLS = false
-	m.irc.Password = "oauth:" + m.twitchToken
-
-	// Cue up commands
-	// go m.ircSetPass(100, &m.irc.)
-	// go m.ircJoinChannels(200, &m.irc.ready)
-
-	// Connect this shit up
-	m.irc.Connect("irc.chat.twitch.tv:6667")
+	m.irc.UseTLS = false
+	m.irc.Password = m.settings.ChatOAuth
 
 	// // Set IRC Connection Callback
-	// m.irc.AddCallback("001", m.handleConnected)
-	// m.irc.AddCallback("366", func(e *irc.Event) {})
-	// m.irc.AddCallback("PRIVMSG", m.handleMessage)
-	// m.irc.AddCallback("NOTICE", m.handleNotice)
+	m.irc.AddCallback("001", m.handleConnected)
+	m.irc.AddCallback("366", func(e *irc.Event) {})
+	m.irc.AddCallback("PRIVMSG", m.handleMessage)
+	m.irc.AddCallback("NOTICE", m.handleNotice)
+	m.irc.AddCallback("PING", m.handlePing)
 
-	// err := m.irc.Connect("irc.chat.twitch.tv:6667")
-	// if err != nil {
-	// 	m.j.Log.Warning("Twitch", "Unable to connect to IRC")
-	// 	return
-	// }
+	// Connect this shit up
+	errorIRC := m.irc.Connect("irc.chat.twitch.tv:6667")
+	if errorIRC != nil {
+		m.j.Log.Error("Twitch", "Unable to connect to Twitch IRC Server. "+errorIRC.Error())
+		return
+	}
+	m.irc.Join(m.settings.Channel)
 
-	// go m.irc.Loop()
+	go m.irc.Loop()
 }
 
-// // Main loop to control the connection.
-// func (irc *Connection) Loop() {
-// 	errChan := irc.ErrorChan()
-// 	for !irc.isQuitting() {
-// 		err := <-errChan
-// 		close(irc.end)
-// 		irc.Wait()
-// 		for !irc.isQuitting() {
-// 			irc.Log.Printf("Error, disconnected: %s\n", err)
-// 			if err = irc.Reconnect(); err != nil {
-// 				irc.Log.Printf("Error while reconnecting: %s\n", err)
-// 				time.Sleep(60 * time.Second)
-// 			} else {
-// 				errChan = irc.ErrorChan()
-// 				break
-// 			}
-// 		}
-// 	}
-// }
+func (m *Module) handleConnected(event *irc.Event) {
+	// Join the channel
+	m.j.Log.Message("Twitch", "Joining IRC Channel "+m.settings.Channel)
+}
+func (m *Module) handlePing(event *irc.Event) {
+	m.irc.SendRaw("PONG :tmi.twitch.tv")
+}
 
-// func (m *Module) handleConnected(event *irc.Event) {
-// 	// Join the channel
-// 	m.j.Log.Message("Twitch", "Joining channel "+m.settings.Channel)
-// 	m.irc.Join(m.settings.Channel)
-// 	m.irc.Privmsg(m.settings.Channel, "Hello World!")
-// }
+func (m *Module) handleMessage(event *irc.Event) {
 
-//:nickname!nickname@nickname.tmi.twitch.tv PRIVMSG #channel :message
-// func (m *Module) handleMessage(event *irc.Event) {
+	_, _ = m.j.Discord.GetSession().ChannelMessageSend(m.j.Discord.GetChatChannelID(), m.settings.Prefix+Core.WrapNicknameForDiscord(event.Nick)+" "+event.Message())
 
-// 	m.j.Log.Message("Twitch", "Message Received "+event.Message())
-// 	if m.settings.ChatSync {
-// 		_, _ = m.discord.GetSession().ChannelMessageSend(m.settings.ChatSyncChannelID, Core.WrapNickname(event.Nick)+" "+event.Message())
-// 	}
-// }
-// func (m *Module) handleNotice(event *irc.Event) {
+}
+func (m *Module) handleNotice(event *irc.Event) {
+	m.j.Log.Message("Twitch", "NOTICE <"+event.Nick+"> "+event.Message())
+}
 
-// 	// if m.settings.ChatSync {
-// 	// 	_, _ = m.discord.GetSession().ChannelMessageSend(m.settings.ChatSyncChannelID, "[NOTICE] "+Core.WrapNickname(event.Nick)+" "+event.Message())
-// 	// }
-// }
+// SendMessage via IRC
+func (m *Module) SendMessage(target string, message string) {
+	m.irc.Privmsg(target, message)
+}

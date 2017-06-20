@@ -2,21 +2,23 @@ package twitch
 
 import (
 	"encoding/json"
+	"strings"
 )
 
 // Config elements
 type Config struct {
 	Channel                     string
 	ChannelID                   string
-	ChatSync                    bool
-	ChatSyncChannelID           string
+	Chat                        bool
+	ChatChannelID               string
+	ChatUsername                string
+	ChatOAuth                   string
 	ClientID                    string
 	ClientSecret                string
 	Enabled                     bool
 	LastFollowersCount          int
 	LastSubscribersCount        int
 	PollingFrequency            int
-	Username                    string
 	Prefix                      string
 	PadChannelFollowersOutput   int
 	PadChannelViewersOutput     int
@@ -32,15 +34,17 @@ func (m *Module) loadConfig() {
 	// TWitch Default Config
 	m.settings.Channel = "#reapazor"
 	m.settings.ChannelID = "21139969"
-	m.settings.ChatSync = true
-	m.settings.ChatSyncChannelID = "325241876758396928"
+	m.settings.Chat = true
+	m.settings.ChatChannelID = "325241876758396928"
+	m.settings.ChatUsername = "mod_jarvis"
+	m.settings.ChatOAuth = "You need to make one"
 	m.settings.ClientID = "You need to set your ClientID"
 	m.settings.ClientSecret = "You need to set your ClientSecret"
 	m.settings.Enabled = true
 	m.settings.LastFollowersCount = 10
 	m.settings.LastSubscribersCount = 10
 	m.settings.PollingFrequency = 7
-	m.settings.Username = "mod_jarvis"
+
 	m.settings.Prefix = ":twitch: "
 	m.settings.PadChannelFollowersOutput = 3
 	m.settings.PadChannelViewersOutput = 3
@@ -58,4 +62,7 @@ func (m *Module) loadConfig() {
 			}
 		}
 	}
+
+	// Sanitize
+	m.settings.ChatUsername = strings.ToLower(m.settings.ChatUsername)
 }

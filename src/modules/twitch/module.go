@@ -18,7 +18,7 @@ import (
 	"time"
 
 	Core "../../core"
-	irc "./irc"
+	"github.com/thoj/go-ircevent"
 	// 	"github.com/fatih/color"
 	// 	"github.com/thoj/go-ircevent"
 
@@ -38,7 +38,7 @@ type TwitchMessage struct {
 type Module struct {
 	ticker *time.Ticker
 
-	irc *irc.Client
+	irc *irc.Connection
 
 	discord          *Core.DiscordCore
 	settings         *Config
@@ -73,6 +73,9 @@ func (m *Module) Initialize(jarvisInstance *Core.JARVIS) {
 	m.twitchStreamName = strings.TrimLeft(m.settings.Channel, "#")
 
 	m.setupPolling()
+	m.connectIRC()
+
+	m.setupCommands()
 }
 
 func (m *Module) getResponse(url string) (*http.Response, error) {

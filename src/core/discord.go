@@ -16,6 +16,7 @@ type DiscordConfig struct {
 	RedirectURI          string
 	Token                string
 	Username             string
+	ChatChannelID        string
 	PrivateChannelID     string
 	LogChannelID         string
 	Prefix               string
@@ -128,6 +129,11 @@ func (m *DiscordCore) GetSession() *discordgo.Session {
 // GetPrivateChannelID for interaction
 func (m *DiscordCore) GetPrivateChannelID() string {
 	return m.settings.PrivateChannelID
+}
+
+// GetChatChannelID for sync
+func (m *DiscordCore) GetChatChannelID() string {
+	return m.settings.ChatChannelID
 }
 
 // GetLogChannelID for logging
