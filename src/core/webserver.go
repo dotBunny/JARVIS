@@ -191,8 +191,8 @@ func (m *WebServerCore) Initialize(jarvisInstance *JARVIS) {
 	m.RegisterEndpoint("/", m.endpointDefault)
 	m.RegisterEndpoint("/content", m.endpointContent)
 	m.RegisterEndpoint("/content/", m.endpointContent)
-	m.RegisterEndpoint("/page", m.endpointContent)
-	m.RegisterEndpoint("/page/", m.endpointContent)
+	m.RegisterEndpoint("/page", m.endpointPage)
+	m.RegisterEndpoint("/page/", m.endpointPage)
 
 	// Start Server
 	go http.ListenAndServe(":"+strconv.Itoa(m.settings.ListenPort), nil)
