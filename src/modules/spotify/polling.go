@@ -80,7 +80,7 @@ func (m *Module) pollCurrentlyPlaying(notify bool) {
 			Core.SaveFile([]byte(m.data.CurrentlyPlayingURL), m.outputs.LinkPath)
 
 			if notify {
-				var message = discordgo.MessageEmbed{
+				m.j.Discord.GetSession().ChannelMessageSendEmbed(m.j.Discord.GetFeedChannelID(), &discordgo.MessageEmbed{
 					Type:  "rich",
 					Title: "Now Playing On Spotify",
 					URL:   m.data.CurrentlyPlayingURL,
@@ -93,8 +93,7 @@ func (m *Module) pollCurrentlyPlaying(notify bool) {
 							Value:  artistLine,
 							Inline: true},
 					},
-				}
-				m.j.Discord.AnnoucementEmbed(&message)
+				})
 			}
 
 			// New Artwork

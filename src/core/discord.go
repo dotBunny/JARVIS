@@ -24,6 +24,7 @@ type DiscordConfig struct {
 	Username             string
 	ChatChannelID        string
 	PrivateChannelID     string
+	FeedChannelID        string
 	LogChannelID         string
 	Prefix               string
 	AnnouncementChannels []string
@@ -131,6 +132,11 @@ func (m *DiscordCore) Connect() {
 // GetSession of Discord
 func (m *DiscordCore) GetSession() *discordgo.Session {
 	return m.session
+}
+
+// GetFeedChannelID for feed
+func (m *DiscordCore) GetFeedChannelID() string {
+	return m.settings.FeedChannelID
 }
 
 // GetPrivateChannelID for interaction
