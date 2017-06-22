@@ -58,6 +58,7 @@ go get github.com/getlantern/systray
 go get github.com/matryer/resync
 go get github.com/bwmarrin/discordgo
 go get github.com/jpillora/backoff
+go get google.golang.org/api/youtube/v3
 ```
 
 Depending on your platform you may need to adjust the build scripts, they work on macOS and Linux varieties. We just haven't made the windows equivalents.

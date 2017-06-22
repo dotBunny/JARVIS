@@ -13,3 +13,4 @@ go get github.com/getlantern/systray
 go get github.com/matryer/resync
 go get github.com/bwmarrin/discordgo
 go get github.com/jpillora/backoff
+go get google.golang.org/api/youtube/v3
