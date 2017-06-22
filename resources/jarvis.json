@@ -26,6 +26,20 @@
     "OutputPath" : "<Absolute Path To Where To Store Files>",
     "Prefix": "<:jarvis:326026030458601472> "
   },
+  "Google" : {
+    "Chat" : true,
+    "ChatChannelID" : "325241876758396928",
+    "ClientID": "Your Client ID",
+    "ClientSecret" : "Your Secret",
+    "Enabled" : true,
+    "LastFollowersCount" : 10,
+    "LastSubscribersCount" : 10,
+    "PollingFrequency" : 7,
+    "Prefix": "<:youtube:327531413358379011>",
+    "PadChannelFollowersOutput" : 3,
+    "PadChannelViewersOutput" : 3,
+    "PadChannelSubscribersOutput " : 3
+  },
   "Spotify" : {
     "ClientID" : "<Your Spotify App ClientID>",
     "ClientSecret" : "<Your Spotify App ClientSecret>",
