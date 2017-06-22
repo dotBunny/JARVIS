@@ -22,16 +22,6 @@ type Module struct {
 	j             *Core.JARVIS
 }
 
-// Connect to Spotify
-func (m *Module) Connect() {
-	// Bail if not enabled
-	if !m.IsEnabled() {
-		return
-	}
-
-	m.stateHash = Core.RandomString(5)
-}
-
 // Initialize the Logging Module
 func (m *Module) Initialize(jarvisInstance *Core.JARVIS) {
 	// Assign JARVIS, the module is made we dont to create it like in core!
