@@ -18,8 +18,6 @@ func (m *Module) setupPolling() {
 	}
 	m.j.Log.Message("Twitch", "Starting polling at "+twitchPollingFrequency.String())
 	m.ticker = time.NewTicker(twitchPollingFrequency)
-	m.Poll(false)
-	go m.loop()
 }
 
 // Loop awaiting ticker

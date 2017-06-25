@@ -1,7 +1,32 @@
 package spotify
 
-func (m *Module) setupCommands() {
+import (
+	Core "../../core"
+)
 
+func (m *Module) setupCommands() {
+	m.j.Discord.RegisterCommand("!spotify", m.commandSpotify, "Spotify ([info]/start/stop/auth)", Core.CommandAccessModerator)
+}
+
+func (m *Module) commandSpotify(message *Core.DiscordMessage) {
+	// We have an option
+	if len(message.Content) > 0 {
+		if message.Content == "start" {
+			m.j.Log.Message("Spotify", "Starting Spotify Polling")
+			m.j.Discord.GetSession().ChannelMessageSend(message.ChannelID, m.settings.Prefix+"Starting Polling")
+			m.Start()
+		} else if message.Content == "stop" {
+			m.j.Log.Message("Spotify", "Stopping Spotify Polling")
+			m.j.Discord.GetSession().ChannelMessageSend(message.ChannelID, m.settings.Prefix+"Stopping Polling")
+			m.Stop()
+		} else if message.Content == "auth" {
+			m.j.Log.Message("Spotify", "Authenticating with Spotify")
+			m.j.Discord.GetSession().ChannelMessageSend(message.ChannelID, m.settings.Prefix+"Authenticating")
+			m.authenticate()
+		}
+	} else {
+		m.j.Discord.GetSession().ChannelMessageSend(message.ChannelID, m.settings.Prefix+"Currently playing "+m.data.CurrentlyPlayingTrack)
+	}
 }
 
 /*

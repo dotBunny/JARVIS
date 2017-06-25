@@ -73,9 +73,10 @@ func (m *Module) Initialize(jarvisInstance *Core.JARVIS) {
 	m.twitchStreamName = strings.TrimLeft(m.settings.Channel, "#")
 
 	m.setupPolling()
-	m.connectIRC()
 
 	m.setupCommands()
+
+	m.Start()
 }
 
 func (m *Module) getResponse(url string) (*http.Response, error) {
@@ -102,115 +103,24 @@ func (m *Module) IsEnabled() bool {
 // Shutdown Module
 func (m *Module) Shutdown() {
 	if m != nil {
-		if m.ticker != nil {
-			m.ticker.Stop()
-		}
-
-		// if m.irc != nil {
-		// 	m.irc.Disconnect()
-		// }
+		m.Stop()
 	}
 }
 
-// func (m *Module) ircMessage(e *irc.Event) {
-// 	message := e.Message()
+// Start Twitch Polling / IRC
+func (m *Module) Start() {
+	m.connectIRC()
+	m.Poll(false)
+}
 
-// 	message = strings.Replace(message, m.config.Twitch.ChatName, m.coloredName, -1)
-
-// 	if strings.HasPrefix(e.Arguments[0], "#") {
-// 		Core.Log("TWITCH", "LOG", m.openBracket+e.Nick+m.closeBracket+" "+message)
-
-// 		// TODO This is where we'd build out chat command recognition and all that sort of feature line
-// 		if message == "!spotify" {
-// 			m.SendMessageToChannel(jarvisMessagePrefix + m.spotify.GetCurrentlyPlayingMessage())
-// 		}
-
-// 	} else {
-// 		Core.Log("TWITCH", "IMPORTANT", "[DM] "+m.openBracket+e.Nick+m.closeBracket+" "+message)
-// 	}
-// }
-
-// func (m *Module) consoleBan(input string) {
-// 	splitLocation := strings.Index(input, " ")
-// 	var user string
-// 	var message = "Bye Bye!"
-// 	if splitLocation > 0 {
-// 		user = input[:splitLocation]
-// 		message = strings.Trim(input[(splitLocation+1):len(input)], " ")
-// 		if len(message) <= 0 {
-// 			message = "Bye Bye!"
-// 		}
-// 	} else {
-// 		user = input
-// 	}
-
-// 	m.irc.SendRaw("CLEARCHAT " + m.config.Twitch.ChatChannel + " :" + user + " @ban-duration=;ban-reason=" + message)
-// 	m.irc.SendRaw("CLEARCHAT " + m.config.Twitch.ChatChannel + " :" + user)
-// 	Core.Log("TWITCH", "IMPORTANT", "Banned @"+user+" ("+message+")")
-// }
-
-// func (m *Module) consoleTimeout(input string) {
-// 	splitLocation := strings.Index(input, " ")
-// 	var user string
-// 	var timeout = "30"
-// 	if splitLocation > 0 {
-// 		user = input[:splitLocation]
-// 		timeout = strings.Trim(input[(splitLocation+1):len(input)], " ")
-// 		if len(timeout) <= 0 {
-// 			timeout = "30"
-// 		}
-// 	} else {
-// 		user = input
-// 	}
-
-// 	m.irc.SendRaw("CLEARCHAT " + m.config.Twitch.ChatChannel + " :" + user + " @ban-duration=" + timeout + ";ban-reason=You\\'re on a break!")
-// 	m.irc.SendRaw("CLEARCHAT " + m.config.Twitch.ChatChannel + " :" + user)
-// 	Core.Log("TWITCH", "IMPORTANT", "Timedout @"+user+" ("+timeout+" seconds)")
-// }
-// func (m *Module) consoleKick(input string) {
-// 	splitLocation := strings.Index(input, " ")
-// 	var user string
-// 	var message = "Bye Bye!"
-// 	if splitLocation > 0 {
-// 		user = input[:splitLocation]
-// 		message = strings.Trim(input[(splitLocation+1):len(input)], " ")
-// 		if len(message) <= 0 {
-// 			message = "Bye Bye!"
-// 		}
-// 	} else {
-// 		user = input
-// 	}
-// 	m.irc.Kick(input, m.config.Twitch.ChatChannel, message)
-// 	Core.Log("TWITCH", "IMPORTANT", "Kicked @"+user+" ("+message+")")
-// }
-
-// func (m *Module) consoleStats(input string) {
-// 	Core.Log("TWITCH", "LOG", "Current Viewers: "+fmt.Sprint(m.ChannelViewers)+"\tFollowers: "+fmt.Sprint(m.ChannelFollowers))
-// }
-// func (m *Module) consoleUpdate(input string) {
-// 	m.Poll()
-// 	Core.Log("TWITCH", "LOG", "Force Update")
-// }
-
-// func (m *Module) consoleWhisper(input string) {
-
-// 	splitLocation := strings.Index(input, " ")
-// 	var user string
-// 	var message string
-// 	if splitLocation > 0 {
-// 		user = input[:splitLocation]
-// 		message = input[(splitLocation + 1):len(input)]
-
-// 		m.irc.Privmsg(user, message)
-// 		Core.Log("TWITCH", "IMPORTANT", "[DM] @"+user+" "+message)
-// 	} else {
-// 		Core.Log("TWITCH", "LOG", "A message is required when whispering someone.")
-// 	}
-
-// }
-
-// // SendMessageToChannel on Twitch
-// func (m *Module) SendMessageToChannel(input string) {
-// 	m.irc.Privmsg(m.config.Twitch.ChatChannel, input)
-// 	Core.Log("TWITCH", "LOG", m.openBracket+m.config.Twitch.ChatName+m.closeBracket+" "+input)
-// }
+// Stop Twitch Polling / IRC
+func (m *Module) Stop() {
+	if m != nil {
+		if m.ticker != nil {
+			m.ticker.Stop()
+		}
+		if m.irc != nil {
+			m.irc.Quit()
+		}
+	}
+}

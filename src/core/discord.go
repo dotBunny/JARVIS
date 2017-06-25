@@ -66,10 +66,11 @@ type DiscordFunc func(*DiscordMessage)
 
 // DiscordMessage is used to pass data around
 type DiscordMessage struct {
-	Author  string
-	Command string
-	Content string
-	Raw     *discordgo.MessageCreate
+	Author    string
+	ChannelID string
+	Command   string
+	Content   string
+	Raw       *discordgo.MessageCreate
 }
 
 // DiscordCore facilitates the callback/web related hosting
@@ -272,10 +273,11 @@ func (m *DiscordCore) messageHandler(session *discordgo.Session, message *discor
 
 		// Create new Discord transport message
 		newMessage := DiscordMessage{
-			Author:  message.Author.Username,
-			Command: targetCommand,
-			Content: strings.TrimLeft(strings.TrimLeft(message.Content, command), " "),
-			Raw:     message}
+			Author:    message.Author.Username,
+			ChannelID: message.ChannelID,
+			Command:   targetCommand,
+			Content:   strings.TrimLeft(strings.TrimLeft(message.Content, command), " "),
+			Raw:       message}
 
 		execCommand(&newMessage)
 	}

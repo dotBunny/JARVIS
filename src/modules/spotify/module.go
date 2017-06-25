@@ -62,3 +62,17 @@ func (m *Module) Shutdown() {
 		}
 	}
 }
+
+// Start Spotify Polling / IRC
+func (m *Module) Start() {
+	m.Poll(false)
+}
+
+// Stop Spotify Polling / IRC
+func (m *Module) Stop() {
+	if m != nil {
+		if m.ticker != nil {
+			m.ticker.Stop()
+		}
+	}
+}
