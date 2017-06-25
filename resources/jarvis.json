@@ -51,6 +51,9 @@
     "Prefix": "<:spotify:326026030265663488> "
   },
   "Stats" : {
+    "CoffeeSounds" : [
+      "/Users/reapazor/Dropbox/Streaming/SoundBytes/nothing-can-stop-me.wav"
+    ],
     "PadCoffeeOutput" : 2,
     "PadCrashesOutput" : 2,
     "PadSavesOutput" : 2

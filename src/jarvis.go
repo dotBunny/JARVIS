@@ -2,10 +2,12 @@ package main
 
 import (
 	"os"
+	"time"
 
 	"github.com/getlantern/systray"
 
 	"log"
+	"math/rand"
 
 	Core "./core"
 
@@ -50,6 +52,10 @@ func onReady() {
 	}()
 
 	go func() {
+
+		// Initialize Random
+		rand.Seed(time.Now().Unix())
+
 		// Create new Jarvis instance
 		j = Core.HireJarvis()
 

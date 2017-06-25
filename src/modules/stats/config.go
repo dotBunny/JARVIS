@@ -6,6 +6,9 @@ import (
 
 // Config elements
 type Config struct {
+	CoffeeSounds    []string
+	CrashSounds     []string
+	SaveSounds      []string
 	PadCoffeeOutput int
 	PadCrashOutput  int
 	PadSavesOutput  int
@@ -32,4 +35,6 @@ func (m *Module) loadConfig() {
 			}
 		}
 	}
+
+	// TODO : VALIDATE SOUND EXISTS
 }
