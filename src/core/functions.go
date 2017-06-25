@@ -136,9 +136,10 @@ func SyncFile(data []byte, path string) bool {
 }
 
 // Touch a file
-func Touch(filepath string) {
-	if _, err := os.Stat(filepath); os.IsNotExist(err) {
-		ioutil.WriteFile(filepath, nil, 0755)
+func Touch(filePath string) {
+	os.MkdirAll(filepath.Dir(filePath), 0755)
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		ioutil.WriteFile(filePath, nil, 0755)
 	}
 }
 

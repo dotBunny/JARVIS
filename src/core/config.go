@@ -78,7 +78,7 @@ func (m *ConfigCore) Initialize(jarvisInstance *JARVIS) {
 	m.settings = new(GeneralConfig)
 
 	// General Config
-	m.settings.OutputPath = path.Join(m.j.GetApplicationPath(), "output")
+	m.settings.OutputPath = path.Join(m.j.GetResourcePath(), "output")
 	m.settings.Prefix = ":jarvis: "
 
 	// Check Raw Data
@@ -94,11 +94,10 @@ func (m *ConfigCore) Initialize(jarvisInstance *JARVIS) {
 	}
 
 	if m.settings.OutputPath == "<Absolute Path To Where To Store Files>" {
-		m.settings.OutputPath = path.Join(m.j.GetApplicationPath(), "output")
+		m.settings.OutputPath = path.Join(m.j.GetResourcePath(), "output")
 	}
 
 	// Make sure our output path base is good and ready
-
 	os.MkdirAll(filepath.Dir(m.GetOutputPath()), 0755)
 
 	// Flag class as loaded

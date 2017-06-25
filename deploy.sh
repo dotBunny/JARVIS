@@ -6,13 +6,12 @@ cd "$(dirname "$0")"
 rm -rf jarvis-build/
 mkdir -p jarvis-build
 
-
 # Build OSX
 mkdir -p jarvis-build/macOS
 cp -rf resources/build/macos/JARVIS.app jarvis-build/macOS
-cp -rf resources/jarvis.json jarvis-build/macOS/JARVIS.app/Contents/MacOS/
+cp -rf resources/jarvis.json jarvis-build/macOS/JARVIS.app/Contents/Resources/
 go build -o jarvis-build/macOS/JARVIS.app/Contents/MacOS/jarvis ./src
-cp -rf resources/www jarvis-build/macOS/JARVIS.app/Contents/MacOS/
+cp -rf resources/www jarvis-build/macOS/JARVIS.app/Contents/Resources/
 
 # Build For Windows
 mkdir -p jarvis-build/windows

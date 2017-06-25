@@ -11,8 +11,10 @@ import (
 // JARVIS Instance
 type JARVIS struct {
 	applicationPath string
+	resourcePath    string
 	configPath      string
 	startTime       time.Time
+	macBundle       bool
 
 	WebServer *WebServerCore
 	Config    *ConfigCore
@@ -36,10 +38,20 @@ func HireJarvis() *JARVIS {
 	j.SetApplicationPath(os.Args[0])
 
 	// Lets check for a second argument, and use it as our path to the config
+
+	_, macBundleCheck := os.Stat(path.Join(j.GetApplicationPath(), "..", "Resources", "jarvis.json"))
+	if macBundleCheck == nil {
+		log.Println("[System]\tMac Bundle Detected")
+		j.macBundle = true
+		j.resourcePath = path.Join(j.GetApplicationPath(), "..", "Resources")
+	} else {
+		j.resourcePath = j.GetApplicationPath()
+	}
+
 	if len(os.Args) >= 2 {
 		j.SetConfigPath(os.Args[1])
 	} else {
-		j.SetConfigPath(path.Join(j.GetApplicationPath(), "jarvis.json"))
+		j.SetConfigPath(path.Join(j.GetResourcePath(), "jarvis.json"))
 	}
 
 	// Load Config
@@ -59,13 +71,23 @@ func HireJarvis() *JARVIS {
 	j.Discord.Connect()
 
 	// Send it back
-	j.Log.Message("System", "Jarvis Hired!")
+	if j.macBundle {
+		j.Log.Message("System", "Jarvis Hired! (Mac Bundle)")
+	} else {
+		j.Log.Message("System", "Jarvis Hired!")
+	}
+
 	return j
 }
 
 // GetApplicationPath returns the found application path
 func (m *JARVIS) GetApplicationPath() string {
 	return m.applicationPath
+}
+
+// GetResourcePath returns the resources path
+func (m *JARVIS) GetResourcePath() string {
+	return m.resourcePath
 }
 
 // Shutdown JARVIS instance

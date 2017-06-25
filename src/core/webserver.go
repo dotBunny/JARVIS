@@ -174,7 +174,7 @@ func (m *WebServerCore) Initialize(jarvisInstance *JARVIS) {
 		}
 	}
 
-	m.webPath = path.Join(m.j.GetApplicationPath(), "www")
+	m.webPath = path.Join(m.j.GetResourcePath(), "www")
 
 	// Register default endpoint
 	m.RegisterEndpoint("/", m.endpointBase)

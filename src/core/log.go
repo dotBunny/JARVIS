@@ -41,6 +41,7 @@ func (m *LogCore) Initialize(jarvisInstance *JARVIS) {
 	m.RegisterChannel("Core", "white", m.j.Config.GetPrefix())
 	m.RegisterChannel("System", "grey", m.j.Config.GetPrefix())
 
+	Touch(path.Join(m.j.Config.GetOutputPath(), "jarvis.log"))
 	logFile, err := os.OpenFile(path.Join(m.j.Config.GetOutputPath(), "jarvis.log"), os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		panic(err)
