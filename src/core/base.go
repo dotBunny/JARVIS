@@ -37,17 +37,21 @@ func HireJarvis() *JARVIS {
 	// Set the application path, or try too
 	j.SetApplicationPath(os.Args[0])
 
-	// Lets check for a second argument, and use it as our path to the config
-
-	_, macBundleCheck := os.Stat(path.Join(j.GetApplicationPath(), "..", "Resources", "jarvis.json"))
-	if macBundleCheck == nil {
-		log.Println("[System]\tMac Bundle Detected")
-		j.macBundle = true
-		j.resourcePath = path.Join(j.GetApplicationPath(), "..", "Resources")
-	} else {
+	_, besideConfig := os.Stat(path.Join(j.GetApplicationPath(), "jarvis.json"))
+	if besideConfig == nil {
 		j.resourcePath = j.GetApplicationPath()
+	} else {
+		_, macBundleCheck := os.Stat(path.Join(j.GetApplicationPath(), "..", "Resources", "jarvis.json"))
+		if macBundleCheck == nil {
+			log.Println("[System]\tMac Bundle Detected")
+			j.macBundle = true
+			j.resourcePath = path.Join(j.GetApplicationPath(), "..", "Resources")
+		} else {
+			j.resourcePath = j.GetApplicationPath()
+		}
 	}
 
+	// Lets check for a second argument, and use it as our path to the config
 	if len(os.Args) >= 2 {
 		j.SetConfigPath(os.Args[1])
 	} else {

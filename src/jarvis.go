@@ -14,6 +14,7 @@ import (
 	Spotify "./modules/spotify"
 	Stats "./modules/stats"
 	Twitch "./modules/twitch"
+	YouTube "./modules/youtube"
 	Resources "./resources"
 )
 
@@ -25,6 +26,7 @@ var (
 	twitchModule    *Twitch.Module
 	statsModule     *Stats.Module
 	overlayModule   *Overlay.Module
+	youtubeModule   *YouTube.Module
 
 	quit chan os.Signal
 )
@@ -67,6 +69,9 @@ func onReady() {
 		twitchModule := new(Twitch.Module)
 		twitchModule.Initialize(j)
 
+		youtubeModule := new(YouTube.Module)
+		youtubeModule.Initialize(j)
+
 		// Overlay Module
 		overlayModule := new(Overlay.Module)
 		overlayModule.Initialize(j)
@@ -81,6 +86,7 @@ func Shutdown() {
 
 	spotifyModule.Shutdown()
 	twitchModule.Shutdown()
+	youtubeModule.Shutdown()
 
 	j.Shutdown()
 	log.Println("[SYSTEM]\tShutdown.")

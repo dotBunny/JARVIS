@@ -26,7 +26,7 @@
     "OutputPath" : "<Absolute Path To Where To Store Files>",
     "Prefix": "<:jarvis:326026030458601472> "
   },
-  "Google" : {
+  "YouTube" : {
     "Chat" : true,
     "ChatChannelID" : "325241876758396928",
     "ClientID": "Your Client ID",
@@ -35,7 +35,7 @@
     "LastFollowersCount" : 10,
     "LastSubscribersCount" : 10,
     "PollingFrequency" : 7,
-    "Prefix": "<:youtube:327531413358379011>",
+    "Prefix": "<:youtube:328598129710596096>",
     "PadChannelFollowersOutput" : 3,
     "PadChannelViewersOutput" : 3,
     "PadChannelSubscribersOutput " : 3

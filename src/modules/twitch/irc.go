@@ -9,11 +9,13 @@ func (m *Module) ircJoinChannels() {
 	m.j.Log.Message("Twitch", "Joining IRC Channels ..")
 	m.irc.Join(m.settings.Channel)
 }
-func (m *Module) ircWelcomeMessage() {
-	m.irc.Privmsg(m.settings.Channel, "Hello World!")
-}
 
 func (m *Module) connectIRC() {
+
+	// Dont do chat
+	if !m.settings.Chat {
+		return
+	}
 	// Create IRC Objects - Username must be LOWERCASE
 
 	m.j.Log.Message("Twitch", "Connecting to IRC ...")
@@ -59,5 +61,8 @@ func (m *Module) handleNotice(event *irc.Event) {
 
 // SendMessage via IRC
 func (m *Module) SendMessage(target string, message string) {
+	if m.settings.Chat {
+		return
+	}
 	m.irc.Privmsg(target, message)
 }

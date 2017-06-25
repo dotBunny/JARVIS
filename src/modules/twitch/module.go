@@ -6,33 +6,16 @@ package twitch
 // curl -H 'Accept: application/vnd.twitchtv.v5+json' -H 'Client-ID: <CLIENT ID>' -X GET https://api.twitch.tv/kraken/users?login=<USERNAME>
 
 import (
-	"golang.org/x/oauth2"
-	// 	"net/http"
-	// 	"path/filepath"
-	// 	"strconv"
-	// 	"time"
-
-	// 	"strings"
-
-	// 	"bytes"
 	"time"
+
+	"golang.org/x/oauth2"
 
 	Core "../../core"
 	"github.com/thoj/go-ircevent"
-	// 	"github.com/fatih/color"
-	// 	"github.com/thoj/go-ircevent"
 
 	"net/http"
 	"strings"
 )
-
-// TwitchMessage is used to pass data around
-type TwitchMessage struct {
-	// Author  string
-	// Command string
-	// Content string
-	// Raw     *discordgo.MessageCreate
-}
 
 // Module Class
 type Module struct {
@@ -40,7 +23,6 @@ type Module struct {
 
 	irc *irc.Connection
 
-	discord          *Core.DiscordCore
 	settings         *Config
 	outputs          *Outputs
 	data             *Data
@@ -71,8 +53,6 @@ func (m *Module) Initialize(jarvisInstance *Core.JARVIS) {
 
 	// Some cached settings
 	m.twitchStreamName = strings.TrimLeft(m.settings.Channel, "#")
-
-	m.setupPolling()
 
 	m.setupCommands()
 
@@ -110,7 +90,7 @@ func (m *Module) Shutdown() {
 // Start Twitch Polling / IRC
 func (m *Module) Start() {
 	m.connectIRC()
-	m.Poll(false)
+	m.setupPolling()
 }
 
 // Stop Twitch Polling / IRC

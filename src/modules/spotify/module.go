@@ -44,9 +44,11 @@ func (m *Module) Initialize(jarvisInstance *Core.JARVIS) {
 	m.authenticate()
 
 	// Start the basic polling for information
-	m.setupPolling()
+
 	m.setupEndpoints()
 	m.setupCommands()
+
+	m.Start()
 }
 
 // IsEnabled for Usage
@@ -56,16 +58,12 @@ func (m *Module) IsEnabled() bool {
 
 // Shutdown Module
 func (m *Module) Shutdown() {
-	if m != nil {
-		if m.ticker != nil {
-			m.ticker.Stop()
-		}
-	}
+	m.Stop()
 }
 
 // Start Spotify Polling / IRC
 func (m *Module) Start() {
-	m.Poll(false)
+	m.setupPolling()
 }
 
 // Stop Spotify Polling / IRC
