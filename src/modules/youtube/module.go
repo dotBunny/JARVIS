@@ -1,5 +1,6 @@
 package youtube
 
+//* You can determine your [ChannelID] by going to https://www.youtube.com/account_advanced and copying the string after "YouTube Channel ID".
 import (
 	"net/http"
 	"time"
@@ -19,11 +20,11 @@ type Module struct {
 	data              *Data
 	youtubeClient     *http.Client
 	youtubeOAuth      oauth2.Config
+	youtubeToken      *oauth2.Token
 	youtubeService    *youtube.Service
 	liveChatID        string
 	liveChatPageToken string
 
-	youtubeToken string
 	// twitchStreamName string
 	j *Core.JARVIS
 }
@@ -33,6 +34,9 @@ func (m *Module) Initialize(jarvisInstance *Core.JARVIS) {
 
 	// Assign JARVIS, the module is made we dont to create it like in core!
 	m.j = jarvisInstance
+
+	// Empty it
+	m.liveChatID = ""
 
 	// Load Configuration
 	m.loadConfig()

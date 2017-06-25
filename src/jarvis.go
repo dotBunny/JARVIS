@@ -69,8 +69,10 @@ func onReady() {
 		twitchModule := new(Twitch.Module)
 		twitchModule.Initialize(j)
 
-		youtubeModule := new(YouTube.Module)
-		youtubeModule.Initialize(j)
+		// YouTube Module
+		// STILL NOT WORKING
+		// youtubeModule := new(YouTube.Module)
+		// youtubeModule.Initialize(j)
 
 		// Overlay Module
 		overlayModule := new(Overlay.Module)

@@ -69,7 +69,6 @@ func (m *Module) getResponse(url string) (*http.Response, error) {
 	req.Header.Set("User-Agent", "JARVIS")
 	req.Header.Set("Client-ID", m.settings.ClientID)
 	req.Header.Set("Authorization", "OAuth "+m.twitchToken)
-
 	req.Header.Set("Accept", "application/vnd.twitchtv.v5+json")
 
 	return m.twitchClient.Do(req)

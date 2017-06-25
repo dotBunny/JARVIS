@@ -7,6 +7,7 @@ import (
 // Config elements
 type Config struct {
 	Chat                        bool
+	ChannelID                   string
 	ChatChannelID               string
 	ClientID                    string
 	ClientSecret                string
@@ -28,6 +29,7 @@ func (m *Module) loadConfig() {
 
 	// TWitch Default Config
 	m.settings.Chat = true
+	m.settings.ChannelID = "UCEF3R66WWgroj4NQeGoR27w"
 	m.settings.ChatChannelID = "325241876758396928"
 	m.settings.Enabled = true
 	m.settings.LastFollowersCount = 10

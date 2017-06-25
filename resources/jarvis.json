@@ -28,6 +28,7 @@
   },
   "YouTube" : {
     "Chat" : true,
+    "ChannelID": "UCEF3R66WWgroj4NQeGoR27w",
     "ChatChannelID" : "325241876758396928",
     "ClientID": "Your Client ID",
     "ClientSecret" : "Your Secret",

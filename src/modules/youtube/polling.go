@@ -9,7 +9,11 @@ import (
 
 func (m *Module) setupPolling() {
 
-	listCall := m.youtubeService.LiveStreams.List("id,snippet")
+	listCall := m.youtubeService.LiveBroadcasts.List("id,snippet")
+	listCall.Id(m.settings.ChannelID)
+	listCall.Header().Set("User-Agent", "JARVIS")
+	listCall.Header().Set("Client-ID", m.settings.ClientID)
+	listCall.Header().Set("Authorization", "OAuth "+m.youtubeToken.AccessToken)
 	listCall.Do()
 	listResponse, listError := listCall.Do()
 	if listError != nil {
@@ -49,7 +53,11 @@ func (m *Module) Poll(notify bool) {
 
 func (m *Module) pollChat() {
 
+	//pollingIntervalMillis should update timer?
 	listCall := m.youtubeService.LiveChatMessages.List(m.liveChatID, "id,snippet")
+	listCall.Header().Set("User-Agent", "JARVIS")
+	listCall.Header().Set("Client-ID", m.settings.ClientID)
+	listCall.Header().Set("Authorization", "OAuth "+m.youtubeToken.AccessToken)
 	listResponse, listError := listCall.Do()
 	if listError != nil {
 		m.j.Log.Error("YouTube", "Unable to retieve any messages "+listError.Error())
