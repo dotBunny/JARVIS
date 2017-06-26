@@ -116,7 +116,7 @@ func (m *Module) pollStream(notify bool) {
 	stream := &StreamResponse{}
 	errorDecoder := json.NewDecoder(response.Body).Decode(&stream)
 	if errorDecoder != nil {
-		m.j.Log.Error("Twitch", "Error decoding JSON from: "+url+", "+responseError.Error())
+		m.j.Log.Error("Twitch", "Error decoding JSON from: "+url+", "+errorDecoder.Error())
 		return
 	}
 
