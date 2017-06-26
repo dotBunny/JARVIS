@@ -8,6 +8,9 @@ type Data struct {
 	PlayedMS              int
 	CurrentlyPlaying      bool
 	CurrentlyPlayingURL   string
+	TrackName             string
+	ArtistLine            string
+	TrackThumbnailURL     string
 }
 
 func (m *Module) setupData() {

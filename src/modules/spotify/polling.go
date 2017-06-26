@@ -55,7 +55,8 @@ func (m *Module) pollCurrentlyPlaying(notify bool) {
 				buffer.WriteString(", ")
 			}
 		}
-		var artistLine = buffer.String()
+
+		m.data.ArtistLine = buffer.String()
 
 		buffer.WriteString(" - ")
 		buffer.WriteString(state.Item.Name)
@@ -77,6 +78,8 @@ func (m *Module) pollCurrentlyPlaying(notify bool) {
 
 			// Get/Save Currently Playing URL
 			m.data.CurrentlyPlayingURL = state.Item.ExternalURLs["spotify"]
+			m.data.TrackThumbnailURL = state.Item.Album.Images[0].URL
+			m.data.TrackName = state.Item.Name
 			Core.SaveFile([]byte(m.data.CurrentlyPlayingURL), m.outputs.LinkPath)
 
 			if notify {
@@ -86,11 +89,11 @@ func (m *Module) pollCurrentlyPlaying(notify bool) {
 					URL:   m.data.CurrentlyPlayingURL,
 					//Description: ,
 					Color:     1947988,
-					Thumbnail: &discordgo.MessageEmbedThumbnail{URL: state.Item.Album.Images[0].URL},
+					Thumbnail: &discordgo.MessageEmbedThumbnail{URL: m.data.TrackThumbnailURL},
 					Fields: []*discordgo.MessageEmbedField{
 						&discordgo.MessageEmbedField{
-							Name:   state.Item.Name,
-							Value:  artistLine,
+							Name:   m.data.TrackName,
+							Value:  m.data.ArtistLine,
 							Inline: true},
 					},
 				})

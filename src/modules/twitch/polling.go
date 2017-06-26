@@ -120,6 +120,8 @@ func (m *Module) pollStream(notify bool) {
 		return
 	}
 
+	m.data.StreamPreviewURL = stream.Stream.Preview.Large
+
 	// Channel Follower Count
 	if stream.Stream.Channel.Followers != m.data.ChannelFollowers {
 		m.data.ChannelFollowers = stream.Stream.Channel.Followers

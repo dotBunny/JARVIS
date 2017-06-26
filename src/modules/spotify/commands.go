@@ -5,7 +5,7 @@ import (
 )
 
 func (m *Module) setupCommands() {
-	m.j.Discord.RegisterCommand("!spotify", m.commandSpotify, "Spotify ([info]/start/stop/auth)", Core.CommandAccessModerator)
+	m.j.Discord.RegisterCommand("!spotify", m.commandSpotify, "Spotify ([info]/start/stop/auth/next)", Core.CommandAccessModerator)
 }
 
 func (m *Module) commandSpotify(message *Core.DiscordMessage) {
@@ -23,9 +23,15 @@ func (m *Module) commandSpotify(message *Core.DiscordMessage) {
 			m.j.Log.Message("Spotify", "Authenticating with Spotify")
 			m.j.Discord.GetSession().ChannelMessageSend(message.ChannelID, m.settings.Prefix+"Authenticating")
 			m.authenticate()
+		} else if message.Content == "pause" {
+			m.endpointPause(nil, nil)
+		} else if message.Content == "play" {
+			m.endpointPlay(nil, nil)
+		} else if message.Content == "next" {
+			m.endpointNextTrack(nil, nil)
 		}
 	} else {
-		m.j.Discord.GetSession().ChannelMessageSend(message.ChannelID, m.settings.Prefix+"Currently playing "+m.data.CurrentlyPlayingTrack)
+		m.endpointInfo(nil, nil)
 	}
 }
 

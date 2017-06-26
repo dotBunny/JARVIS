@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/bwmarrin/discordgo"
 )
 
 func (m *Module) setupEndpoints() {
@@ -16,6 +18,8 @@ func (m *Module) setupEndpoints() {
 	m.j.WebServer.RegisterEndpoint("/twitch/followers/list", m.endpointFollowersList)
 	m.j.WebServer.RegisterEndpoint("/twitch/followers/total", m.endpointFollowersTotal)
 	m.j.WebServer.RegisterEndpoint("/twitch/subscribers/last", m.endpointSubscribersLast)
+	m.j.WebServer.RegisterEndpoint("/twitch/info", m.endpointInfo)
+	m.j.WebServer.RegisterEndpoint("/twitch/info/", m.endpointInfo)
 }
 
 func (m *Module) endpointChannelGame(w http.ResponseWriter, r *http.Request) {
@@ -59,4 +63,24 @@ func (m *Module) endpointSubscribersLast(w http.ResponseWriter, r *http.Request)
 	w.Header().Set("Content-Length", strconv.Itoa(len(m.data.LastSubscriber)))
 	fmt.Fprintf(w, m.data.LastSubscriber)
 
+}
+
+func (m *Module) endpointInfo(w http.ResponseWriter, r *http.Request) {
+	m.j.Discord.AnnoucementEmbed(&discordgo.MessageEmbed{
+		Type:      "rich",
+		Title:     "Streaming on Twitch",
+		URL:       "https://www.twitch.tv/" + m.twitchStreamName,
+		Color:     6570404,
+		Thumbnail: &discordgo.MessageEmbedThumbnail{URL: m.data.StreamPreviewURL},
+		Fields: []*discordgo.MessageEmbedField{
+			&discordgo.MessageEmbedField{
+				Name:   "Viewers",
+				Value:  fmt.Sprintf("%d", m.data.ChannelViewers),
+				Inline: true},
+			&discordgo.MessageEmbedField{
+				Name:   "Followers",
+				Value:  fmt.Sprintf("%d", m.data.ChannelFollowers),
+				Inline: true},
+		},
+	})
 }

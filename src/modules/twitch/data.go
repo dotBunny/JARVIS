@@ -19,6 +19,8 @@ type Data struct {
 
 	ChannelViewers uint
 	ChannelGame    string
+
+	StreamPreviewURL string
 }
 
 func (m *Module) setupData() {
