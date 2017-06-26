@@ -15,7 +15,8 @@ type MediaCore struct {
 func (m *MediaCore) PlaySound(path string) {
 	_, err := os.Stat(path)
 	if err == nil {
-		cmd := exec.Command(m.VLC, "file://"+path, "--play-and-exit", "--no-loop", "--no-repeat", "--quiet") //""
+
+		cmd := exec.Command(m.VLC, "file://"+path, "--play-and-exit", "--no-loop", "--no-repeat", "--quiet", "--start-time=0")
 		errCheck := cmd.Run()
 		if errCheck != nil {
 			m.j.Log.Warning("Media", errCheck.Error())
