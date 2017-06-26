@@ -11,7 +11,7 @@ import (
 func PlaySound(filePath string) {
 	_, err := os.Stat(filePath)
 	if err == nil {
-		cmd := exec.Command("afplay", filePath)
+		cmd := exec.Command("afplay", "-v 0.5", filePath)
 		cmd.Run()
 	}
 }

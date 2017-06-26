@@ -178,6 +178,8 @@ func (m *WebServerCore) Initialize(jarvisInstance *JARVIS) {
 
 	// Register default endpoint
 	m.RegisterEndpoint("/", m.endpointBase)
+	m.RegisterEndpoint("/media", m.endpointMedia)
+	m.RegisterEndpoint("/media/", m.endpointMedia)
 
 	// Start Server
 	go http.ListenAndServe(":"+strconv.Itoa(m.settings.ListenPort), nil)
@@ -193,4 +195,12 @@ func (m *WebServerCore) IsEnabled() bool {
 // RegisterEndpoint to WebServer
 func (m *WebServerCore) RegisterEndpoint(endpoint string, function http.HandlerFunc) {
 	http.HandleFunc(endpoint, function)
+}
+
+// Media player
+func (m *WebServerCore) endpointMedia(w http.ResponseWriter, r *http.Request) {
+
+	var filePath = r.FormValue("path")
+	m.j.Log.Message("WebServer", "Playing media:"+filePath)
+	PlaySound(filePath)
 }
