@@ -14,6 +14,7 @@ import (
 type GeneralConfig struct {
 	OutputPath string
 	Prefix     string
+	VLCPath    string
 }
 
 // ConfigCore holds general configuration information
@@ -34,6 +35,10 @@ func (m *ConfigCore) GetConfigData(key string) *json.RawMessage {
 // GetOutputPath base to use for files
 func (m *ConfigCore) GetOutputPath() string {
 	return m.settings.OutputPath
+}
+
+func (m *ConfigCore) GetVLCPath() string {
+	return m.settings.VLCPath
 }
 
 // GetPrefix for Discord

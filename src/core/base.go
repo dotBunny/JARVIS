@@ -16,6 +16,7 @@ type JARVIS struct {
 	startTime       time.Time
 	macBundle       bool
 
+	Media     *MediaCore
 	WebServer *WebServerCore
 	Config    *ConfigCore
 	Discord   *DiscordCore
@@ -64,6 +65,9 @@ func HireJarvis() *JARVIS {
 	// Initialize Logging Module
 	j.Log.Initialize(j)
 	j.Log.Message("System", "Version: v"+Version)
+
+	// Start Media
+	j.Media.Initialize(j)
 
 	// Initialize the WebServer
 	j.WebServer.Initialize(j)

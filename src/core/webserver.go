@@ -202,5 +202,5 @@ func (m *WebServerCore) endpointMedia(w http.ResponseWriter, r *http.Request) {
 
 	var filePath = r.FormValue("path")
 	m.j.Log.Message("WebServer", "Playing media:"+filePath)
-	PlaySound(filePath)
+	m.j.Media.PlaySound(filePath)
 }

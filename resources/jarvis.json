@@ -24,7 +24,8 @@
   },
   "General" : {
     "OutputPath" : "<Absolute Path To Where To Store Files>",
-    "Prefix": "<:jarvis:326026030458601472> "
+    "Prefix": "<:jarvis:326026030458601472> ",
+    "VLCPath" : "/Applications/VLC.app/Contents/MacOS/VLC"
   },
   "YouTube" : {
     "Chat" : true,
