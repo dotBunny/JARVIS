@@ -47,7 +47,7 @@
     "ClientSecret" : "<Your Spotify App ClientSecret>",
     "Enabled" : true,
     "PollingFrequency" : 5,
-    "TruncateTrackLength" : 55,
+    "TruncateTrackLength" : 58,
     "TruncateTrackRunes" : "...",
     "Prefix": "<:spotify:326026030265663488> "
   },
