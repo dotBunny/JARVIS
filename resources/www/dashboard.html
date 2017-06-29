@@ -327,6 +327,10 @@
             return '<a href="https://www.twitch.tv/' + follower +'" class="list-group-item"><i class="fa fa-fw fa-user"></i> ' + follower + '</a>';
         }
         getList("twitch-followers", "http://localhost:8080/twitch/followers/list", renderLatestFollower, 10);
+
+        
+        getList("twitch-followers", "http://localhost:8080/twitch/followers/list", renderLatestFollower, 10);
+        StartMonitoringMedia("http://localhost:8080/media/monitor");
     </script>
 </body>
 

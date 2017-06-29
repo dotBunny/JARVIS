@@ -1,3 +1,5 @@
+
+
 /**
  * Retrieve information from the JARVIS endpoints periodically
  * @param {string} elementID The ID of the element to fill with data
@@ -84,3 +86,32 @@ function _getList(elementID, endpointURI, renderElement) {
     xmlhttp.open("GET", endpointURI, true);
     xmlhttp.send();
 }
+
+
+var LastMediaCount = 0;
+function StartMonitoringMedia(endpointURI) { 
+    setInterval(function () {_monitorMedia(endpointURI);}, (1 * 1000)); }
+
+function _monitorMedia(endpointURI)
+{
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == XMLHttpRequest.DONE ) {
+            if (xmlhttp.status == 200) {
+                var items = xmlhttp.responseText.split(",");
+                var count = parseInt(items[0]);
+                
+                if ( count > LastMediaCount && count > 0) {
+                    var audio = new Audio(items[1]);
+                    audio.play();
+                    LastMediaCount = count;
+                }
+           }
+        }
+    }
+    xmlhttp.open("GET", endpointURI, true);
+    xmlhttp.send();
+}
+
+
+

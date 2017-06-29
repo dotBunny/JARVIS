@@ -1,27 +1,34 @@
 package core
 
 import (
+	"io/ioutil"
 	"os"
-	"os/exec"
 )
 
 // LogCore Class
 type MediaCore struct {
-	VLC string
-	j   *JARVIS
+	MediaLastPath    string
+	MediaLastData    []byte
+	MediaLastVersion int
+
+	j *JARVIS
 }
 
 // Play Sound
 func (m *MediaCore) PlaySound(path string) {
 	_, err := os.Stat(path)
 	if err == nil {
-
-		cmd := exec.Command(m.VLC, path, "--play-and-exit", "--no-loop", "--no-repeat", "--quiet", "--start-time=0")
-		errCheck := cmd.Run()
-		if errCheck != nil {
-			m.j.Log.Warning("Media", errCheck.Error())
-		}
+		m.MediaLastPath = path
+		m.MediaLastData, _ = ioutil.ReadFile(path)
+		m.MediaLastVersion++
 	}
+
+	// 	cmd := exec.Command(m.VLC, path, "--play-and-exit", "--no-loop", "--no-repeat", "--quiet", "--start-time=0")
+	// 	errCheck := cmd.Run()
+	// 	if errCheck != nil {
+	// 		m.j.Log.Warning("Media", errCheck.Error())
+	// 	}
+	// }
 }
 
 // Initialize Media
@@ -31,7 +38,10 @@ func (m *MediaCore) Initialize(jarvisInstance *JARVIS) {
 	m = new(MediaCore)
 
 	// Assign JARVIS (circle!)
-	jarvisInstance.Media = m
-	m.VLC = jarvisInstance.Config.GetVLCPath()
 	m.j = jarvisInstance
+	m.j.Media = m
+
+	m.MediaLastVersion = 0
+	m.MediaLastPath = "Nothing"
+
 }

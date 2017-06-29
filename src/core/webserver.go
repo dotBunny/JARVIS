@@ -180,6 +180,10 @@ func (m *WebServerCore) Initialize(jarvisInstance *JARVIS) {
 	m.RegisterEndpoint("/", m.endpointBase)
 	m.RegisterEndpoint("/media", m.endpointMedia)
 	m.RegisterEndpoint("/media/", m.endpointMedia)
+	m.RegisterEndpoint("/media/monitor", m.endpointMediaMonitor)
+	m.RegisterEndpoint("/media/monitor/", m.endpointMediaMonitor)
+	m.RegisterEndpoint("/media/fetch/", m.endpointMediaFetch)
+	m.RegisterEndpoint("/media/fetch", m.endpointMediaFetch)
 
 	// Start Server
 	go http.ListenAndServe(":"+strconv.Itoa(m.settings.ListenPort), nil)
@@ -199,8 +203,25 @@ func (m *WebServerCore) RegisterEndpoint(endpoint string, function http.HandlerF
 
 // Media player
 func (m *WebServerCore) endpointMedia(w http.ResponseWriter, r *http.Request) {
-
 	var filePath = r.FormValue("path")
 	m.j.Log.Message("WebServer", "Playing media:"+filePath)
 	m.j.Media.PlaySound(filePath)
+}
+
+func (m *WebServerCore) endpointMediaMonitor(w http.ResponseWriter, r *http.Request) {
+	m.DefaultHeader(w)
+	fmt.Println(m.j.Media.MediaLastVersion)
+	fmt.Println(m.j.Media.MediaLastPath)
+
+	output := strconv.Itoa(m.j.Media.MediaLastVersion) + ",http://localhost:8080/media/fetch"
+	w.Header().Set("Content-Length", strconv.Itoa(len(output)))
+	fmt.Fprintf(w, output)
+}
+
+func (m *WebServerCore) endpointMediaFetch(w http.ResponseWriter, r *http.Request) {
+
+	w.Header().Set("Content-Type", "audio/wav")
+
+	//w.Header().Set("Content-Length", m.j.Media.MediaLastData
+	w.Write(m.j.Media.MediaLastData)
 }
