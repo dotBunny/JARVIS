@@ -210,9 +210,6 @@ func (m *WebServerCore) endpointMedia(w http.ResponseWriter, r *http.Request) {
 
 func (m *WebServerCore) endpointMediaMonitor(w http.ResponseWriter, r *http.Request) {
 	m.DefaultHeader(w)
-	fmt.Println(m.j.Media.MediaLastVersion)
-	fmt.Println(m.j.Media.MediaLastPath)
-
 	output := strconv.Itoa(m.j.Media.MediaLastVersion) + ",http://localhost:8080/media/fetch"
 	w.Header().Set("Content-Length", strconv.Itoa(len(output)))
 	fmt.Fprintf(w, output)
@@ -221,7 +218,5 @@ func (m *WebServerCore) endpointMediaMonitor(w http.ResponseWriter, r *http.Requ
 func (m *WebServerCore) endpointMediaFetch(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "audio/wav")
-
-	//w.Header().Set("Content-Length", m.j.Media.MediaLastData
 	w.Write(m.j.Media.MediaLastData)
 }

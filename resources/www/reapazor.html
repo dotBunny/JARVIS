@@ -1,0 +1,67 @@
+<html>
+    <head>
+        <title>The Forgotten Soul</title>
+        <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Oswald" />
+        <link rel="stylesheet" type="text/css" href="content/css/reapazor.css">
+    </head>
+    <body>
+        <div id="header">
+            <div id="spotify-image" class="header-chunk">
+                <img src="http://localhost:8080/spotify/image" id="spotify-image" />
+            </div>
+            <div id="spotify-track" class="header-chunk">
+                <img src="content/img/spotify-track.png" />
+                <span id="spotify-track-data">Track Name</span>
+            </div>
+            <div id="twitch-follower-last" class="header-chunk">
+                <img src="content/img/twitch-follower.png" />
+                <span id="twitch-follower-last-data">Last Subscriber</span>
+            </div>
+            <div id="jarvis-working-on" class="header-chunk">
+                <img src="content/img/jarvis-workon.png" />
+                <span id="jarvis-working-on-data">JARVIS</span>
+            </div>
+        </div>
+        <div id="sidebar">
+            <div id="crashes" class="sidebar-chunk">
+                <img src="content/img/count-crashes.png" />
+                <span id="crashes-data">0</span>
+            </div>
+            <div id="coffee" class="sidebar-chunk">
+                <img src="content/img/count-coffee.png" />
+                <span id="coffee-data">0</span>
+            </div>  
+            <div id="saves" class="sidebar-chunk">
+                <img src="content/img/count-saves.png" />
+                <span id="saves-data">0</span>
+            </div>  
+            <div id="viewers" class="sidebar-chunk">
+                <img src="content/img/count-viewers.png" />
+                <span id="viewers-data">000</span>
+            </div>  
+        </div>
+        <script type="application/javascript" src="content/js/jarvis.js" /></script>
+        <script type="application/javascript">
+
+            // Polly Last Follower
+            getInfo("twitch-follower-last-data", "http://localhost:8080/twitch/followers/last", 10);
+
+            // Update Track Info
+            getInfo("spotify-track-data", "http://localhost:8080/spotify/track", 5);
+            refreshImage("spotify-image", 5)
+
+            // Update Working On Text
+            getInfo("jarvis-working-on-data", "http://localhost:8080/stats/workingon", 10);
+
+            // Update Stats
+            getInfo("crashes-data", "http://localhost:8080/stats/crashes", 5);
+            getInfo("coffee-data", "http://localhost:8080/stats/coffee", 5);
+            getInfo("saves-data", "http://localhost:8080/stats/saves", 5);
+            
+            // Update Viewer Count
+            getInfo("viewers-data", "http://localhost:8080/twitch/channel/viewers", 5);
+            
+            StartMonitoringMedia("http://localhost:8080/media/monitor");
+        </script>
+    </body>
+</html>
