@@ -2,9 +2,11 @@ body
 {
     margin: 0px;
     padding: 0px;
+    background-color: transparent;
     overflow-x: hidden;
-    overflow-y: hidden;
-    background: transparent;
+    overflow-y: hidden;    
+    font-family: Oswald;
+    font-variant: normal;
 }
 
 
@@ -43,10 +45,9 @@ div#header span
     color: #6f6f6d;
     white-space: nowrap;
 
-    font-family: Oswald;
-	font-size: 30px;
+
+	font-size: 26px;
 	font-style: italic;
-	font-variant: normal;
 	font-weight: 400;
 	line-height: 26.4px;
 
@@ -107,10 +108,10 @@ div#sidebar span {
     color: #6f6f6d;
     white-space: nowrap;
 
-    font-family: Oswald;
+    
     font-size: 18px;
     font-style: normal;
-    font-variant: normal;
+    
     font-weight: 200;
     line-height: 18.4px
 }
@@ -147,3 +148,10 @@ div#saves span{ top: 13px; }
 div#viewers { bottom: 155px; }
 div#viewers img { left: 9px; }
 div#viewers span { top: 8px; }
+
+div#branding
+{
+    position: absolute;    
+    bottom: 50px;
+    right: 115px;
+}

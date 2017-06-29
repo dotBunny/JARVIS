@@ -7,7 +7,7 @@
     <body>
         <div id="header">
             <div id="spotify-image" class="header-chunk">
-                <img src="http://localhost:8080/spotify/image" id="spotify-image" />
+                <img src="http://localhost:8080/spotify/image" id="spotify-image-data" />
             </div>
             <div id="spotify-track" class="header-chunk">
                 <img src="content/img/spotify-track.png" />
@@ -40,6 +40,9 @@
                 <span id="viewers-data">000</span>
             </div>  
         </div>
+        <div id="branding">
+            <img src="content/img/the-forgotten-soul.png" />
+        </div>
         <script type="application/javascript" src="content/js/jarvis.js" /></script>
         <script type="application/javascript">
 
@@ -48,7 +51,7 @@
 
             // Update Track Info
             getInfo("spotify-track-data", "http://localhost:8080/spotify/track", 5);
-            refreshImage("spotify-image", 5)
+            refreshImage("spotify-image-data", 5)
 
             // Update Working On Text
             getInfo("jarvis-working-on-data", "http://localhost:8080/stats/workingon", 10);
