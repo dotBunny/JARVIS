@@ -16,8 +16,6 @@ div#header
     top: 0px;
     height: 105px; 
     width: 100%;
-    background-image: url("../img/header-background.png");
-    background-repeat: repeat-x;
 }
 
 div.header-chunk 
@@ -99,8 +97,6 @@ div#sidebar
     right: 0px;
     top: 105px;
     height: 100%; 
-    background-image: url("../img/sidebar-background.png");
-    background-repeat: repeat-y;
 }
 
 div#sidebar span {
@@ -152,6 +148,11 @@ div#viewers span { top: 8px; }
 div#branding
 {
     position: absolute;    
-    bottom: 50px;
-    right: 115px;
+    bottom: 35px;
+    right: 100px;
+}
+
+div#branding img
+{
+    opacity: .5
 }
