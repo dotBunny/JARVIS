@@ -73,9 +73,7 @@ func (m *Module) pollFollowers(notify bool) {
 			m.data.LastFollower = followers.Follows[0].User.DisplayName
 
 			if notify {
-				m.j.Discord.GetSession().ChannelMessageSend(
-					m.j.Discord.GetPrivateChannelID(),
-					m.settings.Prefix+"New Twitch Follower "+followers.Follows[0].User.DisplayName)
+				m.j.Discord.Announcement(m.settings.Prefix + "New Twitch Follower " + followers.Follows[0].User.DisplayName)
 			}
 
 			// TODO: Need to make it so it loads so this doesnt ding
