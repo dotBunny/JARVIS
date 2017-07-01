@@ -90,6 +90,13 @@ div#jarvis-working-on
 }
 
 
+span#jarvis-working-on-data img
+{
+    position: relative;
+    top: -2px;
+    left: -2px;
+}
+
 div#sidebar 
 {
     position: absolute;

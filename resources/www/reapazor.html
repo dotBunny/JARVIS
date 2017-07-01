@@ -18,7 +18,7 @@
                 <span id="twitch-follower-last-data">Last Subscriber</span>
             </div>
             <div id="jarvis-working-on" class="header-chunk">
-                <img src="content/img/jarvis-workon.png" />
+                <img src="content/img/jarvis-workon.png" id="workingon-image" />
                 <span id="jarvis-working-on-data">JARVIS</span>
             </div>
         </div>
@@ -54,7 +54,7 @@
             refreshImage("spotify-image-data", 5)
 
             // Update Working On Text
-            getInfo("jarvis-working-on-data", "http://localhost:8080/stats/workingon", 10);
+            getWorkingOn("jarvis-working-on-data", "http://localhost:8080/stats/workingon", 10);
 
             // Update Stats
             getInfo("crashes-data", "http://localhost:8080/stats/crashes", 5);

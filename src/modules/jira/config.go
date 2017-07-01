@@ -11,6 +11,7 @@ type Config struct {
 	Enabled           bool
 	PollingFrequency  int
 	Prefix            string
+	Instance          string
 	Query             string
 }
 
@@ -18,10 +19,7 @@ type Config struct {
 func (m *Module) loadConfig() {
 	// Create default general settings
 	m.settings = new(Config)
-
 	m.settings.Enabled = true
-	m.settings.PollingFrequency = 7
-	m.settings.Prefix = ":jira: "
 
 	// Check Raw Data
 	if m.j.Config.IsInitialized() {

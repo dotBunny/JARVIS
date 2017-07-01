@@ -11,12 +11,16 @@ import (
 
 // Data Structure
 type Data struct {
-	WorkingOn   string
-	CoffeeCount int
-	SavesCount  int
-	CrashCount  int
+	WorkingOn     string
+	WorkingOnIcon string
+	CoffeeCount   int
+	SavesCount    int
+	CrashCount    int
 }
 
+func (m *Module) GetWorkingOn() string {
+	return m.data.WorkingOn
+}
 func (m *Module) setupData() {
 	m.data = new(Data)
 

@@ -49,10 +49,30 @@ func (m *Module) commandSave(message *Core.DiscordMessage) {
 
 func (m *Module) commandWorkingOn(message *Core.DiscordMessage) {
 
-	m.data.WorkingOn = message.Content
+	if len(message.Content) > 0 {
+		if message.Content == "jira" {
+			m.UseJIRAForWork = true
+
+			// Force Update
+
+		} else {
+			m.UseJIRAForWork = false
+			m.SetWorkingOn(message.Content, true)
+		}
+	}
+}
+
+// SetWorkingOn text
+func (m *Module) SetWorkingOn(message string, notify bool) {
+	m.data.WorkingOn = message
 	Core.SaveFile([]byte(m.data.WorkingOn), m.outputs.WorkingOnPath)
-	m.j.Discord.Announcement(m.j.Config.GetPrefix() + "Now working on " + m.data.WorkingOn)
+	if notify {
+		m.j.Discord.Announcement(m.j.Config.GetPrefix() + "Now working on " + m.data.WorkingOn)
+	}
 	m.j.Log.Message("Stats", "Working On: "+m.data.WorkingOn)
+}
+func (m *Module) SetWorkingOnIcon(icon string) {
+	m.data.WorkingOnIcon = icon
 }
 
 func (m *Module) commandReset(message *Core.DiscordMessage) {

@@ -20,17 +20,6 @@ function getInfo(elementID, endpointURI, everySeconds) {
     }
 }
 
-function refreshImage(elementID, everySeconds) {
-
-    // Save base source    
-    document.getElementById(elementID).setAttribute("data-source", document.getElementById(elementID).src);
-    setInterval(function () { 
-        d = new Date();
-        var newSource = document.getElementById(elementID).getAttribute("data-source") + "?" + d.getTime()        
-        document.getElementById(elementID).src = newSource;
-    }, (everySeconds * 1000));
-}
-
 /**
  * Retrieve information from JARVIS endpoints 
  * @param {string} elementID The ID of the element to fill with data
@@ -47,6 +36,17 @@ function _getInfo(elementID, endpointURI) {
     }
     xmlhttp.open("GET", endpointURI, true);
     xmlhttp.send();
+}
+
+function refreshImage(elementID, everySeconds) {
+
+    // Save base source    
+    document.getElementById(elementID).setAttribute("data-source", document.getElementById(elementID).src);
+    setInterval(function () { 
+        d = new Date();
+        var newSource = document.getElementById(elementID).getAttribute("data-source") + "?" + d.getTime()        
+        document.getElementById(elementID).src = newSource;
+    }, (everySeconds * 1000));
 }
 
 function HitAPI(endpointURI) {
@@ -90,9 +90,10 @@ function _getList(elementID, endpointURI, renderElement) {
 
 var LastMediaCount = 0;
 function StartMonitoringMedia(endpointURI) { 
-    setInterval(function () {_monitorMedia(endpointURI);}, (1 * 1000)); }
+    _monitorMedia(endpointURI, false);
+    setInterval(function () {_monitorMedia(endpointURI, true);}, (1 * 1000)); }
 
-function _monitorMedia(endpointURI)
+function _monitorMedia(endpointURI, notify)
 {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
@@ -102,9 +103,76 @@ function _monitorMedia(endpointURI)
                 var count = parseInt(items[0]);
                 
                 if ( count > LastMediaCount && count > 0) {
-                    var audio = new Audio(items[1]);
-                    audio.play();
+                    if ( notify ) {
+                        var audio = new Audio(items[1]);
+                        audio.play();
+                    }
                     LastMediaCount = count;
+                }
+           }
+        }
+    }
+    xmlhttp.open("GET", endpointURI, true);
+    xmlhttp.send();
+}
+
+
+
+/**
+ * Retrieve information from the JARVIS endpoints periodically
+ * @param {string} elementID The ID of the element to fill with data
+ * @param {string} endpointURI The full URI of the API endpoint to poll
+ * @param {int} everySeconds How often should the API endpoint be polled
+ */
+function getWorkingOn(elementID, endpointURI, everySeconds) {
+    
+    // Initial Populate
+    _getWorkingOn(elementID, endpointURI);
+
+    if (everySeconds > 0) {
+        setInterval(function () {
+            _getWorkingOn(elementID, endpointURI);
+        }, (everySeconds * 1000));
+    } else {
+        _getWorkingOn(elementID, endpointURI);
+    }
+}
+
+/**
+ * Retrieve information from JARVIS endpoints 
+ * @param {string} elementID The ID of the element to fill with data
+ * @param {string} endpointURI The full URI of the API endpoint to poll
+ */
+function _getWorkingOn(elementID, endpointURI) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == XMLHttpRequest.DONE ) {
+            if (xmlhttp.status == 200) {
+
+                var test = xmlhttp.responseText.split(",", 1);
+                var icon = "";
+
+                // todo output fix check if changed then chang ei t ? 
+                if (test[0] == "Bug") {
+                    icon = "<img src=\"content/img/jira-bug.svg\" />";
+                } else if (test[0] == "Feature" ) {
+                    icon = "<img src=\"content/img/jira-feature.svg\" />";
+                } else if (test[0] == "Improvement" ) {
+                    icon = "<img src=\"content/img/jira-improvement.svg\" />";
+                } else if (test[0] == "Task" ) {
+                    icon =  "<img src=\"content/img/jira-task.svg\" />";
+                } else if (test[0] == "Sub-Task" ) {
+                    icon = "<img src=\"content/img/jira-subtask.svg\" />";
+                } else if (test[0] == "Epic" ) {
+                    icon = "<img src=\"content/img/jira-epic.svg\" />"
+                } 
+
+                if (icon.length > 0 ) {
+                    document.getElementById("workingon-image").src = "content/img/jarvis-workon-jira.png"
+                    document.getElementById(elementID).innerHTML = icon.concat(xmlhttp.responseText.substring(xmlhttp.responseText.indexOf(',')+1));
+                } else {
+                    document.getElementById("workingon-image").src = "content/img/jarvis-workon.png"
+                    document.getElementById(elementID).innerHTML = xmlhttp.responseText;
                 }
            }
         }

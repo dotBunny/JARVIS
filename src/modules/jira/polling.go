@@ -3,16 +3,18 @@ package jira
 import (
 	"strconv"
 	"time"
+
+	jira "github.com/andygrunwald/go-jira"
 )
 
 func (m *Module) setupPolling() {
 	// Create Ticker
-	spotifyPollingFrequency, spotifyPollingError := time.ParseDuration(strconv.Itoa(m.settings.PollingFrequency) + "s")
-	if spotifyPollingError != nil {
-		spotifyPollingFrequency, _ = time.ParseDuration("5s")
+	jiraPollingFrequency, jiraPollingError := time.ParseDuration(strconv.Itoa(m.settings.PollingFrequency) + "s")
+	if jiraPollingError != nil {
+		jiraPollingFrequency, _ = time.ParseDuration("5s")
 	}
-	m.j.Log.Message("JIRA", "Starting polling at "+spotifyPollingFrequency.String())
-	m.ticker = time.NewTicker(spotifyPollingFrequency)
+	m.j.Log.Message("JIRA", "Starting polling at "+jiraPollingFrequency.String())
+	m.ticker = time.NewTicker(jiraPollingFrequency)
 	m.Poll(false)
 	go m.loop()
 }
@@ -35,4 +37,32 @@ func (m *Module) Poll(notify bool) {
 
 func (m *Module) pollIssues(notify bool) {
 
+	opt := &jira.SearchOptions{StartAt: 0, MaxResults: 10}
+	issues, _, err := m.jiraClient.Issue.Search(m.settings.Query, opt)
+	if issues == nil {
+		m.j.Log.Message("JIRA", "No issues found")
+	}
+	if err != nil {
+		m.j.Log.Error("JIRA", "An error occured fetching issues: "+err.Error())
+	}
+
+	// New issue set!
+	if len(issues) > 0 {
+		if (issues[0].Fields.Summary != m.data.LastNotifyText) || (m.stats.UseJIRAForWork && m.stats.GetWorkingOn() != issues[0].Fields.Summary) {
+			if notify {
+				m.j.Discord.Announcement(m.settings.Prefix + "Working On: " + issues[0].Fields.Summary)
+			}
+			m.data.LastNotifyText = issues[0].Fields.Summary
+			m.data.LastNotifyIcon = issues[0].Fields.Type.Name
+			if m.stats.UseJIRAForWork {
+				m.stats.SetWorkingOn(m.data.LastNotifyText, false)
+				m.stats.SetWorkingOnIcon(m.data.LastNotifyIcon)
+			}
+			m.data.LastIssues = issues
+			m.outputLastIssues()
+		}
+	} else {
+		m.data.LastIssues = nil
+		m.outputLastIssues()
+	}
 }

@@ -69,6 +69,13 @@ func (m *Module) endpointCrashesPlus(w http.ResponseWriter, r *http.Request) {
 
 func (m *Module) endpointWorkingOn(w http.ResponseWriter, r *http.Request) {
 	m.j.WebServer.DefaultHeader(w)
-	w.Header().Set("Content-Length", strconv.Itoa(len(m.data.WorkingOn)))
-	fmt.Fprintf(w, string(m.data.WorkingOn))
+
+	if m.UseJIRAForWork {
+		output := m.data.WorkingOnIcon + "," + m.data.WorkingOn
+		w.Header().Set("Content-Length", strconv.Itoa(len(output)))
+		fmt.Fprintf(w, output)
+	} else {
+		w.Header().Set("Content-Length", strconv.Itoa(len(m.data.WorkingOn)))
+		fmt.Fprintf(w, string(m.data.WorkingOn))
+	}
 }

@@ -51,7 +51,7 @@ func (m *Module) authenticate() {
 	// use the client to make calls that require authorization
 	user, err := client.CurrentUser()
 	if err != nil {
-		log.Fatal(err)
+		m.j.Log.Error("Spotify", err.Error())
 	}
 	m.j.Log.Message("Spotify", "You are logged in as: "+user.ID)
 

@@ -12,6 +12,7 @@ import (
 	Core "./core"
 
 	Dashboard "./modules/dashboard"
+	JIRA "./modules/jira"
 	Overlay "./modules/overlay"
 	Spotify "./modules/spotify"
 	Stats "./modules/stats"
@@ -29,6 +30,7 @@ var (
 	statsModule     *Stats.Module
 	overlayModule   *Overlay.Module
 	youtubeModule   *YouTube.Module
+	jiraModule      *JIRA.Module
 
 	quit chan os.Signal
 )
@@ -79,6 +81,9 @@ func onReady() {
 		// STILL NOT WORKING
 		// youtubeModule := new(YouTube.Module)
 		// youtubeModule.Initialize(j)
+
+		jiraModule := new(JIRA.Module)
+		jiraModule.Initialize(j, statsModule)
 
 		// Overlay Module
 		overlayModule := new(Overlay.Module)

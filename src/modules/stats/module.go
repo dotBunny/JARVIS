@@ -6,10 +6,11 @@ import (
 
 // Module Class
 type Module struct {
-	outputs  *Outputs
-	data     *Data
-	settings *Config
-	j        *Core.JARVIS
+	UseJIRAForWork bool
+	outputs        *Outputs
+	data           *Data
+	settings       *Config
+	j              *Core.JARVIS
 }
 
 // Initialize the Stats Module

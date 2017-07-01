@@ -24,8 +24,16 @@
   },
   "General" : {
     "OutputPath" : "<Absolute Path To Where To Store Files>",
-    "Prefix": "<:jarvis:326026030458601472> ",
-    "VLCPath" : "/Applications/VLC.app/Contents/MacOS/VLC"
+    "Prefix": "<:jarvis:326026030458601472> "
+  },
+    "JIRA" : {
+    "BasicAuthUsername": "u",
+    "BasicAuthPassword": "p",
+    "Enabled": false,
+    "PollingFrequency": 30,
+    "Prefix" : "<:jira:327778220625756160> ",
+    "Instance": "https://your.atlassian.net/",
+    "Query": "project = ? AND status = \"In Progress\" AND resolution = Unresolved ORDER BY priority DESC, updated DESC"
   },
   "YouTube" : {
     "Chat" : true,
@@ -47,7 +55,7 @@
     "ClientSecret" : "<Your Spotify App ClientSecret>",
     "Enabled" : true,
     "PollingFrequency" : 5,
-    "TruncateTrackLength" : 50,
+    "TruncateTrackLength" : 45,
     "TruncateTrackRunes" : "...",
     "Prefix": "<:spotify:326026030265663488> "
   },
