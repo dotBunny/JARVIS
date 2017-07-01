@@ -61,7 +61,7 @@ func (m *Module) handleNotice(event *irc.Event) {
 
 // SendMessage via IRC
 func (m *Module) SendMessage(target string, message string) {
-	if m.settings.Chat {
+	if !m.settings.Chat {
 		return
 	}
 	m.irc.Privmsg(target, message)
