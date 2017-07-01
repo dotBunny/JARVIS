@@ -15,9 +15,9 @@ import (
 type Module struct {
 	ticker *time.Ticker
 
-	// settings      *Config
-	// outputs       *Outputs
-	// data          *Data
+	settings   *Config
+	outputs    *Outputs
+	data       *Data
 	jiraClient *http.Client
 	jiraOAuth  oauth2.Config
 	jiraToken  string
@@ -30,23 +30,22 @@ func (m *Module) Initialize(jarvisInstance *Core.JARVIS) {
 	m.j = jarvisInstance
 
 	// Make sure flag is toggled off
-	//m.loadConfig()
+	m.loadConfig()
 
-	//m.j.Log.RegisterChannel("JIRA", "green", m.settings.Prefix)
+	m.j.Log.RegisterChannel("JIRA", "blue", m.settings.Prefix)
 
-	// If we're not enabled go no further
-	// if !m.IsEnabled() {
-	// 	return
-	// }
+	if !m.settings.Enabled {
+		return
+	}
 
-	// m.setupOutputs()
-	// m.setupData()
+	m.setupOutputs()
+	m.setupData()
 
 	// Create new authenticator with permissions
 	m.authenticate()
 
 	// Start the basic polling for information
-	// m.setupPolling()
+	m.setupPolling()
 	// m.setupEndpoints()
 	// m.setupCommands()
 }
