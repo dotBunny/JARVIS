@@ -12,6 +12,7 @@ type Outputs struct {
 	CoffeeCountPath string
 	SavesCountPath  string
 	CrashCountPath  string
+	BuildCountPath  string
 }
 
 func (m *Module) setupOutputs() {
@@ -22,10 +23,12 @@ func (m *Module) setupOutputs() {
 	m.outputs.CoffeeCountPath = filepath.Join(m.j.Config.GetOutputPath(), "Stats_CoffeeCount.txt")
 	m.outputs.SavesCountPath = filepath.Join(m.j.Config.GetOutputPath(), "Stats_SavesCount.txt")
 	m.outputs.CrashCountPath = filepath.Join(m.j.Config.GetOutputPath(), "Stats_CrashCount.txt")
+	m.outputs.BuildCountPath = filepath.Join(m.j.Config.GetOutputPath(), "Stats_BuildCount.txt")
 
 	// Touch Files
 	Core.Touch(m.outputs.WorkingOnPath)
 	Core.Touch(m.outputs.CoffeeCountPath)
 	Core.Touch(m.outputs.SavesCountPath)
 	Core.Touch(m.outputs.CrashCountPath)
+	Core.Touch(m.outputs.BuildCountPath)
 }

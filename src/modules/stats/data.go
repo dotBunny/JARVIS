@@ -16,6 +16,7 @@ type Data struct {
 	CoffeeCount   int
 	SavesCount    int
 	CrashCount    int
+	BuildCount    int
 }
 
 func (m *Module) GetWorkingOn() string {
@@ -78,6 +79,20 @@ func (m *Module) setupData() {
 		}
 	} else {
 		Core.SaveFile([]byte(Core.Left(fmt.Sprintf("%d", m.data.SavesCount), m.settings.PadSavesOutput, "0")), m.outputs.SavesCountPath)
+	}
+
+	// Load Build Count
+	savedBuildCount, errorBuildCount := ioutil.ReadFile(m.outputs.BuildCountPath)
+	if errorBuildCount == nil {
+		s := string(savedBuildCount)
+		i, err := strconv.Atoi(s)
+		if err == nil {
+			m.data.BuildCount = i
+		} else {
+			Core.SaveFile([]byte(fmt.Sprintf("%d", m.data.BuildCount)), m.outputs.BuildCountPath)
+		}
+	} else {
+		Core.SaveFile([]byte(fmt.Sprintf("%d", m.data.CoffeeCount)), m.outputs.BuildCountPath)
 	}
 }
 
@@ -160,4 +175,34 @@ func (m *Module) ChangeSavesCount(value int, notify bool) {
 
 	// Log Change
 	m.j.Log.Message("Stats", "Save Count set to "+fmt.Sprintf("%d", m.data.SavesCount))
+}
+
+// ChangeBuildCount to specific value
+func (m *Module) IncrementBuildCount() {
+	m.ChangeBuildCount(m.data.BuildCount+1, true)
+}
+func (m *Module) ChangeBuildCount(value int, notify bool) {
+
+	// Check action
+	if value > m.data.BuildCount && len(m.settings.BuildSounds) > 0 {
+		// yup increase play a sound
+		m.j.Media.PlaySound(m.settings.BuildSounds[rand.Intn(len(m.settings.BuildSounds))])
+	}
+
+	// Set Value
+	m.data.BuildCount = value
+
+	// Save File
+	Core.SaveFile([]byte(fmt.Sprintf("%d", m.data.BuildCount)), m.outputs.BuildCountPath)
+
+	if notify {
+		if m.data.BuildCount == 1 {
+			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "Our first build of the day!")
+		} else {
+			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "Build it! That's number " + fmt.Sprintf("%d", m.data.BuildCount) + " of the day.")
+		}
+	}
+
+	// Log Change
+	m.j.Log.Message("Stats", "Build Count set to "+fmt.Sprintf("%d", m.data.BuildCount))
 }

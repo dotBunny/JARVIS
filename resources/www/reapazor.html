@@ -27,6 +27,10 @@
                 <img src="content/img/count-crashes.png" />
                 <span id="crashes-data">0</span>
             </div>
+            <div id="builds" class="sidebar-chunk">
+                <img src="content/img/count-builds.png" />
+                <span id="builds-data">0</span>
+            </div>
             <div id="coffee" class="sidebar-chunk">
                 <img src="content/img/count-coffee.png" />
                 <span id="coffee-data">0</span>
@@ -58,6 +62,7 @@
 
             // Update Stats
             getInfo("crashes-data", "http://localhost:8080/stats/crashes", 5);
+            getInfo("builds-data", "http://localhost:8080/stats/builds", 5);
             getInfo("coffee-data", "http://localhost:8080/stats/coffee", 5);
             getInfo("saves-data", "http://localhost:8080/stats/saves", 5);
             

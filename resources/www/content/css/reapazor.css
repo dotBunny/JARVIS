@@ -136,21 +136,25 @@ div.sidebar-chunk span
     text-align: center;
 }
 
-div#crashes { bottom: 323px; }
+div#crashes { bottom: 371px; }
 div#crashes img { left: 7px; }
-div#crashes span { top: 41px; }
+div#crashes span { top: 38px; }
+
+div#builds { bottom: 298px; }
+div#builds img { left: 8px; }
+div#builds span { top: 16px; }
 
 div#coffee { bottom: 243px; }
-div#coffee img { left: 11px; }
-div#coffee span { top: 6px; }
+div#coffee img { left: 8px; }
+div#coffee span { top: 9px; }
 
 div#saves { bottom: 204px; }
-div#saves img { left: 12px; }
-div#saves span{ top: 13px; }
+div#saves img { left: 9px; }
+div#saves span{ top: 17px; }
 
 div#viewers { bottom: 155px; }
-div#viewers img { left: 9px; }
-div#viewers span { top: 8px; }
+div#viewers img { left: 6px; }
+div#viewers span { top: 10px; }
 
 div#branding
 {

@@ -9,6 +9,7 @@ type Config struct {
 	CoffeeSounds    []string
 	CrashSounds     []string
 	SaveSounds      []string
+	BuildSounds     []string
 	PadCoffeeOutput int
 	PadCrashOutput  int
 	PadSavesOutput  int

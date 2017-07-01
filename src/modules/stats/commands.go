@@ -80,6 +80,7 @@ func (m *Module) commandReset(message *Core.DiscordMessage) {
 	m.ChangeCoffeeCount(0, false)
 	m.ChangeSavesCount(0, false)
 	m.ChangeCrashesCount(0, false)
+	m.ChangeBuildCount(0, false)
 
 	m.j.Log.Message("Stats", "Stats Reset")
 }

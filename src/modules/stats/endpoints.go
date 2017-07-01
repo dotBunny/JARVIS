@@ -29,6 +29,15 @@ func (m *Module) setupEndpoints() {
 	m.j.WebServer.RegisterEndpoint("/stats/crashes/plus/", m.endpointCrashesPlus)
 	m.j.WebServer.RegisterEndpoint("/stats/crashes/minus", m.endpointCrashesMinus)
 	m.j.WebServer.RegisterEndpoint("/stats/crashes/minus/", m.endpointCrashesMinus)
+
+	m.j.WebServer.RegisterEndpoint("/stats/builds", m.endpointBuilds)
+	m.j.WebServer.RegisterEndpoint("/stats/builds/", m.endpointBuilds)
+}
+
+func (m *Module) endpointBuilds(w http.ResponseWriter, r *http.Request) {
+	m.j.WebServer.DefaultHeader(w)
+	w.Header().Set("Content-Length", strconv.Itoa(len(fmt.Sprintf("%d", m.data.BuildCount))))
+	fmt.Fprintf(w, fmt.Sprintf("%d", m.data.BuildCount))
 }
 
 func (m *Module) endpointCoffee(w http.ResponseWriter, r *http.Request) {

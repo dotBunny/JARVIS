@@ -11,6 +11,7 @@ import (
 
 	Core "./core"
 
+	CLion "./modules/clion"
 	Dashboard "./modules/dashboard"
 	JIRA "./modules/jira"
 	Overlay "./modules/overlay"
@@ -31,6 +32,7 @@ var (
 	overlayModule   *Overlay.Module
 	youtubeModule   *YouTube.Module
 	jiraModule      *JIRA.Module
+	clionModule     *CLion.Module
 
 	quit chan os.Signal
 )
@@ -85,6 +87,8 @@ func onReady() {
 		jiraModule := new(JIRA.Module)
 		jiraModule.Initialize(j, statsModule)
 
+		clionModule := new(CLion.Module)
+		clionModule.Initialize(j, statsModule)
 		// Overlay Module
 		overlayModule := new(Overlay.Module)
 		overlayModule.Initialize(j)

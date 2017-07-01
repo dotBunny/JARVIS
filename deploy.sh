@@ -12,6 +12,7 @@ cp -rf resources/build/macos/JARVIS.app jarvis-build/macOS
 cp -rf resources/jarvis.json jarvis-build/macOS/JARVIS.app/Contents/Resources/
 go build -o jarvis-build/macOS/JARVIS.app/Contents/MacOS/jarvis ./src
 cp -rf resources/www jarvis-build/macOS/JARVIS.app/Contents/Resources/
+cp -rf resources/scripts jarvis-build/macOS/JARVIS.app/Contents/Resources/
 
 # Build For Windows
 mkdir -p jarvis-build/windows
