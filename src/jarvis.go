@@ -57,6 +57,9 @@ func onReady() {
 
 	go func() {
 
+		// Start loading process, indicate via icon
+		systray.SetIcon(Resources.TrayIconError)
+
 		// Initialize Random
 		rand.Seed(time.Now().Unix())
 
@@ -95,6 +98,8 @@ func onReady() {
 
 		// Ready to rock!
 		j.Log.Message("System", "Ready")
+		systray.SetIcon(Resources.TrayIconReady)
+
 	}()
 }
 
