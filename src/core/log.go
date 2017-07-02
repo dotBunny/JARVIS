@@ -6,6 +6,10 @@ import (
 	"os"
 	"path"
 	"strings"
+
+	Resources "../resources"
+
+	"github.com/getlantern/systray"
 )
 
 // LogCore Class
@@ -78,6 +82,7 @@ func (m *LogCore) Message(channel string, message string) {
 
 // Warning Level Alart
 func (m *LogCore) Warning(channel string, message string) {
+	systray.SetIcon(Resources.TrayIconWarning)
 	if m.j.Discord != nil && m.j.Discord.IsConnected() {
 		_, _ = m.j.Discord.GetSession().ChannelMessageSend(m.j.Discord.GetLogChannelID(), m.getPrefix(channel)+message)
 	}
@@ -86,6 +91,7 @@ func (m *LogCore) Warning(channel string, message string) {
 
 // Error Level Alart
 func (m *LogCore) Error(channel string, message string) {
+	systray.SetIcon(Resources.TrayIconError)
 	if m.j.Discord != nil && m.j.Discord.IsConnected() {
 		_, _ = m.j.Discord.GetSession().ChannelMessageSend(m.j.Discord.GetLogChannelID(), m.getPrefix(channel)+message)
 	}
@@ -94,6 +100,7 @@ func (m *LogCore) Error(channel string, message string) {
 
 // Fatal Level Alart
 func (m *LogCore) Fatal(channel string, message string) {
+	systray.SetIcon(Resources.TrayIconError)
 	if m.j.Discord != nil && m.j.Discord.IsConnected() {
 		_, _ = m.j.Discord.GetSession().ChannelMessageSend(m.j.Discord.GetLogChannelID(), m.getPrefix(channel)+message)
 	}

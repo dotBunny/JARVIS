@@ -45,14 +45,14 @@ func (m *WebServerCore) endpointBase(w http.ResponseWriter, r *http.Request) {
 	// Check Existence
 	_, err := os.Stat(filePath)
 	if err != nil {
-		m.j.Log.Error("WebServer", "Unable to find file: "+filePath)
+		m.j.Log.Warning("WebServer", "Unable to find file: "+filePath)
 		fmt.Fprintf(w, "Content Not Found")
 		return
 	}
 
 	fileData, err := ioutil.ReadFile(filePath)
 	if err != nil {
-		m.j.Log.Error("WebServer", "Unable to read file: "+filePath)
+		m.j.Log.Warning("WebServer", "Unable to read file: "+filePath)
 		fmt.Fprintf(w, "Content Not Readable")
 		return
 	}
@@ -109,7 +109,7 @@ func (m *WebServerCore) endpointBase(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Length", strconv.Itoa(len(fileData)))
 
 	if _, err := w.Write(fileData); err != nil {
-		m.j.Log.Error("WebServer", "Unable to  serve file: "+filePath+", "+err.Error())
+		m.j.Log.Warning("WebServer", "Unable to  serve file: "+filePath+", "+err.Error())
 	}
 
 }
