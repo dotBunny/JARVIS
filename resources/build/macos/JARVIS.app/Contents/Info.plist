@@ -20,5 +20,7 @@
 	<true/>
 	<key>NSHumanReadableCopyright</key>
 	<string>© 2017 dotBunny Inc. All rights reserved.</string>
+	<key>LSUIElement</key>
+	<string>1</string>
 </dict>
 </plist>
