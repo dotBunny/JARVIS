@@ -155,7 +155,7 @@ function _getWorkingOn(elementID, endpointURI) {
                 // todo output fix check if changed then chang ei t ? 
                 if (test[0] == "Bug") {
                     icon = "<img src=\"content/img/jira-bug.svg\" />";
-                } else if (test[0] == "Feature" ) {
+                } else if (test[0] == "New Feature" ) {
                     icon = "<img src=\"content/img/jira-feature.svg\" />";
                 } else if (test[0] == "Improvement" ) {
                     icon = "<img src=\"content/img/jira-improvement.svg\" />";
@@ -181,5 +181,75 @@ function _getWorkingOn(elementID, endpointURI) {
     xmlhttp.send();
 }
 
+
+
+
+
+/**
+ * Retrieve information from the JARVIS endpoints periodically
+ * @param {string} elementID The ID of the element to fill with data
+ * @param {string} endpointURI The full URI of the API endpoint to poll
+ * @param {int} everySeconds How often should the API endpoint be polled
+ */
+function getJIRA(elementID, endpointURI, everySeconds) {
+    
+    // Initial Populate
+    _getJIRA(elementID, endpointURI);
+
+    if (everySeconds > 0) {
+        setInterval(function () {
+            _getJIRA(elementID, endpointURI);
+        }, (everySeconds * 1000));
+    } else {
+        _getJIRA(elementID, endpointURI);
+    }
+}
+
+/**
+ * Retrieve information from JARVIS endpoints 
+ * @param {string} elementID The ID of the element to fill with data
+ * @param {string} endpointURI The full URI of the API endpoint to poll
+ */
+function _getJIRA(elementID, endpointURI) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == XMLHttpRequest.DONE ) {
+            if (xmlhttp.status == 200) {
+
+                var returnValue = "";
+                var elements = xmlhttp.responseText.split("\n");
+                for (var i = 0, len = elements.length; i < len; i++) {
+                    var test = elements[i].split(",", 1);
+                    var icon = "";
+
+                    // todo output fix check if changed then chang ei t ? 
+                    if (test[0] == "Bug") {
+                        icon = "<img src=\"content/img/jira-bug.svg\" />";
+                    } else if (test[0] == "New Feature" ) {
+                        icon = "<img src=\"content/img/jira-feature.svg\" />";
+                    } else if (test[0] == "Improvement" ) {
+                        icon = "<img src=\"content/img/jira-improvement.svg\" />";
+                    } else if (test[0] == "Task" ) {
+                        icon =  "<img src=\"content/img/jira-task.svg\" />";
+                    } else if (test[0] == "Sub-Task" ) {
+                        icon = "<img src=\"content/img/jira-subtask.svg\" />";
+                    } else if (test[0] == "Epic" ) {
+                        icon = "<img src=\"content/img/jira-epic.svg\" />"
+                    } 
+
+                    if (icon.length > 0 ) {
+                        returnValue = returnValue + "<p>" + icon + elements[i].substring(elements[i].indexOf(',')+1) + "</p>";
+                    } else {
+                        returnValue = returnValue + "<p>" + elements[i] + "</p>";
+                       
+                    }
+                }
+                document.getElementById(elementID).innerHTML = returnValue;
+           }
+        }
+    }
+    xmlhttp.open("GET", endpointURI, true);
+    xmlhttp.send();
+}
 
 

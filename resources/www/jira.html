@@ -1,0 +1,17 @@
+<html>
+    <head>
+        <title>JIRA</title>
+        <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Oswald" />
+        <link rel="stylesheet" type="text/css" href="http://localhost:8080/content/css/jira.css">
+    </head>
+    <body>
+        <div id="jira-task-widget">
+            <div id="widget-title">TODO LIST</div>
+            <div id="jira-task-widget-data"></div>
+        </div>
+        <script type="application/javascript" src="http://localhost:8080/content/js/jarvis.js" /></script>
+        <script type="application/javascript">
+            getJIRA("jira-task-widget-data", "http://localhost:8080/jira/inprogress", 5);            
+        </script>
+    </body>
+</html>
