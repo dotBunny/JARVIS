@@ -1,4 +1,9 @@
-
+function CombinedSplit(s, separator, limit) {
+    var arr = s.split(separator, limit);
+    var left = s.substring(arr.join(separator).length + separator.length);
+    arr.push(left);
+    return arr;
+}
 
 /**
  * Retrieve information from the JARVIS endpoints periodically
@@ -149,7 +154,7 @@ function _getWorkingOn(elementID, endpointURI) {
         if (xmlhttp.readyState == XMLHttpRequest.DONE ) {
             if (xmlhttp.status == 200) {
 
-                var test = xmlhttp.responseText.split(",", 1);
+                var test = CombinedSplit(xmlhttp.responseText, ",", 1);
                 var icon = "";
 
                 // todo output fix check if changed then chang ei t ? 
@@ -169,7 +174,7 @@ function _getWorkingOn(elementID, endpointURI) {
 
                 if (icon.length > 0 ) {
                     document.getElementById("workingon-image").src = "content/img/jarvis-workon-jira.png"
-                    document.getElementById(elementID).innerHTML = icon.concat(xmlhttp.responseText.substring(xmlhttp.responseText.indexOf(',')+1));
+                    document.getElementById(elementID).innerHTML = icon.concat(test[1]);
                 } else {
                     document.getElementById("workingon-image").src = "content/img/jarvis-workon.png"
                     document.getElementById(elementID).innerHTML = xmlhttp.responseText;
@@ -191,17 +196,17 @@ function _getWorkingOn(elementID, endpointURI) {
  * @param {string} endpointURI The full URI of the API endpoint to poll
  * @param {int} everySeconds How often should the API endpoint be polled
  */
-function getJIRA(elementID, endpointURI, everySeconds) {
+function getJIRA(elementID, endpointURI, renderElement, everySeconds) {
     
     // Initial Populate
-    _getJIRA(elementID, endpointURI);
+    _getJIRA(elementID, endpointURI, renderElement);
 
     if (everySeconds > 0) {
         setInterval(function () {
-            _getJIRA(elementID, endpointURI);
+            _getJIRA(elementID, endpointURI, renderElement);
         }, (everySeconds * 1000));
     } else {
-        _getJIRA(elementID, endpointURI);
+        _getJIRA(elementID, endpointURI, renderElement);
     }
 }
 
@@ -210,7 +215,7 @@ function getJIRA(elementID, endpointURI, everySeconds) {
  * @param {string} elementID The ID of the element to fill with data
  * @param {string} endpointURI The full URI of the API endpoint to poll
  */
-function _getJIRA(elementID, endpointURI) {
+function _getJIRA(elementID, endpointURI, renderElement) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState == XMLHttpRequest.DONE ) {
@@ -219,31 +224,35 @@ function _getJIRA(elementID, endpointURI) {
                 var returnValue = "";
                 var elements = xmlhttp.responseText.split("\n");
                 for (var i = 0, len = elements.length; i < len; i++) {
-                    var test = elements[i].split(",", 1);
+                    
+                    var test = CombinedSplit(elements[i], ",", 2);
                     var icon = "";
 
                     // todo output fix check if changed then chang ei t ? 
-                    if (test[0] == "Bug") {
+                    if (test[1] == "Bug") {
                         icon = "<img src=\"content/img/jira-bug.svg\" />";
-                    } else if (test[0] == "New Feature" ) {
+                    } else if (test[1] == "New Feature" ) {
                         icon = "<img src=\"content/img/jira-feature.svg\" />";
-                    } else if (test[0] == "Improvement" ) {
+                    } else if (test[1] == "Improvement" ) {
                         icon = "<img src=\"content/img/jira-improvement.svg\" />";
-                    } else if (test[0] == "Task" ) {
+                    } else if (test[1] == "Task" ) {
                         icon =  "<img src=\"content/img/jira-task.svg\" />";
-                    } else if (test[0] == "Sub-Task" ) {
+                    } else if (test[1] == "Sub-Task" ) {
                         icon = "<img src=\"content/img/jira-subtask.svg\" />";
-                    } else if (test[0] == "Epic" ) {
+                    } else if (test[1] == "Epic" ) {
                         icon = "<img src=\"content/img/jira-epic.svg\" />"
                     } 
 
                     if (icon.length > 0 ) {
-                        returnValue = returnValue + "<p>" + icon + elements[i].substring(elements[i].indexOf(',')+1) + "</p>";
+                        returnValue = returnValue + renderElement(icon,test[0], test[2]);
                     } else {
                         returnValue = returnValue + "<p>" + elements[i] + "</p>";
                        
                     }
                 }
+
+
+
                 document.getElementById(elementID).innerHTML = returnValue;
            }
         }

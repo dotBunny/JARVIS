@@ -203,6 +203,31 @@
                         </div>
                     </div>
 
+                    <!-- WIDGET: Builds -->
+                    <div class="col-lg-3 col-md-6 widget-builds">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-cog fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge" id="stats-builds">26</div>
+                                        <div>Builds</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-footer">
+                                <!--<span class="pull-left">View Details</span>-->
+                                <span class="pull-right">
+                                    <a href="#" onClick='HitAPI("http://localhost:8080/stats/builds/plus");'><i class="fa fa-plus-circle"></i></a>
+                                    <a href="#" onClick='HitAPI("http://localhost:8080/stats/builds/minus");'><i class="fa fa-minus-circle"></i></a>
+                                </span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- WIDGET: Coffee -->
                     <div class="col-lg-3 col-md-6 widget-coffee">
                         <div class="panel panel-yellow">
@@ -267,7 +292,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <a href="https://www.twitch.tv/reapazor/dashboard">
+                            <a target="_blank" href="https://www.twitch.tv/reapazor/dashboard">
                                 <div class="panel-footer">
                                     <span class="pull-left">View Details</span>
                                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -280,6 +305,7 @@
                 <!-- /.row -->
 
                 <div class="row">
+                    <!-- FOLLOWERS -->
                     <div class="col-lg-4">
                         <div class="panel panel-default">
                             <div class="panel-heading">
@@ -290,7 +316,24 @@
                                     
                                 </div>
                                 <div class="text-right">
-                                    <a href="https://www.twitch.tv/reapazor/followers">View All Activity <i class="fa fa-arrow-circle-right"></i></a>
+                                    <a target="_blank" href="https://www.twitch.tv/reapazor/followers">View All Activity <i class="fa fa-arrow-circle-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- TASKS -->
+                    <div class="col-lg-4">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-tasks fa-fw"></i> TODO List</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="list-group" id="todo-list">
+                                    
+                                </div>
+                                <div class="text-right">
+                                    <a target="_blank" href="https://dotbunny.atlassian.net">View All Tasks <i class="fa fa-arrow-circle-right"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -322,14 +365,17 @@
         getInfo("stats-coffee", "http://localhost:8080/stats/coffee", 10);
         getInfo("stats-crashes", "http://localhost:8080/stats/crashes", 10);
         getInfo("stats-saves", "http://localhost:8080/stats/saves", 10);
+        getInfo("stats-builds", "http://localhost:8080/stats/builds", 10);
         getInfo("twitch-follower-count", "http://localhost:8080/twitch/followers/total", 10);
         function renderLatestFollower(follower) {
-            return '<a href="https://www.twitch.tv/' + follower +'" class="list-group-item"><i class="fa fa-fw fa-user"></i> ' + follower + '</a>';
+            return '<a target="_blank" href="https://www.twitch.tv/' + follower +'" class="list-group-item"><i class="fa fa-fw fa-user"></i> ' + follower + '</a>';
         }
         getList("twitch-followers", "http://localhost:8080/twitch/followers/list", renderLatestFollower, 10);
-
-        
-        getList("twitch-followers", "http://localhost:8080/twitch/followers/list", renderLatestFollower, 10);
+        function renderTask(img, id, description) 
+        {
+            return '<a target="_blank" href="https://dotbunny.atlassian.net/browse/' + id +'" class="list-group-item">' + img + '<p class="block">' + description + '</p></a>';
+        }
+        getJIRA("todo-list", "http://localhost:8080/jira/inprogress", renderTask, 10);
     </script>
 </body>
 

@@ -11,7 +11,11 @@
         </div>
         <script type="application/javascript" src="http://localhost:8080/content/js/jarvis.js" /></script>
         <script type="application/javascript">
-            getJIRA("jira-task-widget-data", "http://localhost:8080/jira/inprogress", 5);            
+            function renderTask(img, id, description) 
+            {
+                return "<p>" + img + description + "</p>";
+            }
+            getJIRA("jira-task-widget-data", "http://localhost:8080/jira/inprogress", renderTask, 5);            
         </script>
     </body>
 </html>

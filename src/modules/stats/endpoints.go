@@ -32,6 +32,10 @@ func (m *Module) setupEndpoints() {
 
 	m.j.WebServer.RegisterEndpoint("/stats/builds", m.endpointBuilds)
 	m.j.WebServer.RegisterEndpoint("/stats/builds/", m.endpointBuilds)
+	m.j.WebServer.RegisterEndpoint("/stats/builds/plus", m.endpointBuildsPlus)
+	m.j.WebServer.RegisterEndpoint("/stats/builds/plus/", m.endpointBuildsPlus)
+	m.j.WebServer.RegisterEndpoint("/stats/builds/minus", m.endpointBuildsMinus)
+	m.j.WebServer.RegisterEndpoint("/stats/builds/minus/", m.endpointBuildsMinus)
 }
 
 func (m *Module) endpointBuilds(w http.ResponseWriter, r *http.Request) {
@@ -62,6 +66,13 @@ func (m *Module) endpointSavesMinus(w http.ResponseWriter, r *http.Request) {
 }
 func (m *Module) endpointSavesPlus(w http.ResponseWriter, r *http.Request) {
 	m.ChangeSavesCount(m.data.SavesCount+1, true)
+}
+
+func (m *Module) endpointBuildsMinus(w http.ResponseWriter, r *http.Request) {
+	m.ChangeBuildCount(m.data.BuildCount-1, false)
+}
+func (m *Module) endpointBuildsPlus(w http.ResponseWriter, r *http.Request) {
+	m.ChangeBuildCount(m.data.BuildCount+1, false)
 }
 
 func (m *Module) endpointCrashes(w http.ResponseWriter, r *http.Request) {
