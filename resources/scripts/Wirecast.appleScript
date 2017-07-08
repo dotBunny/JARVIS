@@ -4,8 +4,8 @@
 property Stream : "1"
 
 # Function
-property ArguementCount : 0
-property Arguements : ""
+property ArgumentCount : 0
+property Arguments : ""
 property Command : ""
 
 # Arguement Catch
@@ -26,31 +26,31 @@ on Setup()
 	end tell
 	
 	# Get Command
-	if ArguementCount > 0 then
-		set my Command to item 1 of Arguements
+	if ArgumentCount > 0 then
+		set my Command to item 1 of Arguments
 		
-		# Assign Arguements
-		if ArguementCount > 1 then
-			if ArguementCount is 2 then
-				set my Shot1Arg to item 2 of Arguements
-			else if ArguementCount is 3 then
-				set my Shot1Arg to item 2 of Arguements
-				set my Shot2Arg to item 3 of Arguements
-			else if ArguementCount is 4 then
-				set my Shot1Arg to item 2 of Arguements
-				set my Shot2Arg to item 3 of Arguements
-				set my Shot3Arg to item 4 of Arguements
-			else if ArguementCount is 5 then
-				set my Shot1Arg to item 2 of Arguements
-				set my Shot2Arg to item 3 of Arguements
-				set my Shot3Arg to item 4 of Arguements
-				set my Shot4Arg to item 5 of Arguements
+		# Assign Arguments
+		if ArgumentCount > 1 then
+			if ArgumentCount is 2 then
+				set my Shot1Arg to item 2 of Arguments
+			else if ArgumentCount is 3 then
+				set my Shot1Arg to item 2 of Arguments
+				set my Shot2Arg to item 3 of Arguments
+			else if ArgumentCount is 4 then
+				set my Shot1Arg to item 2 of Arguments
+				set my Shot2Arg to item 3 of Arguments
+				set my Shot3Arg to item 4 of Arguments
+			else if ArgumentCount is 5 then
+				set my Shot1Arg to item 2 of Arguments
+				set my Shot2Arg to item 3 of Arguments
+				set my Shot3Arg to item 4 of Arguments
+				set my Shot4Arg to item 5 of Arguments
 			else
-				set my Shot1Arg to item 2 of Arguements
-				set my Shot2Arg to item 3 of Arguements
-				set my Shot3Arg to item 4 of Arguements
-				set my Shot4Arg to item 5 of Arguements
-				set my Shot5Arg to item 6 of Arguements
+				set my Shot1Arg to item 2 of Arguments
+				set my Shot2Arg to item 3 of Arguments
+				set my Shot3Arg to item 4 of Arguments
+				set my Shot4Arg to item 5 of Arguments
+				set my Shot5Arg to item 6 of Arguments
 			end if
 		end if
 	end if
@@ -112,14 +112,14 @@ end CommandToggleMic
 # Execution
 on run argv
 	
-	# Check Arguements
+	# Check Arguments
 	try
-		set my ArguementCount to (count of argv)
-		if ArguementCount is greater than 0 then
-			set my Arguements to argv
+		set my ArgumentCount to (count of argv)
+		if ArgumentCount is greater than 0 then
+			set my Arguments to argv
 		end if
 	on error
-		set my ArguementCount to 0
+		set my ArgumentCount to 0
 	end try
 	
 	my Setup()
