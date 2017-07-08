@@ -11,10 +11,9 @@ import (
 
 	Core "./core"
 
-	CLion "./modules/clion"
+	Command "./modules/command"
 	Dashboard "./modules/dashboard"
 	JIRA "./modules/jira"
-	Overlay "./modules/overlay"
 	Spotify "./modules/spotify"
 	Stats "./modules/stats"
 	Twitch "./modules/twitch"
@@ -29,10 +28,9 @@ var (
 	spotifyModule   *Spotify.Module
 	twitchModule    *Twitch.Module
 	statsModule     *Stats.Module
-	overlayModule   *Overlay.Module
 	youtubeModule   *YouTube.Module
 	jiraModule      *JIRA.Module
-	clionModule     *CLion.Module
+	commandModule   *Command.Module
 
 	quit chan os.Signal
 )
@@ -91,11 +89,9 @@ func onReady() {
 		jiraModule := new(JIRA.Module)
 		jiraModule.Initialize(j, statsModule)
 
-		clionModule := new(CLion.Module)
-		clionModule.Initialize(j, statsModule)
-		// Overlay Module
-		overlayModule := new(Overlay.Module)
-		overlayModule.Initialize(j)
+		// Start Command Module
+		commandModule := new(Command.Module)
+		commandModule.Initialize(j, statsModule)
 
 		// Ready to rock!
 		j.Log.Message("System", "Ready")

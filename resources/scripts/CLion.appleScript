@@ -1,7 +1,8 @@
 #!/usr/bin/osascript
-tell application "CLion"
-	activate
-end tell
+
+# tell application "CLion"
+#	activate
+# end tell
 
 tell application "System Events"
 	tell process "CLion-EAP"
