@@ -195,13 +195,13 @@ func (m *Module) ChangeBuildCount(value int, notify bool) {
 	// Save File
 	Core.SaveFile([]byte(fmt.Sprintf("%d", m.data.BuildCount)), m.outputs.BuildCountPath)
 
-	if notify {
-		if m.data.BuildCount == 1 {
-			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "Our first build of the day!")
-		} else {
-			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "Build it! That's number " + fmt.Sprintf("%d", m.data.BuildCount) + " of the day.")
-		}
-	}
+	// if notify {
+	// 	if m.data.BuildCount == 1 {
+	// 		m.j.Discord.Announcement(m.j.Config.GetPrefix() + "Our first build of the day!")
+	// 	} else {
+	// 		m.j.Discord.Announcement(m.j.Config.GetPrefix() + "Build it! That's number " + fmt.Sprintf("%d", m.data.BuildCount) + " of the day.")
+	// 	}
+	// }
 
 	// Log Change
 	m.j.Log.Message("Stats", "Build Count set to "+fmt.Sprintf("%d", m.data.BuildCount))
