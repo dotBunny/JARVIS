@@ -10,7 +10,6 @@ import (
 
 func (m *Module) setupEndpoints() {
 	m.j.WebServer.RegisterEndpoint("/command/", m.endpointCommand)
-	m.j.WebServer.RegisterEndpoint("/command", m.endpointCommand)
 }
 
 func (m *Module) endpointCommand(w http.ResponseWriter, r *http.Request) {
@@ -25,14 +24,23 @@ func (m *Module) endpointCommand(w http.ResponseWriter, r *http.Request) {
 	} else if script == "itunes" {
 		// TODO: Consolidate iTunes and implement
 	}
+	commandLine := path.Join(m.scriptsPath, baseScript)
 
 	// Handle Arguments
 	var arguments = r.FormValue("arg")
-	var argumentSplit = strings.Split(arguments, ",")
-	for index, element := range argumentSplit {
-		argumentSplit[index], _ = url.PathUnescape(element)
+	arguments, argErr := url.PathUnescape(arguments)
+	if argErr != nil {
+		m.j.Log.Error("SYSTEM", argErr.Error())
 	}
-	commandLine := path.Join(m.scriptsPath, baseScript)
+	var argumentSplit = strings.Split(arguments, ",")
+	for key, value := range argumentSplit {
+		if value == "\"\"" {
+			argumentSplit[key] = "Clear Layer"
+		}
+		if value == "" {
+			argumentSplit[key] = "Clear Layer"
+		}
+	}
 
 	var commandInstance *exec.Cmd
 	switch len(argumentSplit) {
@@ -43,7 +51,7 @@ func (m *Module) endpointCommand(w http.ResponseWriter, r *http.Request) {
 		commandInstance = exec.Command(commandLine, argumentSplit[0], argumentSplit[1])
 		break
 	case 3:
-		commandInstance = exec.Command(commandLine, argumentSplit[0], argumentSplit[1], argumentSplit[2])
+		commandInstance = exec.Command(commandLine, argumentSplit[0], argumentSplit[1], argumentSplit[1])
 		break
 	case 4:
 		commandInstance = exec.Command(commandLine, argumentSplit[0], argumentSplit[1], argumentSplit[2], argumentSplit[3])
@@ -51,13 +59,20 @@ func (m *Module) endpointCommand(w http.ResponseWriter, r *http.Request) {
 	case 5:
 		commandInstance = exec.Command(commandLine, argumentSplit[0], argumentSplit[1], argumentSplit[2], argumentSplit[3], argumentSplit[4])
 		break
+	case 6:
+		commandInstance = exec.Command(commandLine, argumentSplit[0], argumentSplit[1], argumentSplit[2], argumentSplit[3], argumentSplit[4], argumentSplit[5])
+		break
 	default:
 		commandInstance = exec.Command(commandLine)
 		break
 	}
+
 	// Execute Command
 	err := commandInstance.Run()
 
+	if err != nil {
+		m.j.Log.Error("SYSTEM", err.Error())
+	}
 	// Handle CLion Build Counter
 	if err == nil && baseScript == "CLion.appleScript" {
 		m.statsModule.IncrementBuildCount()

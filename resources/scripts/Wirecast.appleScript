@@ -15,8 +15,6 @@ property Shot3Arg : "" # Video
 property Shot4Arg : "" # Audio Layer
 property Shot5Arg : "" # Mic On/Off
 
-#!/usr/bin/osascript
-
 # Setup Variables
 on Setup()
 	
@@ -96,8 +94,9 @@ on CommandSwitch()
 		
 		# Change Layer 5
 		if my Shot5Arg is not "" then
-			my ChangeLayer("Master Layer 4", Shot5Arg)
+			my ChangeLayer("Master Layer 5", Shot5Arg)
 		end if
+		
 		set my Stream's auto live to false
 	end tell
 end CommandSwitch
