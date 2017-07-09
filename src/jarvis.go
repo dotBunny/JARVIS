@@ -71,11 +71,11 @@ func onReady() {
 
 		// Start Command Module
 		commandModule := new(Command.Module)
-		commandModule.Initialize(j, statsModule)
+		commandModule.Initialize(j)
 
 		// Stats Module
 		statsModule := new(Stats.Module)
-		statsModule.Initialize(j)
+		statsModule.Initialize(j, commandModule)
 
 		// Spotify Module
 		spotifyModule := new(Spotify.Module)

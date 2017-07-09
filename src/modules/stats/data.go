@@ -99,13 +99,11 @@ func (m *Module) setupData() {
 // ChangeCoffeeCount to specific value
 func (m *Module) ChangeCoffeeCount(value int, notify bool) {
 
-	// Check action
-	if value > m.data.CoffeeCount && len(m.settings.CoffeeSounds) > 0 {
-		// yup increase play a sound
-		m.j.Media.PlaySound(m.settings.CoffeeSounds[rand.Intn(len(m.settings.CoffeeSounds))])
+	// Set Value
+	if value < m.data.CoffeeCount {
+		notify = false
 	}
 
-	// Set Value
 	m.data.CoffeeCount = value
 
 	// Save File
@@ -117,6 +115,13 @@ func (m *Module) ChangeCoffeeCount(value int, notify bool) {
 		} else {
 			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "Coffee #" + fmt.Sprintf("%d", m.data.CoffeeCount) + "!")
 		}
+
+		if len(m.settings.CoffeeSounds) > 0 {
+			m.j.Media.PlaySound(m.settings.CoffeeSounds[rand.Intn(len(m.settings.CoffeeSounds))])
+		} else {
+			m.commandModule.Wirecast("1", "Coffee")
+		}
+
 	}
 
 	// Log Change
@@ -126,12 +131,9 @@ func (m *Module) ChangeCoffeeCount(value int, notify bool) {
 // ChangeCrashCount to specific value
 func (m *Module) ChangeCrashesCount(value int, notify bool) {
 
-	// Check action
-	if value > m.data.CrashCount && len(m.settings.CrashSounds) > 0 {
-		// yup increase play a sound
-		m.j.Media.PlaySound(m.settings.CrashSounds[rand.Intn(len(m.settings.CrashSounds))])
+	if value < m.data.CrashCount {
+		notify = false
 	}
-
 	// Set Value
 	m.data.CrashCount = value
 
@@ -144,6 +146,12 @@ func (m *Module) ChangeCrashesCount(value int, notify bool) {
 		} else {
 			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "CRASHED! (and or burned!) - That's number " + fmt.Sprintf("%d", m.data.CrashCount) + " of the day.")
 		}
+
+		if len(m.settings.CrashSounds) > 0 {
+			m.j.Media.PlaySound(m.settings.CrashSounds[rand.Intn(len(m.settings.CrashSounds))])
+		} else {
+			m.commandModule.Wirecast("1", "Crash")
+		}
 	}
 
 	// Log Change
@@ -153,10 +161,8 @@ func (m *Module) ChangeCrashesCount(value int, notify bool) {
 // ChangeSavesCount to specific value
 func (m *Module) ChangeSavesCount(value int, notify bool) {
 
-	// Check action
-	if value > m.data.SavesCount && len(m.settings.SaveSounds) > 0 {
-		// yup increase play a sound
-		m.j.Media.PlaySound(m.settings.SaveSounds[rand.Intn(len(m.settings.SaveSounds))])
+	if value < m.data.SavesCount {
+		notify = false
 	}
 
 	// Set Value
@@ -170,6 +176,12 @@ func (m *Module) ChangeSavesCount(value int, notify bool) {
 			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "The first save of the day!")
 		} else {
 			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "SAVED!!! We are up to " + fmt.Sprintf("%d", m.data.SavesCount) + "!")
+		}
+
+		if len(m.settings.SaveSounds) > 0 {
+			m.j.Media.PlaySound(m.settings.SaveSounds[rand.Intn(len(m.settings.SaveSounds))])
+		} else {
+			m.commandModule.Wirecast("1", "Save")
 		}
 	}
 

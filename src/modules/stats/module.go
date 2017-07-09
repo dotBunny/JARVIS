@@ -2,6 +2,7 @@ package stats
 
 import (
 	Core "../../core"
+	Command "../command"
 )
 
 // Module Class
@@ -10,13 +11,16 @@ type Module struct {
 	outputs        *Outputs
 	data           *Data
 	settings       *Config
-	j              *Core.JARVIS
+
+	commandModule *Command.Module
+	j             *Core.JARVIS
 }
 
 // Initialize the Stats Module
-func (m *Module) Initialize(jarvisInstance *Core.JARVIS) {
+func (m *Module) Initialize(jarvisInstance *Core.JARVIS, commandModule *Command.Module) {
 	// Assign JARVIS, the module is made we dont to create it like in core!
 	m.j = jarvisInstance
+	m.commandModule = commandModule
 
 	m.loadConfig()
 

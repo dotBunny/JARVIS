@@ -201,6 +201,10 @@ func (m *WebServerCore) RegisterEndpoint(endpoint string, function http.HandlerF
 	http.HandleFunc(endpoint, function)
 }
 
+func (m *WebServerCore) TouchEndpoint(endpoint string) {
+	go http.Get("http://localhost:" + strconv.Itoa(m.settings.ListenPort) + endpoint)
+}
+
 // Media player
 func (m *WebServerCore) endpointMedia(w http.ResponseWriter, r *http.Request) {
 	var filePath = r.FormValue("path")

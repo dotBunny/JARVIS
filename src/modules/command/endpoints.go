@@ -51,7 +51,7 @@ func (m *Module) endpointCommand(w http.ResponseWriter, r *http.Request) {
 		commandInstance = exec.Command(commandLine, argumentSplit[0], argumentSplit[1])
 		break
 	case 3:
-		commandInstance = exec.Command(commandLine, argumentSplit[0], argumentSplit[1], argumentSplit[1])
+		commandInstance = exec.Command(commandLine, argumentSplit[0], argumentSplit[1], argumentSplit[2])
 		break
 	case 4:
 		commandInstance = exec.Command(commandLine, argumentSplit[0], argumentSplit[1], argumentSplit[2], argumentSplit[3])
@@ -70,11 +70,22 @@ func (m *Module) endpointCommand(w http.ResponseWriter, r *http.Request) {
 	// Execute Command
 	err := commandInstance.Run()
 
+	// var out bytes.Buffer
+	// var stderr bytes.Buffer
+	// commandInstance.Stdout = &out
+	// commandInstance.Stderr = &stderr
+	// err := commandInstance.Run()
+	// if err != nil {
+	// 	fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
+	// 	return
+	// }
+	// fmt.Println("Result: " + out.String())
+
 	if err != nil {
 		m.j.Log.Error("SYSTEM", err.Error())
 	}
 	// Handle CLion Build Counter
 	if err == nil && baseScript == "CLion.appleScript" {
-		m.statsModule.IncrementBuildCount()
+		m.j.WebServer.TouchEndpoint("/stats/builds/plus/")
 	}
 }
