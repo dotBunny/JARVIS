@@ -101,6 +101,24 @@ on CommandSwitch()
 	end tell
 end CommandSwitch
 
+on CommandLayer()
+	tell application "Wirecast"
+		set my Stream's auto live to true	
+		if my Shot1Arg is "1" then
+			my ChangeLayer("Master Layer 1", Shot2Arg)
+		else if my Shot1Arg is "2" then
+			my ChangeLayer("Master Layer 2", Shot2Arg)
+		else if my Shot1Arg is "3" then
+			my ChangeLayer("Master Layer 3", Shot2Arg)
+		else if my Shot1Arg is "4" then
+			my ChangeLayer("Master Layer 4", Shot2Arg)
+		else if my Shot1Arg is "5" then
+			my ChangeLayer("Master Layer 5", Shot2Arg)
+		end if
+		set my Stream's auto live to false
+	end tell
+end CommandLayer
+
 on CommandToggleMic()
 	tell application "Wirecast"
 		
@@ -126,6 +144,9 @@ on run argv
 	# Action Gate
 	if my Command is "switch" then
 		my CommandSwitch()
+	end if
+	if my Command is "layer" then
+		my CommandLayer()
 	end if
 	
 end run

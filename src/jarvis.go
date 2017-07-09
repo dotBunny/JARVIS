@@ -69,6 +69,10 @@ func onReady() {
 		dashboardModule := new(Dashboard.Module)
 		dashboardModule.Initialize(j)
 
+		// Start Command Module
+		commandModule := new(Command.Module)
+		commandModule.Initialize(j, statsModule)
+
 		// Stats Module
 		statsModule := new(Stats.Module)
 		statsModule.Initialize(j)
@@ -79,7 +83,7 @@ func onReady() {
 
 		// Twitch Module
 		twitchModule := new(Twitch.Module)
-		twitchModule.Initialize(j)
+		twitchModule.Initialize(j, commandModule)
 
 		// YouTube Module
 		// STILL NOT WORKING
@@ -88,10 +92,6 @@ func onReady() {
 
 		jiraModule := new(JIRA.Module)
 		jiraModule.Initialize(j, statsModule)
-
-		// Start Command Module
-		commandModule := new(Command.Module)
-		commandModule.Initialize(j, statsModule)
 
 		// Ready to rock!
 		j.Log.Message("System", "Ready")

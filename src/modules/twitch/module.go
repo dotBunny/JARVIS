@@ -11,6 +11,7 @@ import (
 	"golang.org/x/oauth2"
 
 	Core "../../core"
+	Command "../command"
 	"github.com/thoj/go-ircevent"
 
 	"net/http"
@@ -31,13 +32,15 @@ type Module struct {
 	twitchToken      string
 	twitchStreamName string
 	j                *Core.JARVIS
+	commandModule    *Command.Module
 }
 
 // Initialize the Logging Module
-func (m *Module) Initialize(jarvisInstance *Core.JARVIS) {
+func (m *Module) Initialize(jarvisInstance *Core.JARVIS, commandModule *Command.Module) {
 
 	// Assign JARVIS, the module is made we dont to create it like in core!
 	m.j = jarvisInstance
+	m.commandModule = commandModule
 
 	// Load Configuration
 	m.loadConfig()
