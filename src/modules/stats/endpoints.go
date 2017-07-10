@@ -72,7 +72,7 @@ func (m *Module) endpointBuildsMinus(w http.ResponseWriter, r *http.Request) {
 	m.ChangeBuildCount(m.data.BuildCount-1, false)
 }
 func (m *Module) endpointBuildsPlus(w http.ResponseWriter, r *http.Request) {
-	m.ChangeBuildCount(m.data.BuildCount+1, false)
+	m.ChangeBuildCount(m.data.BuildCount+1, true)
 }
 
 func (m *Module) endpointCrashes(w http.ResponseWriter, r *http.Request) {

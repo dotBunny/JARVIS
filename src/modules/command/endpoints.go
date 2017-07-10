@@ -1,6 +1,8 @@
 package command
 
 import (
+	"bytes"
+	"fmt"
 	"net/http"
 	"net/url"
 	"os/exec"
@@ -68,18 +70,18 @@ func (m *Module) endpointCommand(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Execute Command
-	err := commandInstance.Run()
-
-	// var out bytes.Buffer
-	// var stderr bytes.Buffer
-	// commandInstance.Stdout = &out
-	// commandInstance.Stderr = &stderr
 	// err := commandInstance.Run()
-	// if err != nil {
-	// 	fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
-	// 	return
-	// }
-	// fmt.Println("Result: " + out.String())
+
+	var out bytes.Buffer
+	var stderr bytes.Buffer
+	commandInstance.Stdout = &out
+	commandInstance.Stderr = &stderr
+	err := commandInstance.Run()
+	if err != nil {
+		fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
+		return
+	}
+	fmt.Println("Result: " + out.String())
 
 	if err != nil {
 		m.j.Log.Error("SYSTEM", err.Error())
