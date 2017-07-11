@@ -10,6 +10,9 @@ type Config struct {
 	CrashSounds     []string
 	SaveSounds      []string
 	BuildSounds     []string
+	PadCoffee       int
+	PadCrash        int
+	PadSaves        int
 	PadCoffeeOutput int
 	PadCrashOutput  int
 	PadSavesOutput  int
@@ -20,9 +23,12 @@ func (m *Module) loadConfig() {
 	// Create default general settings
 	m.settings = new(Config)
 
-	m.settings.PadCoffeeOutput = 2
-	m.settings.PadSavesOutput = 2
-	m.settings.PadCrashOutput = 2
+	m.settings.PadCoffee = 2
+	m.settings.PadSaves = 2
+	m.settings.PadCrash = 2
+	m.settings.PadCoffeeOutput = 0
+	m.settings.PadSavesOutput = 0
+	m.settings.PadCrashOutput = 0
 
 	// Check Raw Data
 	if m.j.Config.IsInitialized() {

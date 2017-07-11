@@ -74,10 +74,6 @@ func (m *Module) pollFollowers(notify bool) {
 
 			if notify {
 				m.j.Discord.Announcement(m.settings.Prefix + "New Twitch Follower " + followers.Follows[0].User.DisplayName)
-
-				// Issue Wirecast Change
-				// TODO: Make this as an option
-				m.commandModule.Wirecast("Master Layer 1", "Follower")
 			}
 
 			// TODO: Need to make it so it loads so this doesnt ding

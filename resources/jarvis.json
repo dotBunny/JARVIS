@@ -61,15 +61,20 @@
   },
   "Stats" : {
     "CoffeeSounds" : [
-      "/Users/reapazor/Dropbox/Streaming/SoundBytes/nothing-can-stop-me.wav"
+    
     ],
     "CrashSounds" : [
-      "/Users/reapazor/Dropbox/Streaming/SoundBytes/crash-ya-im-not-worried.wav"
+    
     ],
     "SaveSounds" : [
-      "/Users/reapazor/Dropbox/Streaming/SoundBytes/save-extra-credit.wav",
-      "/Users/reapazor/Dropbox/Streaming/SoundBytes/save-ifearnoevil.wav"
+    
     ],
+    "PadCoffee" : 2,
+    "PadCrashes" : 2,
+    "PadSaves" : 2,
+    "PadCoffeeOutput" : 2,
+    "PadCrashesOutput" : 2,
+    "PadSavesOutput" : 2,
     "PadCoffeeOutput" : 2,
     "PadCrashesOutput" : 2,
     "PadSavesOutput" : 2
