@@ -69,15 +69,15 @@
     "SaveSounds" : [
     
     ],
+    "PrefixCoffee": "",
     "PadCoffee" : 2,
+    "PrefixCrashes" : "CRASH #",
     "PadCrashes" : 2,
+    "PrefixSaves" : "SAVE #",
     "PadSaves" : 2,
-    "PadCoffeeOutput" : 2,
-    "PadCrashesOutput" : 2,
-    "PadSavesOutput" : 2,
-    "PadCoffeeOutput" : 2,
-    "PadCrashesOutput" : 2,
-    "PadSavesOutput" : 2
+    "PadCoffeeOutput" : 0,
+    "PadCrashesOutput" : 0,
+    "PadSavesOutput" : 0
   },
   "WebServer" : {
     "Enabled" : true,

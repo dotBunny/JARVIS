@@ -107,7 +107,7 @@ func (m *Module) ChangeCoffeeCount(value int, notify bool) {
 	m.data.CoffeeCount = value
 
 	// Save File
-	Core.SaveFile([]byte(Core.Left(fmt.Sprintf("%d", m.data.CoffeeCount), m.settings.PadCoffeeOutput, "0")), m.outputs.CoffeeCountPath)
+	Core.SaveFile([]byte(m.settings.PrefixCoffee+Core.Left(fmt.Sprintf("%d", m.data.CoffeeCount), m.settings.PadCoffeeOutput, "0")), m.outputs.CoffeeCountPath)
 
 	if notify {
 		if m.data.CoffeeCount == 1 {
@@ -138,7 +138,7 @@ func (m *Module) ChangeCrashesCount(value int, notify bool) {
 	m.data.CrashCount = value
 
 	// Save File
-	Core.SaveFile([]byte(Core.Left(fmt.Sprintf("%d", m.data.CrashCount), m.settings.PadCrashOutput, "0")), m.outputs.CrashCountPath)
+	Core.SaveFile([]byte(m.settings.PrefixCrashes+Core.Left(fmt.Sprintf("%d", m.data.CrashCount), m.settings.PadCrashOutput, "0")), m.outputs.CrashCountPath)
 
 	if notify {
 		if m.data.CrashCount == 1 {
@@ -169,7 +169,7 @@ func (m *Module) ChangeSavesCount(value int, notify bool) {
 	m.data.SavesCount = value
 
 	// Save File
-	Core.SaveFile([]byte(Core.Left(fmt.Sprintf("%d", m.data.SavesCount), m.settings.PadSavesOutput, "0")), m.outputs.SavesCountPath)
+	Core.SaveFile([]byte(m.settings.PrefixSaves+Core.Left(fmt.Sprintf("%d", m.data.SavesCount), m.settings.PadSavesOutput, "0")), m.outputs.SavesCountPath)
 
 	if notify {
 		if m.data.SavesCount == 1 {

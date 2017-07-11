@@ -10,8 +10,11 @@ type Config struct {
 	CrashSounds     []string
 	SaveSounds      []string
 	BuildSounds     []string
+	PrefixCoffee    string
 	PadCoffee       int
+	PrefixCrashes   string
 	PadCrash        int
+	PrefixSaves     string
 	PadSaves        int
 	PadCoffeeOutput int
 	PadCrashOutput  int
