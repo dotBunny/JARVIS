@@ -1,6 +1,8 @@
 package spotify
 
 import (
+	"encoding/json"
+	"strings"
 	"time"
 
 	Core "../../core"
@@ -48,6 +50,9 @@ func (m *Module) Initialize(jarvisInstance *Core.JARVIS) {
 	m.setupEndpoints()
 	m.setupCommands()
 
+	// Register Parser With Webserver
+	m.j.WebServer.RegisterParser("spotify", m.ParseWebContent)
+
 	m.Start()
 }
 
@@ -73,4 +78,28 @@ func (m *Module) Stop() {
 			m.ticker.Stop()
 		}
 	}
+}
+
+func (m *Module) ParseWebContent(content string, mode string) string {
+
+	if mode == ".json" {
+
+		responseMap := make(map[string]interface{})
+
+		responseMap["CurrentlyPlayingTrack"] = m.data.CurrentlyPlayingTrack
+		responseMap["DurationMS"] = m.data.DurationMS
+		responseMap["PlayedMS"] = m.data.PlayedMS
+		responseMap["CurrentlyPlaying"] = m.data.CurrentlyPlaying
+		responseMap["CurrentlyPlayingURL"] = m.data.CurrentlyPlayingURL
+		responseMap["TrackName"] = m.data.TrackName
+		responseMap["ArtistLine"] = m.data.ArtistLine
+		responseMap["TrackThumbnailURL"] = m.data.TrackThumbnailURL
+
+		outputJSON, _ := json.Marshal(responseMap)
+		content = strings.Replace(content, "[[JARVIS.spotify]]", string(outputJSON), -1)
+
+	} else {
+
+	}
+	return content
 }

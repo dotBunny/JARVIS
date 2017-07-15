@@ -1,6 +1,9 @@
 package stats
 
 import (
+	"encoding/json"
+	"strings"
+
 	Core "../../core"
 	Command "../command"
 )
@@ -32,4 +35,26 @@ func (m *Module) Initialize(jarvisInstance *Core.JARVIS, commandModule *Command.
 
 	m.setupEndpoints()
 	m.setupCommands()
+
+	// Register Parser With Webserver
+	m.j.WebServer.RegisterParser("stats", m.ParseWebContent)
+}
+
+func (m *Module) ParseWebContent(content string, mode string) string {
+
+	if mode == ".json" {
+
+		responseMap := make(map[string]interface{})
+
+		for _, stat := range m.stats {
+			responseMap[stat.Key] = stat.Value
+		}
+		outputJSON, _ := json.Marshal(responseMap)
+
+		content = strings.Replace(content, "[[JARVIS.stats]]", string(outputJSON), -1)
+
+	} else {
+
+	}
+	return content
 }

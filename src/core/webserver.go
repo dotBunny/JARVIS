@@ -13,6 +13,9 @@ import (
 	"github.com/skratchdot/open-golang/open"
 )
 
+// DiscordFunc for IRC
+type WebServerParser func(string, string) string
+
 // WebServerConfig Settings
 type WebServerConfig struct {
 	Enabled    bool
@@ -25,6 +28,7 @@ type WebServerConfig struct {
 type WebServerCore struct {
 	settings *WebServerConfig
 	webPath  string
+	parsers  map[string]WebServerParser
 
 	j *JARVIS
 }
@@ -66,6 +70,7 @@ func (m *WebServerCore) Initialize(jarvisInstance *JARVIS) {
 
 	// Create default general settings
 	m.settings = new(WebServerConfig)
+	m.parsers = make(map[string]WebServerParser)
 
 	// Register Log Channel
 	m.j.Log.RegisterChannel("WebServer", "blue", m.settings.Prefix)
@@ -113,8 +118,15 @@ func (m *WebServerCore) IsEnabled() bool {
 }
 
 // ParseContent data as string and replace in variables
-func (m *WebServerCore) ParseContent(originalData []byte) []byte {
-	return originalData
+func (m *WebServerCore) ParseContent(originalData []byte, mode string) []byte {
+
+	workingContent := string(originalData[:len(originalData)])
+
+	for _, parser := range m.parsers {
+		workingContent = parser(workingContent, mode)
+	}
+
+	return []byte(workingContent)
 }
 
 // RegisterEndpoint to WebServer
@@ -184,6 +196,10 @@ func (m *WebServerCore) endpointBase(w http.ResponseWriter, r *http.Request) {
 	case ".jpeg":
 		w.Header().Set("Content-Type", "image/jpeg")
 		break
+	case ".json":
+		w.Header().Set("Content-Type", "application/json")
+		parsableContent = true
+		break
 	case ".svg":
 		w.Header().Set("Content-Type", "image/svg+xml")
 		break
@@ -216,7 +232,7 @@ func (m *WebServerCore) endpointBase(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if parsableContent {
-		fileData = m.ParseContent(fileData)
+		fileData = m.ParseContent(fileData, ext)
 	}
 	w.Header().Set("Content-Length", strconv.Itoa(len(fileData)))
 
@@ -249,6 +265,18 @@ func (m *WebServerCore) endpointMediaFetch(w http.ResponseWriter, r *http.Reques
 // OpenDashboard
 func (m *WebServerCore) OpenDashboard() {
 	open.Run(m.GetBaseURI() + "/dashboard.html")
+}
+
+func (m *WebServerCore) RegisterParser(key string, function WebServerParser) {
+
+	key = strings.ToLower(key)
+
+	// Check for command
+	if m.parsers[key] != nil {
+		m.j.Log.Warning("WEB", "Duplicate parser registration for '"+key+"', ignoring latest.")
+		return
+	}
+	m.parsers[key] = function
 }
 
 // GetBaseURI returns the complete server web address

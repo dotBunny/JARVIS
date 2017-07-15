@@ -6,6 +6,7 @@ package twitch
 // curl -H 'Accept: application/vnd.twitchtv.v5+json' -H 'Client-ID: <CLIENT ID>' -X GET https://api.twitch.tv/kraken/users?login=<USERNAME>
 
 import (
+	"encoding/json"
 	"time"
 
 	"golang.org/x/oauth2"
@@ -58,6 +59,7 @@ func (m *Module) Initialize(jarvisInstance *Core.JARVIS, commandModule *Command.
 	m.twitchStreamName = strings.TrimLeft(m.settings.Channel, "#")
 
 	m.setupCommands()
+	m.j.WebServer.RegisterParser("twitch", m.ParseWebContent)
 
 	m.Start()
 }
@@ -105,4 +107,29 @@ func (m *Module) Stop() {
 			m.irc.Quit()
 		}
 	}
+}
+
+func (m *Module) ParseWebContent(content string, mode string) string {
+
+	if mode == ".json" {
+
+		// TODO: We should make data have a function to turn it into a map?
+		responseMap := make(map[string]interface{})
+
+		responseMap["LastFollower"] = m.data.LastFollower
+		responseMap["LastFollowers"] = m.data.LastFollowers
+		responseMap["LastSubscriber"] = m.data.LastSubscriber
+		responseMap["LastSubscribers"] = m.data.LastSubscribers
+		responseMap["ChannelFollowers"] = m.data.ChannelFollowers
+		responseMap["ChannelViewers"] = m.data.ChannelViewers
+		responseMap["ChannelGame"] = m.data.ChannelGame
+		responseMap["StreamPreviewURL"] = m.data.StreamPreviewURL
+
+		outputJSON, _ := json.Marshal(responseMap)
+		content = strings.Replace(content, "[[JARVIS.twitch]]", string(outputJSON), -1)
+
+	} else {
+
+	}
+	return content
 }
