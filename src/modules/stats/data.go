@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"strconv"
+	"strings"
 
 	Core "../../core"
 )
@@ -13,23 +14,63 @@ import (
 type Data struct {
 	WorkingOn     string
 	WorkingOnIcon string
-	CoffeeCount   int
-	SavesCount    int
-	CrashCount    int
-	BuildCount    int
 }
 
 func (m *Module) GetWorkingOn() string {
 	return m.data.WorkingOn
 }
 func (m *Module) setupData() {
+
+	// Initialize map
+	m.stats = make(map[string]Stat)
+
+	// Take definitions and put them into our map
+	for _, definition := range m.settings.Definitions {
+
+		var ourStat Stat
+		ourStat.Decrease.Sounds = definition.Decrease.Sounds
+
+		// Assign it so we can immediately reference it
+		m.stats[definition.Key] = definition
+
+		// Get our working path
+		var workingPath = m.GetOutputPath(definition.Key, "Count")
+
+		// We check usage here, but normally it happens on the save
+		if definition.NumericalOutput.Enabled {
+			Core.Touch(workingPath)
+		}
+		if definition.TextOutput.Enabled {
+			Core.Touch(m.GetOutputPath(definition.Key, "Text"))
+		}
+
+		// Load Existing Data
+		loadedValue, errorLoading := ioutil.ReadFile(workingPath)
+		if errorLoading == nil {
+			s := string(loadedValue)
+			i, err := strconv.Atoi(s)
+			if err == nil {
+				m.j.Log.Message("STATS", "Loaded value "+s+" for \""+definition.Key+"\"")
+
+				// Go Issue (fix is coming in Go2)
+				var tmp = m.stats[definition.Key]
+				tmp.Value = i
+				m.stats[definition.Key] = tmp
+			} else {
+				m.OutputNumericalValue(definition.Key, 0)
+			}
+		} else {
+			m.OutputNumericalValue(definition.Key, 0)
+		}
+
+		// Always top off textual value
+		m.OutputTextualValue(definition.Key, m.stats[definition.Key].Value)
+	}
+
 	m.data = new(Data)
 
 	// Default
 	m.data.WorkingOn = "JARVIS"
-	m.data.CoffeeCount = 0
-	m.data.SavesCount = 0
-	m.data.CrashCount = 0
 
 	// Load WorkingOn Text
 	savedWorkingOn, errorWorkingOn := ioutil.ReadFile(m.outputs.WorkingOnPath)
@@ -38,184 +79,56 @@ func (m *Module) setupData() {
 	} else {
 		Core.SaveFile([]byte(m.data.WorkingOn), m.outputs.WorkingOnPath)
 	}
-
-	// Load Coffee Count
-	savedCoffeeCount, errorCoffeeCount := ioutil.ReadFile(m.outputs.CoffeeCountPath)
-	if errorCoffeeCount == nil {
-		s := string(savedCoffeeCount)
-		i, err := strconv.Atoi(s)
-		if err == nil {
-			m.data.CoffeeCount = i
-		} else {
-			Core.SaveFile([]byte(Core.Left(fmt.Sprintf("%d", m.data.CoffeeCount), m.settings.PadCoffeeOutput, "0")), m.outputs.CoffeeCountPath)
-		}
-	} else {
-		Core.SaveFile([]byte(Core.Left(fmt.Sprintf("%d", m.data.CoffeeCount), m.settings.PadCoffeeOutput, "0")), m.outputs.CoffeeCountPath)
-	}
-
-	// Load Coffee Count
-	savedCrashCount, errorCrashCount := ioutil.ReadFile(m.outputs.CrashCountPath)
-	if errorCrashCount == nil {
-		s := string(savedCrashCount)
-		i, err := strconv.Atoi(s)
-		if err == nil {
-			m.data.CrashCount = i
-		} else {
-			Core.SaveFile([]byte(Core.Left(fmt.Sprintf("%d", m.data.CrashCount), m.settings.PadCrashOutput, "0")), m.outputs.CrashCountPath)
-		}
-	} else {
-		Core.SaveFile([]byte(Core.Left(fmt.Sprintf("%d", m.data.CrashCount), m.settings.PadCrashOutput, "0")), m.outputs.CrashCountPath)
-	}
-
-	// Load Saves Count
-	savedSavesCount, errorSavesCount := ioutil.ReadFile(m.outputs.SavesCountPath)
-	if errorSavesCount == nil {
-		s := string(savedSavesCount)
-		i, err := strconv.Atoi(s)
-		if err == nil {
-			m.data.SavesCount = i
-		} else {
-			Core.SaveFile([]byte(Core.Left(fmt.Sprintf("%d", m.data.SavesCount), m.settings.PadSavesOutput, "0")), m.outputs.SavesCountPath)
-		}
-	} else {
-		Core.SaveFile([]byte(Core.Left(fmt.Sprintf("%d", m.data.SavesCount), m.settings.PadSavesOutput, "0")), m.outputs.SavesCountPath)
-	}
-
-	// Load Build Count
-	savedBuildCount, errorBuildCount := ioutil.ReadFile(m.outputs.BuildCountPath)
-	if errorBuildCount == nil {
-		s := string(savedBuildCount)
-		i, err := strconv.Atoi(s)
-		if err == nil {
-			m.data.BuildCount = i
-		} else {
-			Core.SaveFile([]byte(fmt.Sprintf("%d", m.data.BuildCount)), m.outputs.BuildCountPath)
-		}
-	} else {
-		Core.SaveFile([]byte(fmt.Sprintf("%d", m.data.CoffeeCount)), m.outputs.BuildCountPath)
-	}
 }
 
-// ChangeCoffeeCount to specific value
-func (m *Module) ChangeCoffeeCount(value int, notify bool) {
+func (m *Module) ChangeData(item string, value int, notify bool) {
 
-	// Set Value
-	if value < m.data.CoffeeCount {
-		notify = false
+	// Flags
+	var increase = false
+	var decrease = false
+
+	if value < m.stats[item].Value {
+		decrease = true
+	} else if value > m.stats[item].Value {
+		increase = true
 	}
 
-	m.data.CoffeeCount = value
+	// Go Issue (fix is coming in Go2)
+	var tmp = m.stats[item]
+	tmp.Value = value
+	m.stats[item] = tmp
 
-	// Save File
-	Core.SaveFile([]byte(m.settings.PrefixCoffee+Core.Left(fmt.Sprintf("%d", m.data.CoffeeCount), m.settings.PadCoffeeOutput, "0")), m.outputs.CoffeeCountPath)
+	m.OutputNumericalValue(item, value)
+	m.OutputTextualValue(item, value)
 
-	if notify {
-		if m.data.CoffeeCount == 1 {
-			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "We are on the first cup of coffee for the day! Watch out!")
-		} else {
-			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "Coffee #" + fmt.Sprintf("%d", m.data.CoffeeCount) + "!")
+	if increase && notify && m.stats[item].Increase.Notify {
+
+		// Check for callback
+		if len(m.stats[item].Increase.NotifyCallback) > 0 {
+			m.j.WebServer.TouchEndpoint(m.stats[item].Increase.NotifyCallback)
 		}
 
-		if len(m.settings.CoffeeSounds) > 0 {
-			m.j.Media.PlaySound(m.settings.CoffeeSounds[rand.Intn(len(m.settings.CoffeeSounds))])
-		} else {
-			m.commandModule.Wirecast("1", "Coffee")
+		// Legacy Sound Events
+		if len(m.stats[item].Increase.Sounds) > 0 {
+			m.j.Media.PlaySound(m.stats[item].Increase.Sounds[rand.Intn(len(m.stats[item].Increase.Sounds))])
 		}
 
-	}
+		m.j.Discord.Announcement(m.j.Config.GetPrefix() + strings.Replace(m.stats[item].Increase.NotifyMessage, "###", fmt.Sprintf("%d", value), -1))
+	} else if decrease && notify && m.stats[item].Decrease.Notify {
 
-	// Log Change
-	m.j.Log.Message("Stats", "Coffee Count set to "+fmt.Sprintf("%d", m.data.CoffeeCount))
-}
-
-// ChangeCrashCount to specific value
-func (m *Module) ChangeCrashesCount(value int, notify bool) {
-
-	if value < m.data.CrashCount {
-		notify = false
-	}
-	// Set Value
-	m.data.CrashCount = value
-
-	// Save File
-	Core.SaveFile([]byte(m.settings.PrefixCrashes+Core.Left(fmt.Sprintf("%d", m.data.CrashCount), m.settings.PadCrashOutput, "0")), m.outputs.CrashCountPath)
-
-	if notify {
-		if m.data.CrashCount == 1 {
-			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "Our first crash of the day :(")
-		} else {
-			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "CRASHED! (and or burned!) - That's number " + fmt.Sprintf("%d", m.data.CrashCount) + " of the day.")
+		// Check for callback
+		if len(m.stats[item].Decrease.NotifyCallback) > 0 {
+			m.j.WebServer.TouchEndpoint(m.stats[item].Decrease.NotifyCallback)
 		}
 
-		if len(m.settings.CrashSounds) > 0 {
-			m.j.Media.PlaySound(m.settings.CrashSounds[rand.Intn(len(m.settings.CrashSounds))])
-		} else {
-			m.commandModule.Wirecast("1", "Crash")
-		}
-	}
-
-	// Log Change
-	m.j.Log.Message("Stats", "Crash Count set to "+fmt.Sprintf("%d", m.data.CrashCount))
-}
-
-// ChangeSavesCount to specific value
-func (m *Module) ChangeSavesCount(value int, notify bool) {
-
-	if value < m.data.SavesCount {
-		notify = false
-	}
-
-	// Set Value
-	m.data.SavesCount = value
-
-	// Save File
-	Core.SaveFile([]byte(m.settings.PrefixSaves+Core.Left(fmt.Sprintf("%d", m.data.SavesCount), m.settings.PadSavesOutput, "0")), m.outputs.SavesCountPath)
-
-	if notify {
-		if m.data.SavesCount == 1 {
-			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "The first save of the day!")
-		} else {
-			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "SAVED!!! We are up to " + fmt.Sprintf("%d", m.data.SavesCount) + "!")
+		// Legacy Sound Events
+		if len(m.stats[item].Decrease.Sounds) > 0 {
+			m.j.Media.PlaySound(m.stats[item].Increase.Sounds[rand.Intn(len(m.stats[item].Increase.Sounds))])
 		}
 
-		if len(m.settings.SaveSounds) > 0 {
-			m.j.Media.PlaySound(m.settings.SaveSounds[rand.Intn(len(m.settings.SaveSounds))])
-		} else {
-			m.commandModule.Wirecast("1", "Save")
-		}
+		m.j.Discord.Announcement(m.j.Config.GetPrefix() + strings.Replace(m.stats[item].Decrease.NotifyMessage, "###", fmt.Sprintf("%d", value), -1))
 	}
 
-	// Log Change
-	m.j.Log.Message("Stats", "Save Count set to "+fmt.Sprintf("%d", m.data.SavesCount))
-}
-
-// ChangeBuildCount to specific value
-func (m *Module) IncrementBuildCount() {
-	m.ChangeBuildCount(m.data.BuildCount+1, true)
-}
-func (m *Module) ChangeBuildCount(value int, notify bool) {
-
-	// Check action
-	if value > m.data.BuildCount && len(m.settings.BuildSounds) > 0 {
-		// yup increase play a sound
-		m.j.Media.PlaySound(m.settings.BuildSounds[rand.Intn(len(m.settings.BuildSounds))])
-	}
-
-	// Set Value
-	m.data.BuildCount = value
-
-	// Save File
-	Core.SaveFile([]byte(fmt.Sprintf("%d", m.data.BuildCount)), m.outputs.BuildCountPath)
-
-	if notify {
-		m.commandModule.Wirecast("1", "Build")
-		// 	if m.data.BuildCount == 1 {
-		// 		m.j.Discord.Announcement(m.j.Config.GetPrefix() + "Our first build of the day!")
-		// 	} else {
-		// 		m.j.Discord.Announcement(m.j.Config.GetPrefix() + "Build it! That's number " + fmt.Sprintf("%d", m.data.BuildCount) + " of the day.")
-		// 	}
-	}
-
-	// Log Change
-	m.j.Log.Message("Stats", "Build Count set to "+fmt.Sprintf("%d", m.data.BuildCount))
+	// Log
+	m.j.Log.Message("Stats", "\""+item+"\""+" set to "+fmt.Sprintf("%d", value))
 }

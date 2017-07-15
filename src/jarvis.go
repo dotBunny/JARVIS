@@ -12,7 +12,6 @@ import (
 	Core "./core"
 
 	Command "./modules/command"
-	Dashboard "./modules/dashboard"
 	JIRA "./modules/jira"
 	Spotify "./modules/spotify"
 	Stats "./modules/stats"
@@ -24,13 +23,12 @@ import (
 var (
 	j *Core.JARVIS
 
-	dashboardModule *Dashboard.Module
-	spotifyModule   *Spotify.Module
-	twitchModule    *Twitch.Module
-	statsModule     *Stats.Module
-	youtubeModule   *YouTube.Module
-	jiraModule      *JIRA.Module
-	commandModule   *Command.Module
+	spotifyModule *Spotify.Module
+	twitchModule  *Twitch.Module
+	statsModule   *Stats.Module
+	youtubeModule *YouTube.Module
+	jiraModule    *JIRA.Module
+	commandModule *Command.Module
 
 	quit chan os.Signal
 )
@@ -51,7 +49,7 @@ func onReady() {
 	}()
 	go func() {
 		<-mDashboard.ClickedCh
-		dashboardModule.Show()
+		j.WebServer.OpenDashboard()
 	}()
 
 	go func() {
@@ -64,10 +62,6 @@ func onReady() {
 
 		// Create new Jarvis instance
 		j = Core.HireJarvis()
-
-		// Dashboard Moudle
-		dashboardModule := new(Dashboard.Module)
-		dashboardModule.Initialize(j)
 
 		// Start Command Module
 		commandModule := new(Command.Module)

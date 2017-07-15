@@ -6,7 +6,7 @@ import (
 
 func (m *Module) setupCommands() {
 	//	m.j.Discord.RegisterCommand("!y", m.commandSay, "Say something on Twitch", Core.CommandAccessModerator)
-	m.j.Discord.RegisterCommand("!youtube", m.commandYouTube, "YouTube ([info]/start/stop/auth)", Core.CommandAccessModerator)
+	m.j.Discord.RegisterCommand("!youtube", m.commandYouTube, "YouTube ([info]/start/stop/auth)", Core.CommandAccessModerator, "youtube")
 
 }
 

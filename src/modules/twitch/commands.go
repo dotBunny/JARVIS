@@ -7,8 +7,8 @@ import (
 )
 
 func (m *Module) setupCommands() {
-	m.j.Discord.RegisterCommand("!t", m.commandSay, "Say something on Twitch", Core.CommandAccessModerator)
-	m.j.Discord.RegisterCommand("!twitch", m.commandTwitch, "Twitch ([info]/start/stop/auth)", Core.CommandAccessModerator)
+	m.j.Discord.RegisterCommand("!t", m.commandSay, "Say something on Twitch", Core.CommandAccessModerator, "twitch")
+	m.j.Discord.RegisterCommand("!twitch", m.commandTwitch, "Twitch ([info]/start/stop/auth)", Core.CommandAccessModerator, "twitch")
 
 }
 

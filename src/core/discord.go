@@ -66,11 +66,12 @@ type DiscordFunc func(*DiscordMessage)
 
 // DiscordMessage is used to pass data around
 type DiscordMessage struct {
-	Author    string
-	ChannelID string
-	Command   string
-	Content   string
-	Raw       *discordgo.MessageCreate
+	Author     string
+	ChannelID  string
+	Command    string
+	CommandKey string
+	Content    string
+	Raw        *discordgo.MessageCreate
 }
 
 // DiscordCore facilitates the callback/web related hosting
@@ -79,6 +80,7 @@ type DiscordCore struct {
 	channelCache        map[string]int
 	commandAliases      map[string]string
 	commandAccessLevels map[string]int
+	commandKeys         map[string]string
 	commandCache        []string
 	commands            map[string]DiscordFunc
 	connected           bool
@@ -166,6 +168,7 @@ func (m *DiscordCore) Initialize(jarvisInstance *JARVIS) {
 	// Create command index
 	m.commands = make(map[string]DiscordFunc)
 	m.descriptions = make(map[string]string)
+	m.commandKeys = make(map[string]string)
 	m.channelCache = make(map[string]int)
 	m.commandAccessLevels = make(map[string]int)
 
@@ -199,7 +202,7 @@ func (m *DiscordCore) AnnoucementEmbed(message *discordgo.MessageEmbed) {
 }
 
 // RegisterCommand to use with bot
-func (m *DiscordCore) RegisterCommand(command string, function DiscordFunc, description string, accessLevel int) {
+func (m *DiscordCore) RegisterCommand(command string, function DiscordFunc, description string, accessLevel int, key string) {
 
 	// Sanitize
 	command = strings.ToLower(command)
@@ -214,6 +217,7 @@ func (m *DiscordCore) RegisterCommand(command string, function DiscordFunc, desc
 	m.commands[command] = function
 	m.descriptions[command] = description
 	m.commandAccessLevels[command] = accessLevel
+	m.commandKeys[command] = key
 
 	// Add to command cache for easier lookup
 	m.commandCache = append(m.commandCache, command)
@@ -273,11 +277,12 @@ func (m *DiscordCore) messageHandler(session *discordgo.Session, message *discor
 
 		// Create new Discord transport message
 		newMessage := DiscordMessage{
-			Author:    message.Author.Username,
-			ChannelID: message.ChannelID,
-			Command:   targetCommand,
-			Content:   strings.TrimLeft(strings.TrimLeft(message.Content, command), " "),
-			Raw:       message}
+			Author:     message.Author.Username,
+			ChannelID:  message.ChannelID,
+			Command:    targetCommand,
+			CommandKey: m.commandKeys[targetCommand],
+			Content:    strings.TrimLeft(strings.TrimLeft(message.Content, command), " "),
+			Raw:        message}
 
 		execCommand(&newMessage)
 	}

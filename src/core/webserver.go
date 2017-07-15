@@ -9,6 +9,8 @@ import (
 	"path"
 	"strconv"
 	"strings"
+
+	"github.com/skratchdot/open-golang/open"
 )
 
 // WebServerConfig Settings
@@ -21,97 +23,10 @@ type WebServerConfig struct {
 
 // WebServerCore facilitates the callback/web related hosting
 type WebServerCore struct {
-	externalIP string
-	settings   *WebServerConfig
-	webPath    string
+	settings *WebServerConfig
+	webPath  string
 
 	j *JARVIS
-}
-
-func (m *WebServerCore) endpointBase(w http.ResponseWriter, r *http.Request) {
-
-	// Santize query (just incase)
-	var query = strings.Replace(r.URL.RequestURI(), "..", "/", -1)
-
-	// Remove query
-	var queryIndex = strings.Index(query, "?")
-	if queryIndex > 0 {
-		query = query[:queryIndex]
-	}
-
-	// Build File Path
-	filePath := path.Join(m.webPath, query)
-
-	// Check Existence
-	_, err := os.Stat(filePath)
-	if err != nil {
-		m.j.Log.Warning("WebServer", "Unable to find file: "+filePath)
-		fmt.Fprintf(w, "Content Not Found")
-		return
-	}
-
-	fileData, err := ioutil.ReadFile(filePath)
-	if err != nil {
-		m.j.Log.Warning("WebServer", "Unable to read file: "+filePath)
-		fmt.Fprintf(w, "Content Not Readable")
-		return
-	}
-
-	// No need to cache locally
-	w.Header().Set("Cache-Control", "no-cache, must-revalidate")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-
-	// Check MIME Type
-	ext := filePath[strings.LastIndex(filePath, "."):]
-
-	switch ext {
-	case ".png":
-		w.Header().Set("Content-Type", "image/png")
-		break
-	case ".gif":
-		w.Header().Set("Content-Type", "image/gif")
-		break
-	case ".js":
-		w.Header().Set("Content-Type", "application/javascript")
-		break
-	case ".css":
-		w.Header().Set("Content-Type", "text/css")
-		break
-	case ".jpg":
-	case ".jpeg":
-		w.Header().Set("Content-Type", "image/jpeg")
-		break
-	case ".svg":
-		w.Header().Set("Content-Type", "image/svg+xml")
-		break
-	case ".html":
-	case ".htm":
-		w.Header().Set("Content-Type", "text/html")
-		break
-	case ".eot":
-		w.Header().Set("Content-Type", "application/vnd.ms-fontobject")
-		break
-	case ".otf":
-	case ".ttf":
-		w.Header().Set("Content-Type", "application/font-sfnt")
-		break
-	case ".woff":
-		w.Header().Set("Content-Type", "application/font-woff")
-		break
-	case ".woff2":
-		w.Header().Set("Content-Type", "font/woff2")
-		break
-	default:
-		w.Header().Set("Content-Type", "text/plain")
-		break
-	}
-
-	w.Header().Set("Content-Length", strconv.Itoa(len(fileData)))
-
-	if _, err := w.Write(fileData); err != nil {
-		m.j.Log.Warning("WebServer", "Unable to  serve file: "+filePath+", "+err.Error())
-	}
-
 }
 
 // DefaultHeader to be used
@@ -178,6 +93,7 @@ func (m *WebServerCore) Initialize(jarvisInstance *JARVIS) {
 
 	// Register default endpoint
 	m.RegisterEndpoint("/", m.endpointBase)
+
 	m.RegisterEndpoint("/media", m.endpointMedia)
 	m.RegisterEndpoint("/media/", m.endpointMedia)
 	m.RegisterEndpoint("/media/monitor", m.endpointMediaMonitor)
@@ -196,13 +112,118 @@ func (m *WebServerCore) IsEnabled() bool {
 	return m.settings.Enabled
 }
 
+// ParseContent data as string and replace in variables
+func (m *WebServerCore) ParseContent(originalData []byte) []byte {
+	return originalData
+}
+
 // RegisterEndpoint to WebServer
 func (m *WebServerCore) RegisterEndpoint(endpoint string, function http.HandlerFunc) {
 	http.HandleFunc(endpoint, function)
 }
 
+// TouchEndpoint of our API without returning anyhting
 func (m *WebServerCore) TouchEndpoint(endpoint string) {
-	go http.Get("http://localhost:" + strconv.Itoa(m.settings.ListenPort) + endpoint)
+	go http.Get("http://" + m.settings.IPAddress + ":" + strconv.Itoa(m.settings.ListenPort) + endpoint)
+}
+
+func (m *WebServerCore) endpointBase(w http.ResponseWriter, r *http.Request) {
+
+	// Santize query (just incase)
+	var query = strings.Replace(r.URL.RequestURI(), "..", "/", -1)
+
+	// Remove query
+	var queryIndex = strings.Index(query, "?")
+	if queryIndex > 0 {
+		query = query[:queryIndex]
+	}
+
+	// Build File Path (safely)
+	filePath := path.Join(m.webPath, query)
+
+	// Check Existence
+	_, err := os.Stat(filePath)
+	if err != nil {
+		m.j.Log.Warning("WebServer", "Unable to find file: "+filePath)
+		fmt.Fprintf(w, "Content Not Found")
+		return
+	}
+
+	fileData, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		m.j.Log.Warning("WebServer", "Unable to read file: "+filePath)
+		fmt.Fprintf(w, "Content Not Readable")
+		return
+	}
+
+	// No need to cache locally
+	w.Header().Set("Cache-Control", "no-cache, must-revalidate")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
+	// Check MIME Type
+	ext := filePath[strings.LastIndex(filePath, "."):]
+
+	// Flag to see if the content is parsable (we look at the content type for this one)
+	var parsableContent bool
+
+	switch ext {
+	case ".png":
+		w.Header().Set("Content-Type", "image/png")
+		break
+	case ".gif":
+		w.Header().Set("Content-Type", "image/gif")
+		break
+	case ".js":
+		// TODO: Maybe make this parse through? would be sick
+		w.Header().Set("Content-Type", "application/javascript")
+		break
+	case ".css":
+		w.Header().Set("Content-Type", "text/css")
+		break
+	case ".jpg":
+	case ".jpeg":
+		w.Header().Set("Content-Type", "image/jpeg")
+		break
+	case ".svg":
+		w.Header().Set("Content-Type", "image/svg+xml")
+		break
+	case ".html":
+	case ".htm":
+		w.Header().Set("Content-Type", "text/html")
+		parsableContent = true
+		break
+	case ".eot":
+		w.Header().Set("Content-Type", "application/vnd.ms-fontobject")
+		break
+	case ".otf":
+	case ".ttf":
+		w.Header().Set("Content-Type", "application/font-sfnt")
+		break
+	case ".xml":
+		w.Header().Set("Content-Type", "text/xml")
+		parsableContent = true
+		break
+	case ".woff":
+		w.Header().Set("Content-Type", "application/font-woff")
+		break
+	case ".woff2":
+		w.Header().Set("Content-Type", "font/woff2")
+		break
+	default:
+		w.Header().Set("Content-Type", "text/plain")
+		parsableContent = true
+		break
+	}
+
+	if parsableContent {
+		fileData = m.ParseContent(fileData)
+	}
+	w.Header().Set("Content-Length", strconv.Itoa(len(fileData)))
+
+	if _, err := w.Write(fileData); err != nil {
+		m.j.Log.Warning("WebServer", "Unable to  serve file: "+filePath+", "+err.Error())
+	}
+
 }
 
 // Media player
@@ -214,7 +235,7 @@ func (m *WebServerCore) endpointMedia(w http.ResponseWriter, r *http.Request) {
 
 func (m *WebServerCore) endpointMediaMonitor(w http.ResponseWriter, r *http.Request) {
 	m.DefaultHeader(w)
-	output := strconv.Itoa(m.j.Media.MediaLastVersion) + ",http://localhost:8080/media/fetch"
+	output := strconv.Itoa(m.j.Media.MediaLastVersion) + "," + m.GetBaseURI() + "/media/fetch"
 	w.Header().Set("Content-Length", strconv.Itoa(len(output)))
 	fmt.Fprintf(w, output)
 }
@@ -223,4 +244,14 @@ func (m *WebServerCore) endpointMediaFetch(w http.ResponseWriter, r *http.Reques
 
 	w.Header().Set("Content-Type", "audio/wav")
 	w.Write(m.j.Media.MediaLastData)
+}
+
+// OpenDashboard
+func (m *WebServerCore) OpenDashboard() {
+	open.Run(m.GetBaseURI() + "/dashboard.html")
+}
+
+// GetBaseURI returns the complete server web address
+func (m *WebServerCore) GetBaseURI() string {
+	return "http://" + m.settings.IPAddress + ":" + strconv.Itoa(m.settings.ListenPort)
 }

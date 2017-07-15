@@ -59,25 +59,137 @@
     "TruncateTrackRunes" : "...",
     "Prefix": "<:spotify:326026030265663488> "
   },
-  "Stats" : {
-    "CoffeeSounds" : [
-    
-    ],
-    "CrashSounds" : [
-    
-    ],
-    "SaveSounds" : [
-    
-    ],
-    "PrefixCoffee": "",
-    "PadCoffee" : 2,
-    "PrefixCrashes" : "CRASH #",
-    "PadCrashes" : 2,
-    "PrefixSaves" : "SAVE #",
-    "PadSaves" : 2,
-    "PadCoffeeOutput" : 0,
-    "PadCrashesOutput" : 0,
-    "PadSavesOutput" : 0
+   "Stats" : {
+    "Definitions" : [
+      {
+        "Key" : "Coffee",
+        "TextOutput" : {
+          "Enabled" : false,
+          "Prefix" : "Coffee #",
+          "Suffix" : ""
+        },
+        "NumericalOutput" : {
+          "Enabled" : true,
+          "Padding" : 0
+        },
+        "Increase" : {
+          "Command" : "!coffee++",
+          "CommandDescription" : "Increase Coffee Count",
+          "CommandLevel" : 3,
+          "Notify" :true,
+          "NotifyCallback" : "?script=wirecast&args=layer,1,Coffee",
+          "NotifyMessage" : "We're on our ### coffee of the day.", 
+          "Sounds" : []
+        },
+        "Decrease" : {
+          "Command" : "!coffee--",
+          "CommandDescription" : "Decrease Coffee Count",
+          "CommandLevel" : 3,
+          "Sounds" : []
+        },
+        "Set" : {
+          "Command" : "!coffee",
+          "CommandDescription" : "Set Coffee Count",
+          "CommandLevel" : 3
+        }
+      },
+      {
+        "Key" : "Crashes",
+        "TextOutput" : {
+          "Enabled" : true,
+          "Prefix" : "Crash #",
+          "Suffix" : ""
+        },
+        "NumericalOutput" : {
+          "Enabled" : true,
+          "Padding" : 0
+        },
+        "Increase" : {
+          "Command" : "!crash++",
+          "CommandDescription" : "Increase Crash Count",
+          "CommandLevel" : 3,
+          "Notify" :true,
+          "NotifyCallback" : "?script=wirecast&args=layer,1,Crash",
+          "NotifyMessage" : "We're on our ### crash of the day.", 
+          "Sounds" : []
+        },
+        "Decrease" : {
+          "Command" : "!crash--",
+          "CommandDescription" : "Decrease Crash Count",
+          "CommandLevel" : 3,
+          "Sounds" : []
+        },
+        "Set" : {
+          "Command" : "!crash",
+          "CommandDescription" : "Set Crash Count",
+          "CommandLevel" : 3
+        }
+      },
+      {
+        "Key" : "Saves",
+        "TextOutput" : {
+          "Enabled" : true,
+          "Prefix" : "Save #",
+          "Suffix" : ""
+        },
+        "NumericalOutput" : {
+          "Enabled" : true,
+          "Padding" : 0
+        },
+        "Increase" : {
+          "Command" : "!save++",
+          "CommandDescription" : "Increase Save Count",
+          "CommandLevel" : 3,
+          "Notify" :true,
+          "NotifyCallback" : "?script=wirecast&args=layer,1,Save",
+          "NotifyMessage" : "We're on our ### save of the day.", 
+          "Sounds" : []
+        },
+        "Decrease" : {
+          "Command" : "!save--",
+          "CommandDescription" : "Decrease Save Count",
+          "CommandLevel" : 3,
+          "Sounds" : []
+        },
+        "Set" : {
+          "Command" : "!save",
+          "CommandDescription" : "Set Save Count",
+          "CommandLevel" : 3
+        }
+      },
+      {
+        "Key" : "Build",
+        "TextOutput" : {
+          "Enabled" : true,
+          "Prefix" : "Build #",
+          "Suffix" : ""
+        },
+        "NumericalOutput" : {
+          "Enabled" : true,
+          "Padding" : 0
+        },
+        "Increase" : {
+          "Command" : "!build++",
+          "CommandDescription" : "Build!",
+          "CommandLevel" : 3,
+          "Notify" :true,
+          "NotifyCallback" : "?script=clion",
+          "NotifyMessage" : "We're on our ### build of the day.", 
+          "Sounds" : []
+        },
+        "Decrease" : {
+          "Command" : "!build--",
+          "CommandDescription" : "Decrease Build Count",
+          "CommandLevel" : 3,
+          "Sounds" : []
+        },
+        "Set" : {
+          "Command" : "!build",
+          "CommandDescription" : "Set Build Count",
+          "CommandLevel" : 3
+        }
+      }
+    ]
   },
   "WebServer" : {
     "Enabled" : true,

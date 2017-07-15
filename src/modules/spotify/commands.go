@@ -5,7 +5,7 @@ import (
 )
 
 func (m *Module) setupCommands() {
-	m.j.Discord.RegisterCommand("!spotify", m.commandSpotify, "Spotify ([info]/start/stop/auth/next)", Core.CommandAccessModerator)
+	m.j.Discord.RegisterCommand("!spotify", m.commandSpotify, "Spotify ([info]/start/stop/auth/next)", Core.CommandAccessModerator, "spotify")
 }
 
 func (m *Module) commandSpotify(message *Core.DiscordMessage) {

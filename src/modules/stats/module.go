@@ -12,6 +12,8 @@ type Module struct {
 	data           *Data
 	settings       *Config
 
+	stats map[string]Stat
+
 	commandModule *Command.Module
 	j             *Core.JARVIS
 }
@@ -23,7 +25,6 @@ func (m *Module) Initialize(jarvisInstance *Core.JARVIS, commandModule *Command.
 	m.commandModule = commandModule
 
 	m.loadConfig()
-
 	m.j.Log.RegisterChannel("Stats", "red", m.j.Config.GetPrefix())
 
 	m.setupOutputs()

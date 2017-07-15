@@ -5,7 +5,7 @@
 # end tell
 
 tell application "System Events"
-	tell process "CLion-EAP"
+	tell process "CLion"
 		tell menu bar 1
 			tell menu bar item "Run"
 				tell menu "Run"
