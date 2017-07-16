@@ -6,41 +6,32 @@ import (
 
 func (m *Module) setupCommands() {
 	//	m.j.Discord.RegisterCommand("!work", m.commandWork, "Work Command", Core.CommandAccessModerator, "task")
-	m.j.Discord.RegisterCommand("!work", m.commandWorkingOn, "What are you doing?", Core.CommandAccessAdmin, "stats")
+	m.j.Discord.RegisterCommand("!work", m.commandWorkingOn, "What are you doing?", Core.CommandAccessAdmin, "task")
+	m.j.Discord.RegisterCommand("!jira", m.commandJIRA, "User JIRA instead of the work system", Core.CommandAccessAdmin, "task")
 }
 
-func (m *Module) commandWorkingOn(message *Core.DiscordMessage) {
+func (m *Module) commandJIRA(message *Core.DiscordMessage) {
 
-	if len(message.Content) > 0 {
-		if message.Content == "jira" {
-			m.UseJIRAForWork = true
+	if !m.UseJIRAForWork {
+		// Turn on JIRA
+		m.UseJIRAForWork = true
+		m.SetWorkingOn("Loading JIRA Task ...", false)
 
-			if !m.jiraInstance.Polling {
-				m.jiraInstance.Start()
-			}
+		// Force POLL (with notify)
+		m.jiraInstance.Poll(true)
 
-		} else {
-			m.UseJIRAForWork = false
-			m.jiraInstance.Stop()
-			m.SetWorkingOn(message.Content, true)
+		if !m.jiraInstance.Polling {
+			m.jiraInstance.Start()
 		}
 	}
 }
 
-// SetWorkingOn text
-func (m *Module) SetWorkingOn(message string, notify bool) {
-	m.data.WorkingOn = message
-	Core.SaveFile([]byte(m.data.WorkingOn), m.outputs.WorkingOnPath)
-	if notify {
-		m.j.Discord.Announcement(m.j.Config.GetPrefix() + "Now working on " + m.data.WorkingOn)
-	}
-	m.j.Log.Message("Stats", "Working On: "+m.data.WorkingOn)
-}
+func (m *Module) commandWorkingOn(message *Core.DiscordMessage) {
 
-func (m *Module) SetWorkingOnJIRA(message string, notify bool) {
-	if !m.UseJIRAForWork {
-		return
+	if m.UseJIRAForWork || m.jiraInstance.Polling {
+		m.UseJIRAForWork = false
+		m.jiraInstance.Stop()
 	}
 
-	m.SetWorkingOn(message, notify)
+	m.SetWorkingOn(message.Content, true)
 }

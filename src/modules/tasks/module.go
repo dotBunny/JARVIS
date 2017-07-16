@@ -26,13 +26,17 @@ func (m *Module) Initialize(jarvisInstance *Core.JARVIS) {
 	jiraInstance := new(JIRA.Module)
 	m.jiraInstance = jiraInstance
 
-	m.jiraInstance.Initialize(m.j, m.SetWorkingOnJIRA, m.GetWorkingOn)
-
 	m.loadConfig()
 	m.j.Log.RegisterChannel("Tasks", "yellow", m.j.Config.GetPrefix())
+	m.UseJIRAForWork = m.settings.UseJIRAByDefault
 
 	m.setupOutputs()
 	m.setupData()
+
+	// Create our callback niceness
+	jiraModifier := new(JIRAModifier)
+	jiraModifier.tasks = m
+	m.jiraInstance.Initialize(m.j, jiraModifier)
 
 	m.setupCommands()
 
@@ -50,7 +54,7 @@ func (m *Module) ParseWebContent(content string, mode string) string {
 		responseMap["JIRA"] = m.UseJIRAForWork
 
 		if m.UseJIRAForWork {
-			responseMap["Icon"] = m.jiraInstance.GetData().LastNotifyIcon
+			responseMap["Type"] = m.jiraInstance.GetData().IssueType
 		}
 		// responseMap["link"] =
 

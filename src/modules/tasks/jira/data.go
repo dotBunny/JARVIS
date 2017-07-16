@@ -10,17 +10,17 @@ type Data struct {
 	LastIssues       []jira.Issue
 	LastIssuesString string
 	LastNotifyText   string
-	LastNotifyIcon   string
+	IssueType        string
 }
 
 func (m *Module) setupData() {
 	m.data = new(Data)
+	m.data.IssueType = "Task"
 }
 
 func (m *Module) GetData() *Data {
 	return m.data
 }
-
 func (m *Module) outputLastIssues() {
 
 	m.data.LastIssuesString = ""

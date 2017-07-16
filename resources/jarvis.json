@@ -26,7 +26,10 @@
     "OutputPath" : "<Absolute Path To Where To Store Files>",
     "Prefix": "<:jarvis:326026030458601472> "
   },
-    "JIRA" : {
+  "Tasks": {
+    "UseJIRAByDefault": true
+  },
+  "JIRA" : {
     "BasicAuthUsername": "u",
     "BasicAuthPassword": "p",
     "Enabled": false,

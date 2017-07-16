@@ -6,7 +6,7 @@ import (
 
 // Config elements
 type Config struct {
-	UseJIRA bool
+	UseJIRAByDefault bool
 }
 
 // Initialize the Logging Module
@@ -17,13 +17,13 @@ func (m *Module) loadConfig() {
 
 	// Check Raw Data
 	if m.j.Config.IsInitialized() {
-		if !m.j.Config.IsValidKey("TaskManager") {
-			m.j.Log.Message("Config", "Unable to find \"TaskManager\" config section. Using defaults.")
+		if !m.j.Config.IsValidKey("Tasks") {
+			m.j.Log.Message("Config", "Unable to find \"Tasks\" config section. Using defaults.")
 		} else {
 
-			errorCheck := json.Unmarshal(*m.j.Config.GetConfigData("TaskManager"), &m.settings)
+			errorCheck := json.Unmarshal(*m.j.Config.GetConfigData("Tasks"), &m.settings)
 			if errorCheck != nil {
-				m.j.Log.Message("Config", "Unable to properly parse TaskManager Config, somethings may be wonky.")
+				m.j.Log.Message("Config", "Unable to properly parse Tasks Config, somethings may be wonky.")
 			}
 		}
 	}

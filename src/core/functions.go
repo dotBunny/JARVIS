@@ -14,9 +14,6 @@ import (
 	"github.com/atotto/clipboard"
 )
 
-type DataSetter func(string, bool)
-type DataGetter func() string
-
 //CopyToClipboard string
 func CopyToClipboard(buffer string) {
 	clipboard.WriteAll(buffer)

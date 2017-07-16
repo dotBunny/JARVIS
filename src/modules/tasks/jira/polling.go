@@ -49,13 +49,12 @@ func (m *Module) pollIssues(notify bool) {
 
 	// New issue set!
 	if len(issues) > 0 {
-		if (issues[0].Fields.Summary != m.data.LastNotifyText) || (m.getter() != issues[0].Fields.Summary) {
-			if notify {
-				m.j.Discord.Announcement(m.settings.Prefix + "Working On: " + issues[0].Fields.Summary)
+		if m.workingOn.GetDataValue() != issues[0].Fields.Summary {
+
+			if m.workingOn.ShouldUpdate() {
+				m.data.IssueType = issues[0].Fields.Type.Name
+				m.workingOn.SetDataValue(issues[0].Fields.Summary, true)
 			}
-			m.data.LastNotifyText = issues[0].Fields.Summary
-			m.data.LastNotifyIcon = issues[0].Fields.Type.Name
-			m.callback(m.data.LastNotifyText, false)
 
 			m.data.LastIssues = issues
 			m.outputLastIssues()

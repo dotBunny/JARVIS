@@ -7,8 +7,6 @@ import (
 	"github.com/andygrunwald/go-jira"
 )
 
-// const currentlyPlayingBase = "https://open.spotify.com/track/"
-
 // Module Class
 type Module struct {
 	ticker  *time.Ticker
@@ -18,17 +16,22 @@ type Module struct {
 	outputs    *Outputs
 	data       *Data
 	jiraClient *jira.Client
-	j          *Core.JARVIS
-	callback   Core.DataSetter
-	getter     Core.DataGetter
+
+	j *Core.JARVIS
+
+	workingOn Core.DataModifier
 }
 
+type DataSetter func(string, bool)
+type DataGetter func() string
+
 // Initialize the Logging Module
-func (m *Module) Initialize(jarvisInstance *Core.JARVIS, setWorkingOnText Core.DataSetter, getWorkingOnText Core.DataGetter) {
+func (m *Module) Initialize(jarvisInstance *Core.JARVIS, modifierInterface Core.DataModifier) {
 	// Assign JARVIS, the module is made we dont to create it like in core!
 	m.j = jarvisInstance
-	m.callback = setWorkingOnText
-	m.getter = getWorkingOnText
+
+	// TODO: I m not a fan of these call backs - they seem to be a source of issue
+	m.workingOn = modifierInterface
 	m.Polling = false
 
 	// Make sure flag is toggled off
@@ -46,19 +49,21 @@ func (m *Module) Initialize(jarvisInstance *Core.JARVIS, setWorkingOnText Core.D
 	var jiraError error
 	m.jiraClient, jiraError = jira.NewClient(nil, m.settings.Instance)
 	if jiraError != nil {
-		m.j.Log.Error("JIRA", jiraError.Error())
+		m.j.Log.Error("JIRA", "Creating Client Failed. "+jiraError.Error())
 		return
 	}
+
 	m.jiraClient.Authentication.SetBasicAuth(m.settings.BasicAuthUsername, m.settings.BasicAuthPassword)
 	sessionCookie, errorCookie := m.jiraClient.Authentication.AcquireSessionCookie(m.settings.BasicAuthUsername, m.settings.BasicAuthPassword)
 	if errorCookie != nil || sessionCookie == false {
-		m.j.Log.Error("JIRA", errorCookie.Error())
+		m.j.Log.Error("JIRA", "Cookie Request Failed. "+errorCookie.Error())
 		return
 	}
 
 	// Start the basic polling for information
-	m.setupPolling()
-	// m.setupCommands()
+	if m.workingOn.ShouldUpdate() {
+		m.setupPolling()
+	}
 }
 
 // IsEnabled for Usage
@@ -85,4 +90,5 @@ func (m *Module) Stop() {
 			m.ticker.Stop()
 		}
 	}
+	m.Polling = false
 }

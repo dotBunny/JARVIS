@@ -6,3 +6,9 @@ type Enum interface {
 	ordinal() int
 	valueOf() *[]string
 }
+
+type DataModifier interface {
+	GetDataValue() string
+	SetDataValue(string, bool)
+	ShouldUpdate() bool
+}

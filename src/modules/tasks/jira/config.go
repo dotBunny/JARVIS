@@ -34,3 +34,7 @@ func (m *Module) loadConfig() {
 		}
 	}
 }
+
+func (m *Module) GetPrefix() string {
+	return m.settings.Prefix
+}
