@@ -16,6 +16,7 @@ func (m *Module) setupPolling() {
 	m.j.Log.Message("JIRA", "Starting polling at "+jiraPollingFrequency.String())
 	m.ticker = time.NewTicker(jiraPollingFrequency)
 	m.Poll(false)
+	m.Polling = true
 	go m.loop()
 }
 
@@ -48,16 +49,14 @@ func (m *Module) pollIssues(notify bool) {
 
 	// New issue set!
 	if len(issues) > 0 {
-		if (issues[0].Fields.Summary != m.data.LastNotifyText) || (m.stats.UseJIRAForWork && m.stats.GetWorkingOn() != issues[0].Fields.Summary) {
+		if (issues[0].Fields.Summary != m.data.LastNotifyText) || (m.getter() != issues[0].Fields.Summary) {
 			if notify {
 				m.j.Discord.Announcement(m.settings.Prefix + "Working On: " + issues[0].Fields.Summary)
 			}
 			m.data.LastNotifyText = issues[0].Fields.Summary
 			m.data.LastNotifyIcon = issues[0].Fields.Type.Name
-			if m.stats.UseJIRAForWork {
-				m.stats.SetWorkingOn(m.data.LastNotifyText, false)
-				m.stats.SetWorkingOnIcon(m.data.LastNotifyIcon)
-			}
+			m.callback(m.data.LastNotifyText, false)
+
 			m.data.LastIssues = issues
 			m.outputLastIssues()
 		}

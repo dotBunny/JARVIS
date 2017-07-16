@@ -1,47 +1,42 @@
-function CombinedSplit(s, separator, limit) {
-    var arr = s.split(separator, limit);
-    var left = s.substring(arr.join(separator).length + separator.length);
-    arr.push(left);
-    return arr;
-}
-
 /**
  * Retrieve information from the JARVIS endpoints periodically
- * @param {string} elementID The ID of the element to fill with data
  * @param {string} endpointURI The full URI of the API endpoint to poll
+ * @param {function} callbackFunction The function to callback with the dataset
  * @param {int} everySeconds How often should the API endpoint be polled
  */
-function getInfo(elementID, endpointURI, everySeconds) {
+function getJSON(endpointURI,callbackFunction, everySeconds) {
     
-    // Initial Populate
-    _getInfo(elementID, endpointURI);
-
+    var responseHandler = callbackFunction;
+    _getJSON(endpointURI, responseHandler);
     if (everySeconds > 0) {
         setInterval(function () {
-            _getInfo(elementID, endpointURI);
+            _getJSON(endpointURI, responseHandler);
         }, (everySeconds * 1000));
     } else {
-        _getInfo(elementID, endpointURI);
+        _getJSON(endpointURI, responseHandler);
     }
 }
 
 /**
  * Retrieve information from JARVIS endpoints 
- * @param {string} elementID The ID of the element to fill with data
+ * @param {function} callbackFunction The function to callback with the dataset
  * @param {string} endpointURI The full URI of the API endpoint to poll
  */
-function _getInfo(elementID, endpointURI) {
+function _getJSON(endpointURI, callbackFunction) {
     var xmlhttp = new XMLHttpRequest();
+    var responseHandler = callbackFunction;
+
     xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState == XMLHttpRequest.DONE ) {
-            if (xmlhttp.status == 200) {
-               document.getElementById(elementID).innerHTML = xmlhttp.responseText;
-           }
+        if (xmlhttp.readyState == XMLHttpRequest.DONE  && xmlhttp.status == 200 && responseHandler) {
+            responseHandler(JSON.parse(xmlhttp.responseText)); 
         }
     }
     xmlhttp.open("GET", endpointURI, true);
     xmlhttp.send();
 }
+
+
+
 
 function refreshImage(elementID, everySeconds) {
 
@@ -54,11 +49,35 @@ function refreshImage(elementID, everySeconds) {
     }, (everySeconds * 1000));
 }
 
-function HitAPI(endpointURI) {
+function hitAPI(endpointURI) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("GET", endpointURI, true);
     xmlhttp.send();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function CombinedSplit(s, separator, limit) {
+    var arr = s.split(separator, limit);
+    var left = s.substring(arr.join(separator).length + separator.length);
+    arr.push(left);
+    return arr;
+}
+
+
+
 
 
 function getList(elementID, endpointURI, renderElement, everySeconds) {

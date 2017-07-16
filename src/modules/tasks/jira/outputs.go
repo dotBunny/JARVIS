@@ -3,7 +3,7 @@ package jira
 import (
 	"path/filepath"
 
-	Core "../../core"
+	Core "../../../core"
 )
 
 // Outputs Pathing
@@ -19,5 +19,4 @@ func (m *Module) setupOutputs() {
 
 	// Touch Files
 	Core.Touch(m.outputs.IssuesPath)
-
 }

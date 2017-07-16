@@ -71,6 +71,7 @@ func (m *WebServerCore) Initialize(jarvisInstance *JARVIS) {
 	// Create default general settings
 	m.settings = new(WebServerConfig)
 	m.parsers = make(map[string]WebServerParser)
+	m.RegisterParser("webserver", m.ParseWebContent)
 
 	// Register Log Channel
 	m.j.Log.RegisterChannel("WebServer", "blue", m.settings.Prefix)
@@ -186,13 +187,15 @@ func (m *WebServerCore) endpointBase(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "image/gif")
 		break
 	case ".js":
-		// TODO: Maybe make this parse through? would be sick
 		w.Header().Set("Content-Type", "application/javascript")
+		//parsableContent = true
 		break
 	case ".css":
 		w.Header().Set("Content-Type", "text/css")
 		break
 	case ".jpg":
+		w.Header().Set("Content-Type", "image/jpeg")
+		break
 	case ".jpeg":
 		w.Header().Set("Content-Type", "image/jpeg")
 		break
@@ -204,6 +207,8 @@ func (m *WebServerCore) endpointBase(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "image/svg+xml")
 		break
 	case ".html":
+		w.Header().Set("Content-Type", "text/html")
+		parsableContent = true
 	case ".htm":
 		w.Header().Set("Content-Type", "text/html")
 		parsableContent = true
@@ -212,6 +217,8 @@ func (m *WebServerCore) endpointBase(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/vnd.ms-fontobject")
 		break
 	case ".otf":
+		w.Header().Set("Content-Type", "application/font-sfnt")
+		break
 	case ".ttf":
 		w.Header().Set("Content-Type", "application/font-sfnt")
 		break
@@ -227,7 +234,6 @@ func (m *WebServerCore) endpointBase(w http.ResponseWriter, r *http.Request) {
 		break
 	default:
 		w.Header().Set("Content-Type", "text/plain")
-		parsableContent = true
 		break
 	}
 
@@ -282,4 +288,8 @@ func (m *WebServerCore) RegisterParser(key string, function WebServerParser) {
 // GetBaseURI returns the complete server web address
 func (m *WebServerCore) GetBaseURI() string {
 	return "http://" + m.settings.IPAddress + ":" + strconv.Itoa(m.settings.ListenPort)
+}
+
+func (m *WebServerCore) ParseWebContent(content string, mode string) string {
+	return strings.Replace(content, "[[JARVIS.address]]", m.GetBaseURI(), -1)
 }

@@ -3,8 +3,7 @@ package jira
 import (
 	"time"
 
-	Core "../../core"
-	Stats "../stats"
+	Core "../../../core"
 	"github.com/andygrunwald/go-jira"
 )
 
@@ -12,21 +11,25 @@ import (
 
 // Module Class
 type Module struct {
-	ticker *time.Ticker
+	ticker  *time.Ticker
+	Polling bool
 
 	settings   *Config
 	outputs    *Outputs
 	data       *Data
 	jiraClient *jira.Client
 	j          *Core.JARVIS
-	stats      *Stats.Module
+	callback   Core.DataSetter
+	getter     Core.DataGetter
 }
 
 // Initialize the Logging Module
-func (m *Module) Initialize(jarvisInstance *Core.JARVIS, statsModule *Stats.Module) {
+func (m *Module) Initialize(jarvisInstance *Core.JARVIS, setWorkingOnText Core.DataSetter, getWorkingOnText Core.DataGetter) {
 	// Assign JARVIS, the module is made we dont to create it like in core!
 	m.j = jarvisInstance
-	m.stats = statsModule
+	m.callback = setWorkingOnText
+	m.getter = getWorkingOnText
+	m.Polling = false
 
 	// Make sure flag is toggled off
 	m.loadConfig()
@@ -36,7 +39,6 @@ func (m *Module) Initialize(jarvisInstance *Core.JARVIS, statsModule *Stats.Modu
 		return
 	}
 
-	m.stats.UseJIRAForWork = true
 	m.setupOutputs()
 	m.setupData()
 
@@ -56,7 +58,6 @@ func (m *Module) Initialize(jarvisInstance *Core.JARVIS, statsModule *Stats.Modu
 
 	// Start the basic polling for information
 	m.setupPolling()
-	m.setupEndpoints()
 	// m.setupCommands()
 }
 
@@ -72,7 +73,9 @@ func (m *Module) Shutdown() {
 
 // Start Spotify Polling / IRC
 func (m *Module) Start() {
-	m.setupPolling()
+	if !m.Polling {
+		m.setupPolling()
+	}
 }
 
 // Stop Spotify Polling / IRC

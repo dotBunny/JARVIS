@@ -1,7 +1,7 @@
 package jira
 
 import (
-	Core "../../core"
+	Core "../../../core"
 	"github.com/andygrunwald/go-jira"
 )
 
@@ -15,6 +15,10 @@ type Data struct {
 
 func (m *Module) setupData() {
 	m.data = new(Data)
+}
+
+func (m *Module) GetData() *Data {
+	return m.data
 }
 
 func (m *Module) outputLastIssues() {

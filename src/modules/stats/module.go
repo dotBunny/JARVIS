@@ -10,10 +10,8 @@ import (
 
 // Module Class
 type Module struct {
-	UseJIRAForWork bool
-	outputs        *Outputs
-	data           *Data
-	settings       *Config
+	outputs  *Outputs
+	settings *Config
 
 	stats map[string]Stat
 

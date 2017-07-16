@@ -12,9 +12,9 @@ import (
 	Core "./core"
 
 	Command "./modules/command"
-	JIRA "./modules/jira"
 	Spotify "./modules/spotify"
 	Stats "./modules/stats"
+	Tasks "./modules/tasks"
 	Twitch "./modules/twitch"
 	YouTube "./modules/youtube"
 	Resources "./resources"
@@ -25,9 +25,8 @@ var (
 
 	spotifyModule *Spotify.Module
 	twitchModule  *Twitch.Module
-	statsModule   *Stats.Module
+	tasksModule   *Tasks.Module
 	youtubeModule *YouTube.Module
-	jiraModule    *JIRA.Module
 	commandModule *Command.Module
 
 	quit chan os.Signal
@@ -84,8 +83,8 @@ func onReady() {
 		// youtubeModule := new(YouTube.Module)
 		// youtubeModule.Initialize(j)
 
-		jiraModule := new(JIRA.Module)
-		jiraModule.Initialize(j, statsModule)
+		tasksModule := new(Tasks.Module)
+		tasksModule.Initialize(j)
 
 		// Ready to rock!
 		j.Log.Message("System", "Ready")
