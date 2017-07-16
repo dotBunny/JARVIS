@@ -125,6 +125,7 @@ func (m *Module) ParseWebContent(content string, mode string) string {
 			responseMap["ChannelViewers"] = m.data.ChannelViewers
 			responseMap["ChannelGame"] = m.data.ChannelGame
 			responseMap["StreamPreviewURL"] = m.data.StreamPreviewURL
+			responseMap["Username"] = strings.Replace(m.settings.Channel, "#", "", -1)
 
 			outputJSON, _ := json.Marshal(responseMap)
 			content = strings.Replace(content, "[[JARVIS.twitch]]", string(outputJSON), -1)
@@ -132,6 +133,9 @@ func (m *Module) ParseWebContent(content string, mode string) string {
 
 	} else {
 
+		if strings.Contains(content, "[[JARVIS.twitch.username]]") {
+			content = strings.Replace(content, "[[JARVIS.twitch.username]]", strings.Replace(m.settings.Channel, "#", "", -1), -1)
+		}
 	}
 	return content
 }
