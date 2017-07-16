@@ -170,3 +170,31 @@ div#branding img
 {
     opacity: .5
 }
+
+div#streamlabs
+{
+    height: 1080px;
+    width: 1920;
+}
+
+iframe#streamlabs-eventlist
+{
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    height: 300px;
+    width: 400px;
+    background: transparent;
+    border: none;
+}
+
+iframe#streamlabs-alertbox
+{
+    position: absolute;
+    top: 105px;
+    right: 62px;
+    height: 500px;
+    width: 850px;
+    background: transparent;
+    border: none;
+}
