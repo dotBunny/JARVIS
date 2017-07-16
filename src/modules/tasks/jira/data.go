@@ -2,12 +2,11 @@ package jira
 
 import (
 	Core "../../../core"
-	"github.com/andygrunwald/go-jira"
 )
 
 // Data Structure
 type Data struct {
-	LastIssues       []jira.Issue
+	LastIssues       []JSONItem
 	LastIssuesString string
 	LastNotifyText   string
 	IssueType        string
@@ -26,7 +25,7 @@ func (m *Module) outputLastIssues() {
 	m.data.LastIssuesString = ""
 	for _, issue := range m.data.LastIssues {
 
-		m.data.LastIssuesString = m.data.LastIssuesString + issue.Key + "," + issue.Fields.Type.Name + "," + issue.Fields.Summary + "\n"
+		m.data.LastIssuesString = m.data.LastIssuesString + issue.ID + "," + issue.Type + "," + issue.Description + "\n"
 	}
 	Core.SaveFile([]byte(m.data.LastIssuesString), m.outputs.IssuesPath)
 }

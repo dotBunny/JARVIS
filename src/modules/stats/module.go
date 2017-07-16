@@ -42,14 +42,16 @@ func (m *Module) ParseWebContent(content string, mode string) string {
 
 	if mode == ".json" {
 
-		responseMap := make(map[string]interface{})
+		if strings.Contains(content, "[[JARVIS.stats]]") {
+			responseMap := make(map[string]interface{})
 
-		for _, stat := range m.stats {
-			responseMap[stat.Key] = stat.Value
+			for _, stat := range m.stats {
+				responseMap[stat.Key] = stat.Value
+			}
+			outputJSON, _ := json.Marshal(responseMap)
+
+			content = strings.Replace(content, "[[JARVIS.stats]]", string(outputJSON), -1)
 		}
-		outputJSON, _ := json.Marshal(responseMap)
-
-		content = strings.Replace(content, "[[JARVIS.stats]]", string(outputJSON), -1)
 
 	} else {
 

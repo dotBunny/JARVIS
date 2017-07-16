@@ -48,20 +48,40 @@ func (m *Module) ParseWebContent(content string, mode string) string {
 
 	if mode == ".json" {
 
-		responseMap := make(map[string]interface{})
+		if strings.Contains(content, "[[JARVIS.tasks]]") {
+			responseMap := make(map[string]interface{})
 
-		responseMap["Text"] = m.data.WorkingOn
-		responseMap["JIRA"] = m.UseJIRAForWork
+			responseMap["Text"] = m.data.WorkingOn
+			responseMap["JIRA"] = m.UseJIRAForWork
 
-		if m.UseJIRAForWork {
-			responseMap["Type"] = m.jiraInstance.GetData().IssueType
+			if m.UseJIRAForWork {
+				responseMap["Type"] = m.jiraInstance.GetData().IssueType
+			}
+			// responseMap["link"] =
+			outputJSON, _ := json.Marshal(responseMap)
+			content = strings.Replace(content, "[[JARVIS.tasks]]", string(outputJSON), -1)
 		}
-		// responseMap["link"] =
 
-		outputJSON, _ := json.Marshal(responseMap)
+		if strings.Contains(content, "[[JARVIS.tasks.jira]]") {
 
-		content = strings.Replace(content, "[[JARVIS.tasks]]", string(outputJSON), -1)
+			//responseMap["Text"] = m.data.WorkingOn
+			//responseMap["JIRA"] = m.UseJIRAForWork
 
+			if m.jiraInstance.GetData().LastIssues != nil {
+				//responseMap["Type"] = m.jiraInstance.GetData().IssueType
+				//		responseMap := make(map[string]interface{})
+
+				// for key, value := range m.jiraInstance.GetData().LastIssues {
+				// 	keyValue := strconv.Itoa(key)
+				// 	responseMap[keyValue] = value
+				// }
+
+				outputJSON, _ := json.Marshal(m.jiraInstance.GetLastIssues())
+				content = strings.Replace(content, "[[JARVIS.tasks.jira]]", string(outputJSON), -1)
+			} else {
+				content = strings.Replace(content, "[[JARVIS.tasks.jira]]", "{}", -1)
+			}
+		}
 	} else {
 
 	}

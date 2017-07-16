@@ -113,20 +113,22 @@ func (m *Module) ParseWebContent(content string, mode string) string {
 
 	if mode == ".json" {
 
-		// TODO: We should make data have a function to turn it into a map?
-		responseMap := make(map[string]interface{})
+		if strings.Contains(content, "[[JARVIS.twitch]]") {
+			// TODO: We should make data have a function to turn it into a map?
+			responseMap := make(map[string]interface{})
 
-		responseMap["LastFollower"] = m.data.LastFollower
-		responseMap["LastFollowers"] = m.data.LastFollowers
-		responseMap["LastSubscriber"] = m.data.LastSubscriber
-		responseMap["LastSubscribers"] = m.data.LastSubscribers
-		responseMap["ChannelFollowers"] = m.data.ChannelFollowers
-		responseMap["ChannelViewers"] = m.data.ChannelViewers
-		responseMap["ChannelGame"] = m.data.ChannelGame
-		responseMap["StreamPreviewURL"] = m.data.StreamPreviewURL
+			responseMap["LastFollower"] = m.data.LastFollower
+			responseMap["LastFollowers"] = m.data.LastFollowers
+			responseMap["LastSubscriber"] = m.data.LastSubscriber
+			responseMap["LastSubscribers"] = m.data.LastSubscribers
+			responseMap["ChannelFollowers"] = m.data.ChannelFollowers
+			responseMap["ChannelViewers"] = m.data.ChannelViewers
+			responseMap["ChannelGame"] = m.data.ChannelGame
+			responseMap["StreamPreviewURL"] = m.data.StreamPreviewURL
 
-		outputJSON, _ := json.Marshal(responseMap)
-		content = strings.Replace(content, "[[JARVIS.twitch]]", string(outputJSON), -1)
+			outputJSON, _ := json.Marshal(responseMap)
+			content = strings.Replace(content, "[[JARVIS.twitch]]", string(outputJSON), -1)
+		}
 
 	} else {
 

@@ -84,19 +84,21 @@ func (m *Module) ParseWebContent(content string, mode string) string {
 
 	if mode == ".json" {
 
-		responseMap := make(map[string]interface{})
+		if strings.Contains(content, "[[JARVIS.spotify]]") {
+			responseMap := make(map[string]interface{})
 
-		responseMap["CurrentlyPlayingTrack"] = m.data.CurrentlyPlayingTrack
-		responseMap["DurationMS"] = m.data.DurationMS
-		responseMap["PlayedMS"] = m.data.PlayedMS
-		responseMap["CurrentlyPlaying"] = m.data.CurrentlyPlaying
-		responseMap["CurrentlyPlayingURL"] = m.data.CurrentlyPlayingURL
-		responseMap["TrackName"] = m.data.TrackName
-		responseMap["ArtistLine"] = m.data.ArtistLine
-		responseMap["TrackThumbnailURL"] = m.data.TrackThumbnailURL
+			responseMap["CurrentlyPlayingTrack"] = m.data.CurrentlyPlayingTrack
+			responseMap["DurationMS"] = m.data.DurationMS
+			responseMap["PlayedMS"] = m.data.PlayedMS
+			responseMap["CurrentlyPlaying"] = m.data.CurrentlyPlaying
+			responseMap["CurrentlyPlayingURL"] = m.data.CurrentlyPlayingURL
+			responseMap["TrackName"] = m.data.TrackName
+			responseMap["ArtistLine"] = m.data.ArtistLine
+			responseMap["TrackThumbnailURL"] = m.data.TrackThumbnailURL
 
-		outputJSON, _ := json.Marshal(responseMap)
-		content = strings.Replace(content, "[[JARVIS.spotify]]", string(outputJSON), -1)
+			outputJSON, _ := json.Marshal(responseMap)
+			content = strings.Replace(content, "[[JARVIS.spotify]]", string(outputJSON), -1)
+		}
 
 	} else {
 

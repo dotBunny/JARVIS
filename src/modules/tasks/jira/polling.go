@@ -56,7 +56,13 @@ func (m *Module) pollIssues(notify bool) {
 				m.workingOn.SetDataValue(issues[0].Fields.Summary, true)
 			}
 
-			m.data.LastIssues = issues
+			// Wipe Old
+			m.data.LastIssues = nil
+
+			// Make new data
+			for _, issue := range issues {
+				m.data.LastIssues = append(m.data.LastIssues, m.GetJSONItem(issue))
+			}
 			m.outputLastIssues()
 		}
 	} else {
