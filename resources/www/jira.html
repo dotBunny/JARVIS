@@ -11,52 +11,34 @@
         </div>
         <script type="application/javascript" src="[[JARVIS.address]]/content/js/jarvis.js" /></script>
         <script type="application/javascript">
-            function renderTask(img, id, description) 
-            {
-                return "<p>" + img + description + "</p>";
-            }
-            getJIRA("jira-task-widget-data", "[[JARVIS.address]]/jira/inprogress", renderTask, 5);   
-        </script>
-
-        <script type="application/javascript">
             var responseHandler = function(response){
 
-                // Handle Simple Swaps
-                document.getElementById("twitch-follower-last-data").innerHTML = response.Twitch.LastFollower;
-                document.getElementById("viewers-data").innerHTML = response.Twitch.ChannelViewers;
-                document.getElementById("spotify-track-data").innerHTML = response.Spotify.CurrentlyPlayingTrack;
-                document.getElementById("crashes-data").innerHTML = response.Stats.Crashes;
-                document.getElementById("builds-data").innerHTML = response.Stats.Build;
-                document.getElementById("coffee-data").innerHTML = response.Stats.Coffee;
-                document.getElementById("saves-data").innerHTML = response.Stats.Saves;
-                
-                // Are we using JIRA?
-                if ( response.Tasks.JIRA ) {
+                var content = "";
+                for(var item in response)
+                {
+                    var ID = response[item].ID;
+                    var Description = response[item].Description;
+                    var Type = response[item].Type
 
-                    // Default to Task
+                     // Default to Task
                     var icon = "<img src=\"content/img/jira-task.svg\" />"
-
-                    if ( response.Tasks.Type == "Bug" ) {
+                    if ( Type == "Bug" ) {
                         icon = "<img src=\"content/img/jira-bug.svg\" />";
-                    } else if (response.Tasks.Type  == "New Feature" ) {
+                    } else if (Type  == "New Feature" ) {
                         icon = "<img src=\"content/img/jira-feature.svg\" />";
-                    } else if (response.Tasks.Type == "Improvement" ) {
+                    } else if (Type == "Improvement" ) {
                         icon = "<img src=\"content/img/jira-improvement.svg\" />";
-                    } else if (response.Tasks.Type == "Sub-Task" ) {
+                    } else if (Type == "Sub-Task" ) {
                         icon = "<img src=\"content/img/jira-subtask.svg\" />";
-                    } else if (response.Tasks.Type == "Epic" ) {
+                    } else if (Type == "Epic" ) {
                         icon = "<img src=\"content/img/jira-epic.svg\" />"
                     } 
 
-                    document.getElementById("workingon-image").src = "content/img/jarvis-workon-jira.png"
-                    document.getElementById("jarvis-working-on-data").innerHTML = icon.concat(response.Tasks.Text);
-
-                } else {
-                        document.getElementById("workingon-image").src = "content/img/jarvis-workon.png"
-                        document.getElementById("jarvis-working-on-data").innerHTML = response.Tasks.Text;
-                }            
+                    content = content + "<p>" + icon + Description + "</p>"
+                }
+                document.getElementById("jira-task-widget-data").innerHTML = content;
             };
-            getJSON("[[JARVIS.address]]/data/everything.json", responseHandler, 5);
-            </script>
+            getJSON("[[JARVIS.address]]/data/jira.json", responseHandler, 30);
+        </script>
     </body>
 </html>

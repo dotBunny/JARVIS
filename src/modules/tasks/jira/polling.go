@@ -49,6 +49,7 @@ func (m *Module) pollIssues(notify bool) {
 
 	// New issue set!
 	if len(issues) > 0 {
+
 		if m.workingOn.GetDataValue() != issues[0].Fields.Summary {
 
 			if m.workingOn.ShouldUpdate() {
