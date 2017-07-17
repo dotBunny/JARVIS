@@ -1,273 +1,350 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="JARVIS Dashboard">
-    <meta name="author" content="JARVIS">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="JARVIS Dashboard">
+        <meta name="author" content="JARVIS">
 
-    <title>JARVIS</title>
+        <title>JARVIS</title>
 
-    <link href="content/css/bootstrap.min.css" rel="stylesheet">
-    <link href="content/css/sb-admin.css" rel="stylesheet">
-    <link href="content/css/plugins/morris.css" rel="stylesheet">
-    <link href="content/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href="content/css/bootstrap.min.css" rel="stylesheet">
+        <link href="content/css/sb-admin.css" rel="stylesheet">
+        <link href="content/css/plugins/morris.css" rel="stylesheet">
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+        <!-- Custom Fonts -->
+        <link href="content/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
-    <link href="content/css/dashboard.css" rel="stylesheet" type="text/css">
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
 
-</head>
+        <link href="content/css/dashboard.css" rel="stylesheet" type="text/css">
+    </head>
 
-<body>
+    <body>
 
-    <div id="wrapper">
-
-        <!-- Navigation -->
-        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="/dashboard">JARVIS</a>
-            </div>
-            <!-- Top Menu Items -->
-            <ul class="nav navbar-right top-nav">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-envelope"></i> <b class="caret"></b></a>
-                    <ul class="dropdown-menu message-dropdown">
-                        <li class="message-preview">
-                            <a href="#">
-                                <div class="media">
-                                    <span class="pull-left">
-                                        <img class="media-object" src="http://placehold.it/50x50" alt="">
-                                    </span>
-                                    <div class="media-body">
-                                        <h5 class="media-heading"><strong>John Smith</strong>
-                                        </h5>
-                                        <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
-                                        <p>Lorem ipsum dolor sit amet, consectetur...</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="message-preview">
-                            <a href="#">
-                                <div class="media">
-                                    <span class="pull-left">
-                                        <img class="media-object" src="http://placehold.it/50x50" alt="">
-                                    </span>
-                                    <div class="media-body">
-                                        <h5 class="media-heading"><strong>John Smith</strong>
-                                        </h5>
-                                        <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
-                                        <p>Lorem ipsum dolor sit amet, consectetur...</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="message-preview">
-                            <a href="#">
-                                <div class="media">
-                                    <span class="pull-left">
-                                        <img class="media-object" src="http://placehold.it/50x50" alt="">
-                                    </span>
-                                    <div class="media-body">
-                                        <h5 class="media-heading"><strong>John Smith</strong>
-                                        </h5>
-                                        <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
-                                        <p>Lorem ipsum dolor sit amet, consectetur...</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="message-footer">
-                            <a href="#">Read All New Messages</a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i> <b class="caret"></b></a>
-                    <ul class="dropdown-menu alert-dropdown">
-                        <li>
-                            <a href="#">Alert Name <span class="label label-default">Alert Badge</span></a>
-                        </li>
-                        <li>
-                            <a href="#">Alert Name <span class="label label-primary">Alert Badge</span></a>
-                        </li>
-                        <li>
-                            <a href="#">Alert Name <span class="label label-success">Alert Badge</span></a>
-                        </li>
-                        <li>
-                            <a href="#">Alert Name <span class="label label-info">Alert Badge</span></a>
-                        </li>
-                        <li>
-                            <a href="#">Alert Name <span class="label label-warning">Alert Badge</span></a>
-                        </li>
-                        <li>
-                            <a href="#">Alert Name <span class="label label-danger">Alert Badge</span></a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">View All</a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> Admin<b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="#"><i class="fa fa-fw fa-gear"></i> Settings</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
-            <div class="collapse navbar-collapse navbar-ex1-collapse">
-                <ul class="nav navbar-nav side-nav">
-                    <li class="active">
-                        <a href="/dashboard"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+        <div id="wrapper">
+            <!-- Navigation -->
+            <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/dashboard">JARVIS</a>
+                </div>
+                <!-- Top Menu Items -->
+                <ul class="nav navbar-right top-nav">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i> <b class="caret"></b></a>
+                        <!-- TODO : Add Alerts -->
+                        <ul class="dropdown-menu alert-dropdown">
+                            <li>
+                                <a href="#">Alert Name <span class="label label-default">Alert Badge</span></a>
+                            </li>
+                            <li>
+                                <a href="#">Alert Name <span class="label label-primary">Alert Badge</span></a>
+                            </li>
+                            <li>
+                                <a href="#">Alert Name <span class="label label-success">Alert Badge</span></a>
+                            </li>
+                            <li>
+                                <a href="#">Alert Name <span class="label label-info">Alert Badge</span></a>
+                            </li>
+                            <li>
+                                <a href="#">Alert Name <span class="label label-warning">Alert Badge</span></a>
+                            </li>
+                            <li>
+                                <a href="#">Alert Name <span class="label label-danger">Alert Badge</span></a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="#">View All</a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
-            </div>
-            <!-- /.navbar-collapse -->
-        </nav>
-
-        <div id="page-wrapper">
-
-            <div class="container-fluid">
-
-                <!-- Page Heading -->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1 class="page-header">
-                            Dashboard <small>Statistics Overview</small>
-                        </h1>
-                        <ol class="breadcrumb">
-                            <li class="active">
-                                <i class="fa fa-dashboard"></i> Dashboard
-                            </li>
-                        </ol>
-                    </div>
+                <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+                <div class="collapse navbar-collapse navbar-ex1-collapse">
+                    <ul class="nav navbar-nav side-nav">
+                        <li class="active">
+                            <a href="/dashboard"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+                        </li>
+                    </ul>
                 </div>
-                <!-- /.row -->
+                <!-- /.navbar-collapse -->
+            </nav>
 
-                
-                <div class="row">
-          
-                    <!-- WIDGET: Viewers -->
-                    <div class="col-lg-3 col-md-6 widget-viewers">
-                        <div class="panel panel-red">
-                            <div class="panel-heading">
-                                <div class="row">
-                                    <div class="col-xs-3">
-                                        <i class="fa fa-twitch fa-5x"></i>
-                                    </div>
-                                    <div class="col-xs-9 text-right">
-                                        <div class="huge" id="twitch-channel-viewers">13</div>
-                                        <div>Viewers</div>
+            <div id="page-wrapper">
+
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h1 class="page-header">
+                                Dashboard <small>Statistics Overview</small>
+                            </h1>
+                            <ol class="breadcrumb">
+                                <li class="active">
+                                    <i class="fa fa-dashboard"></i> Dashboard
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                    <!-- /.row -->
+
+                    
+                    <div class="row">
+
+                        
+                        <!-- WIDGET: Crashes 
+                        <div class="col-lg-3 col-md-6 widget-crashes">
+                            <div class="panel panel-red">
+                                <div class="panel-heading">
+                                    <div class="row">
+                                        <div class="col-xs-3">
+                                            <i class="fa fa-fire fa-5x"></i>
+                                        </div>
+                                        <div class="col-xs-9 text-right">
+                                            <div class="huge" id="stats-crashes">26</div>
+                                            <div>Crashes</div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <a target="_blank" href="https://www.twitch.tv/[[JARVIS.twitch.username]]/dashboard">
                                 <div class="panel-footer">
-                                    <span class="pull-left">View Details</span>
-                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    
+                                    <span class="pull-right">
+                                        <a href="#" onClick='HitAPI("http://localhost:8080/stats/crashes/plus");'><i class="fa fa-plus-circle"></i></a>
+                                        <a href="#" onClick='HitAPI("http://localhost:8080/stats/crashes/minus");'><i class="fa fa-minus-circle"></i></a>
+                                    </span>
                                     <div class="clearfix"></div>
                                 </div>
-                            </a>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <!-- /.row -->
+                        -->
 
-                <div class="row">
-                    <!-- FOLLOWERS -->
-                    <div class="col-lg-4">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-clock-o fa-fw"></i> Latest Twitch Followers (<span id="twitch-follower-count">0</span>)</h3>
-                            </div>
-                            <div class="panel-body">
-                                <div class="list-group" id="twitch-followers">
-                                    
+                        <!-- WIDGET: Builds 
+                        <div class="col-lg-3 col-md-6 widget-builds">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <div class="row">
+                                        <div class="col-xs-3">
+                                            <i class="fa fa-cog fa-5x"></i>
+                                        </div>
+                                        <div class="col-xs-9 text-right">
+                                            <div class="huge" id="stats-builds">26</div>
+                                            <div>Builds</div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="text-right">
-                                    <a target="_blank" href="https://www.twitch.tv/reapazor/followers">View All Activity <i class="fa fa-arrow-circle-right"></i></a>
+                                <div class="panel-footer">
+                                
+                                    <span class="pull-right">
+                                        <a href="#" onClick='HitAPI("http://localhost:8080/stats/builds/plus");'><i class="fa fa-plus-circle"></i></a>
+                                        <a href="#" onClick='HitAPI("http://localhost:8080/stats/builds/minus");'><i class="fa fa-minus-circle"></i></a>
+                                    </span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                        -->
+
+                        <!-- WIDGET: Coffee 
+                        <div class="col-lg-3 col-md-6 widget-coffee">
+                            <div class="panel panel-yellow">
+                                <div class="panel-heading">
+                                    <div class="row">
+                                        <div class="col-xs-3">
+                                            <i class="fa fa-coffee fa-5x"></i>
+                                        </div>
+                                        <div class="col-xs-9 text-right">
+                                            <div class="huge"id="stats-coffee">12</div>
+                                            <div>Coffees</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-footer">
+                                    
+                                    <span class="pull-right">
+                                        <a href="#" onClick='HitAPI("http://localhost:8080/stats/coffee/plus");'><i class="fa fa-plus-circle"></i></a>
+                                        <a href="#" onClick='HitAPI("http://localhost:8080/stats/coffee/minus");'><i class="fa fa-minus-circle"></i></a>
+                                    </span>
+                                    <div class="clearfix"></div>
+                                </div>                          
+                            </div>
+                        </div>
+                        -->
+
+                        <!-- WIDGET: Saves 
+                        <div class="col-lg-3 col-md-6 widget-saves">
+                            <div class="panel panel-red">
+                                <div class="panel-heading">
+                                    <div class="row">
+                                        <div class="col-xs-3">
+                                            <i class="fa fa-life-ring fa-5x"></i>
+                                        </div>
+                                        <div class="col-xs-9 text-right">
+                                            <div class="huge" id="stats-saves">124</div>
+                                            <div>Saves</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-footer">
+                                
+                                    <span class="pull-right">
+                                        <a href="#" onClick='HitAPI("http://localhost:8080/stats/saves/plus");'><i class="fa fa-plus-circle"></i></a>
+                                        <a href="#" onClick='HitAPI("http://localhost:8080/stats/saves/minus");'><i class="fa fa-minus-circle"></i></a>
+                                    </span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                        -->
+
+                        <!-- WIDGET: Viewers -->
+                        <div class="col-lg-3 col-md-6 widget-viewers">
+                            <div class="panel panel-red">
+                                <div class="panel-heading">
+                                    <div class="row">
+                                        <div class="col-xs-3">
+                                            <i class="fa fa-twitch fa-5x"></i>
+                                        </div>
+                                        <div class="col-xs-9 text-right">
+                                            <div class="huge" id="twitch-channel-viewers">13</div>
+                                            <div>Viewers</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a target="_blank" href="https://www.twitch.tv/[[JARVIS.twitch.username]]/dashboard">
+                                    <div class="panel-footer">
+                                        <span class="pull-left">View Details</span>
+                                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.row -->
+
+                    <div class="row">
+                        <!-- FOLLOWERS -->
+                        <div class="col-lg-4">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title"><i class="fa fa-clock-o fa-fw"></i> Latest Twitch Followers (<span id="twitch-follower-count">0</span>)</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="list-group" id="twitch-followers">
+                                        
+                                    </div>
+                                    <div class="text-right">
+                                        <a target="_blank" href="https://www.twitch.tv/reapazor/followers">View All Activity <i class="fa fa-arrow-circle-right"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- TASKS -->
+                        <div class="col-lg-4">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title"><i class="fa fa-tasks fa-fw"></i> TODO List</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="list-group" id="todo-list">
+                                        
+                                    </div>
+                                    <div class="text-right">
+                                        <a target="_blank" href="https://dotbunny.atlassian.net">View All Tasks <i class="fa fa-arrow-circle-right"></i></a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- TASKS -->
-                    <div class="col-lg-4">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-tasks fa-fw"></i> TODO List</h3>
-                            </div>
-                            <div class="panel-body">
-                                <div class="list-group" id="todo-list">
-                                    
-                                </div>
-                                <div class="text-right">
-                                    <a target="_blank" href="https://dotbunny.atlassian.net">View All Tasks <i class="fa fa-arrow-circle-right"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
+                <!-- /.container-fluid -->
 
             </div>
-            <!-- /.container-fluid -->
+            <!-- /#page-wrapper -->
 
         </div>
-        <!-- /#page-wrapper -->
+        <!-- /#wrapper -->
 
-    </div>
-    <!-- /#wrapper -->
+        <!-- jQuery -->
+        <script src="content/js/jquery.js"></script>
 
-    <!-- jQuery -->
-    <script src="content/js/jquery.js"></script>
+        <!-- Bootstrap Core JavaScript -->
+        <script src="content/js/bootstrap.min.js"></script>
 
-    <!-- Bootstrap Core JavaScript -->
-    <script src="content/js/bootstrap.min.js"></script>
+        <!-- Morris Charts JavaScript -->
+        <script src="content/js/plugins/morris/raphael.min.js"></script>
+        <!--<script src="content/js/plugins/morris/morris.min.js"></script>
+        <script src="content/js/plugins/morris/morris-data.js"></script>-->
+        <script type="application/javascript" src="content/js/jarvis.js" /></script>
+        <script type="application/javascript">
+            var jiraInstance = "";
 
-    <!-- Morris Charts JavaScript -->
-    <script src="content/js/plugins/morris/raphael.min.js"></script>
-    <!--<script src="content/js/plugins/morris/morris.min.js"></script>
-    <script src="content/js/plugins/morris/morris-data.js"></script>-->
-    <script type="application/javascript" src="content/js/jarvis.js" /></script>
-    <script type="application/javascript">
-        getInfo("twitch-channel-viewers", "http://localhost:8080/twitch/channel/viewers", 5);
-        getInfo("stats-coffee", "http://localhost:8080/stats/coffee", 10);
-        getInfo("stats-crashes", "http://localhost:8080/stats/crashes", 10);
-        getInfo("stats-saves", "http://localhost:8080/stats/saves", 10);
-        getInfo("stats-builds", "http://localhost:8080/stats/builds", 10);
-        getInfo("twitch-follower-count", "http://localhost:8080/twitch/followers/total", 10);
-        function renderLatestFollower(follower) {
-            return '<a target="_blank" href="https://www.twitch.tv/' + follower +'" class="list-group-item"><i class="fa fa-fw fa-user"></i> ' + follower + '</a>';
-        }
-        getList("twitch-followers", "http://localhost:8080/twitch/followers/list", renderLatestFollower, 10);
-        function renderTask(img, id, description) 
-        {
-            return '<a target="_blank" href="https://dotbunny.atlassian.net/browse/' + id +'" class="list-group-item">' + img + '<p class="block">' + description + '</p></a>';
-        }
-        getJIRA("todo-list", "http://localhost:8080/jira/inprogress", renderTask, 10);
-    </script>
-</body>
+            var baseHandler = function(response){
 
+                // Handle Simple Swaps                
+                document.getElementById("twitch-channel-viewers").innerHTML = response.Twitch.ChannelViewers;
+                document.getElementById("twitch-follower-count").innerHTML = response.Twitch.ChannelFollowers;
+                // document.getElementById("stats-crashes").innerHTML = response.Stats.Crashes;
+                // document.getElementById("stats-builds").innerHTML = response.Stats.Build;
+                // document.getElementById("stats-coffee").innerHTML = response.Stats.Coffee;
+                // document.getElementById("stats-saves").innerHTML = response.Stats.Saves; 
+
+                // Handle Recent Followers
+                var content = "";
+                for(var item in response.Twitch.LastFollowers)
+                {
+                    
+                    content = content + '<a target="_blank" href="https://www.twitch.tv/' + response.Twitch.LastFollowers[item] +'" class="list-group-item"><i class="fa fa-fw fa-user"></i> ' + response.Twitch.LastFollowers[item] + '</a>';
+                }
+                document.getElementById("twitch-followers").innerHTML = content
+                
+                // Set JIRA Instance
+                jiraInstance = response.Tasks.JIRAAddress;
+            };
+            getJSON("[[JARVIS.address]]/data/everything.json", baseHandler, 5);
+            
+            var jiraHandler = function(response){
+                var content = "";
+                for(var item in response)
+                {
+                    var ID = response[item].ID;
+                    var Description = response[item].Description;
+                    var Type = response[item].Type
+
+                        // Default to Task
+                    var icon = "<img src=\"content/img/jira-task.svg\" />"
+                    if ( Type == "Bug" ) {
+                        icon = "<img src=\"content/img/jira-bug.svg\" />";
+                    } else if (Type  == "New Feature" ) {
+                        icon = "<img src=\"content/img/jira-feature.svg\" />";
+                    } else if (Type == "Improvement" ) {
+                        icon = "<img src=\"content/img/jira-improvement.svg\" />";
+                    } else if (Type == "Sub-Task" ) {
+                        icon = "<img src=\"content/img/jira-subtask.svg\" />";
+                    } else if (Type == "Epic" ) {
+                        icon = "<img src=\"content/img/jira-epic.svg\" />"
+                    } 
+                    content = content + '<a target="_blank" href="' + jiraInstance  + 'browse/' + ID +'" class="list-group-item">' + icon + '<p class="block">' + Description + '</p></a>'
+                }
+                document.getElementById("todo-list").innerHTML = content;
+            };
+            getJSON("[[JARVIS.address]]/data/jira.json", jiraHandler, 30);
+        </script>
+    </body>
 </html>

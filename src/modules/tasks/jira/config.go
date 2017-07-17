@@ -38,3 +38,7 @@ func (m *Module) loadConfig() {
 func (m *Module) GetPrefix() string {
 	return m.settings.Prefix
 }
+
+func (m *Module) GetInstance() string {
+	return m.settings.Instance
+}

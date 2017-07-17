@@ -52,9 +52,12 @@ func (m *Module) ParseWebContent(content string, mode string) string {
 			responseMap := make(map[string]interface{})
 
 			responseMap["Text"] = m.data.WorkingOn
+
 			responseMap["JIRA"] = m.UseJIRAForWork
+			responseMap["JIRAAddress"] = m.jiraInstance.GetInstance()
 
 			if m.UseJIRAForWork {
+
 				responseMap["Type"] = m.jiraInstance.GetData().IssueType
 			}
 
