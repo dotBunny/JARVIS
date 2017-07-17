@@ -12,6 +12,7 @@ type Data struct {
 	LastSubscriber  string
 	LastSubscribers []string
 	LastFollowers   []string
+	Viewers         []string
 
 	ChannelFollowers uint
 	ChannelViews     uint

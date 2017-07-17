@@ -131,6 +131,11 @@ func (m *Module) ParseWebContent(content string, mode string) string {
 			content = strings.Replace(content, "[[JARVIS.twitch]]", string(outputJSON), -1)
 		}
 
+		if strings.Contains(content, "[[JARVIS.twitch.viewers]]") {
+			outputJSON, _ := json.Marshal(m.data.Viewers)
+			content = strings.Replace(content, "[[JARVIS.twitch.viewers]]", string(outputJSON), -1)
+		}
+
 	} else {
 
 		if strings.Contains(content, "[[JARVIS.twitch.username]]") {

@@ -34,8 +34,11 @@ func (m *Module) loop() {
 
 // Poll For Updates
 func (m *Module) Poll(notify bool) {
+	// TODO We might need to stagger these because we're hammering?
 	m.pollFollowers(notify)
+	// Wait a second?
 	m.pollStream(notify)
+	m.pollViewers()
 	m.pollSubscribers(notify)
 }
 
@@ -153,6 +156,25 @@ func (m *Module) pollStream(notify bool) {
 	stream = nil
 }
 
+func (m *Module) pollViewers() {
+
+	// Query for data
+	var url = twitchRootURL + "group/user/" + m.settings.ChannelID + "/chatters"
+	response, responseError := m.getResponse(url)
+	if responseError != nil {
+		m.j.Log.Error("Twitch", "Unable to get data valid response from: "+url+", "+responseError.Error())
+		return
+	}
+
+	chatters := &ChatterResponse{}
+	errorDecoder := json.NewDecoder(response.Body).Decode(&chatters)
+	if errorDecoder != nil {
+		m.j.Log.Error("Twitch", "Error decoding JSON from: "+url+", "+responseError.Error())
+		return
+	}
+
+	m.data.Viewers = chatters.Chatters.Viewers
+}
 func (m *Module) pollSubscribers(notify bool) {
 
 	// Sanitize settings (based on Twitch rules)
