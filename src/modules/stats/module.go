@@ -13,7 +13,8 @@ type Module struct {
 	outputs  *Outputs
 	settings *Config
 
-	stats map[string]Stat
+	stats                map[string]Stat
+	dashboardDefinitions []DashboardCounterDefinition
 
 	commandModule *Command.Module
 	j             *Core.JARVIS
@@ -51,6 +52,11 @@ func (m *Module) ParseWebContent(content string, mode string) string {
 			outputJSON, _ := json.Marshal(responseMap)
 
 			content = strings.Replace(content, "[[JARVIS.stats]]", string(outputJSON), -1)
+		}
+
+		if strings.Contains(content, "[[JARVIS.stats.detailed]]") {
+			outputJSON, _ := json.Marshal(m.dashboardDefinitions)
+			content = strings.Replace(content, "[[JARVIS.stats.detailed]]", string(outputJSON), -1)
 		}
 
 	} else {

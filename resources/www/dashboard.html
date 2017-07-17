@@ -39,7 +39,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="/dashboard">JARVIS</a>
+                    <a class="navbar-brand" href="/dashboard.html">JARVIS</a>
                 </div>
                 <!-- Top Menu Items -->
                 <ul class="nav navbar-right top-nav">
@@ -76,7 +76,10 @@
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
                     <ul class="nav navbar-nav side-nav">
                         <li class="active">
-                            <a href="/dashboard"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+                            <a href="/dashboard.html"><i class="fa fa-fw fa-dashboard"></i> Overview</a>
+                        </li>
+                        <li>
+                            <a href="/dashboard-stats.html"><i class="fa fa-fw fa-bar-chart"></i> Stats</a>
                         </li>
                     </ul>
                 </div>
@@ -93,122 +96,12 @@
                             <h1 class="page-header">
                                 Dashboard <small>Statistics Overview</small>
                             </h1>
-                            <ol class="breadcrumb">
-                                <li class="active">
-                                    <i class="fa fa-dashboard"></i> Dashboard
-                                </li>
-                            </ol>
                         </div>
                     </div>
                     <!-- /.row -->
 
                     
                     <div class="row">
-
-                        
-                        <!-- WIDGET: Crashes 
-                        <div class="col-lg-3 col-md-6 widget-crashes">
-                            <div class="panel panel-red">
-                                <div class="panel-heading">
-                                    <div class="row">
-                                        <div class="col-xs-3">
-                                            <i class="fa fa-fire fa-5x"></i>
-                                        </div>
-                                        <div class="col-xs-9 text-right">
-                                            <div class="huge" id="stats-crashes">26</div>
-                                            <div>Crashes</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel-footer">
-                                    
-                                    <span class="pull-right">
-                                        <a href="#" onClick='HitAPI("http://localhost:8080/stats/crashes/plus");'><i class="fa fa-plus-circle"></i></a>
-                                        <a href="#" onClick='HitAPI("http://localhost:8080/stats/crashes/minus");'><i class="fa fa-minus-circle"></i></a>
-                                    </span>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </div>
-                        </div>
-                        -->
-
-                        <!-- WIDGET: Builds 
-                        <div class="col-lg-3 col-md-6 widget-builds">
-                            <div class="panel panel-primary">
-                                <div class="panel-heading">
-                                    <div class="row">
-                                        <div class="col-xs-3">
-                                            <i class="fa fa-cog fa-5x"></i>
-                                        </div>
-                                        <div class="col-xs-9 text-right">
-                                            <div class="huge" id="stats-builds">26</div>
-                                            <div>Builds</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel-footer">
-                                
-                                    <span class="pull-right">
-                                        <a href="#" onClick='HitAPI("http://localhost:8080/stats/builds/plus");'><i class="fa fa-plus-circle"></i></a>
-                                        <a href="#" onClick='HitAPI("http://localhost:8080/stats/builds/minus");'><i class="fa fa-minus-circle"></i></a>
-                                    </span>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </div>
-                        </div>
-                        -->
-
-                        <!-- WIDGET: Coffee 
-                        <div class="col-lg-3 col-md-6 widget-coffee">
-                            <div class="panel panel-yellow">
-                                <div class="panel-heading">
-                                    <div class="row">
-                                        <div class="col-xs-3">
-                                            <i class="fa fa-coffee fa-5x"></i>
-                                        </div>
-                                        <div class="col-xs-9 text-right">
-                                            <div class="huge"id="stats-coffee">12</div>
-                                            <div>Coffees</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel-footer">
-                                    
-                                    <span class="pull-right">
-                                        <a href="#" onClick='HitAPI("http://localhost:8080/stats/coffee/plus");'><i class="fa fa-plus-circle"></i></a>
-                                        <a href="#" onClick='HitAPI("http://localhost:8080/stats/coffee/minus");'><i class="fa fa-minus-circle"></i></a>
-                                    </span>
-                                    <div class="clearfix"></div>
-                                </div>                          
-                            </div>
-                        </div>
-                        -->
-
-                        <!-- WIDGET: Saves 
-                        <div class="col-lg-3 col-md-6 widget-saves">
-                            <div class="panel panel-red">
-                                <div class="panel-heading">
-                                    <div class="row">
-                                        <div class="col-xs-3">
-                                            <i class="fa fa-life-ring fa-5x"></i>
-                                        </div>
-                                        <div class="col-xs-9 text-right">
-                                            <div class="huge" id="stats-saves">124</div>
-                                            <div>Saves</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel-footer">
-                                
-                                    <span class="pull-right">
-                                        <a href="#" onClick='HitAPI("http://localhost:8080/stats/saves/plus");'><i class="fa fa-plus-circle"></i></a>
-                                        <a href="#" onClick='HitAPI("http://localhost:8080/stats/saves/minus");'><i class="fa fa-minus-circle"></i></a>
-                                    </span>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </div>
-                        </div>
-                        -->
 
                         <!-- WIDGET: Viewers -->
                         <div class="col-lg-3 col-md-6 widget-viewers">
@@ -233,10 +126,7 @@
                                 </a>
                             </div>
                         </div>
-                    </div>
-                    <!-- /.row -->
-
-                    <div class="row">
+                        
                         <!-- FOLLOWERS -->
                         <div class="col-lg-4">
                             <div class="panel panel-default">
@@ -300,10 +190,6 @@
                 // Handle Simple Swaps                
                 document.getElementById("twitch-channel-viewers").innerHTML = response.Twitch.ChannelViewers;
                 document.getElementById("twitch-follower-count").innerHTML = response.Twitch.ChannelFollowers;
-                // document.getElementById("stats-crashes").innerHTML = response.Stats.Crashes;
-                // document.getElementById("stats-builds").innerHTML = response.Stats.Build;
-                // document.getElementById("stats-coffee").innerHTML = response.Stats.Coffee;
-                // document.getElementById("stats-saves").innerHTML = response.Stats.Saves; 
 
                 // Handle Recent Followers
                 var content = "";

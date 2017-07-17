@@ -94,6 +94,11 @@
           "Command" : "!coffee",
           "CommandDescription" : "Set Coffee Count",
           "CommandLevel" : 3
+        },
+        "Dashboard" : {
+            "ForegroundColor" : "#fff",
+          "BackgroundColor" : "#000",
+          "IconClass" : "fa-coffee"
         }
       },
       {
@@ -126,6 +131,11 @@
           "Command" : "!crash",
           "CommandDescription" : "Set Crash Count",
           "CommandLevel" : 3
+        },
+        "Dashboard" : {
+          "ForegroundColor" : "#fff",
+          "BackgroundColor" : "#000",
+          "IconClass" : "fa-coffee"
         }
       },
       {
@@ -158,6 +168,11 @@
           "Command" : "!save",
           "CommandDescription" : "Set Save Count",
           "CommandLevel" : 3
+        },
+        "Dashboard" : {
+            "ForegroundColor" : "#fff",
+          "BackgroundColor" : "#000",
+          "IconClass" : "fa-coffee"
         }
       },
       {
@@ -190,6 +205,11 @@
           "Command" : "!build",
           "CommandDescription" : "Set Build Count",
           "CommandLevel" : 3
+        },
+        "Dashboard" : {
+          "ForegroundColor" : "#fff",
+          "BackgroundColor" : "#000",
+          "IconClass" : "fa-coffee"
         }
       }
     ]

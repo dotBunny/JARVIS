@@ -14,6 +14,7 @@ func (m *Module) setupData() {
 
 	// Initialize map
 	m.stats = make(map[string]Stat)
+	m.dashboardDefinitions = nil
 
 	// Take definitions and put them into our map
 	for _, definition := range m.settings.Definitions {
@@ -56,6 +57,15 @@ func (m *Module) setupData() {
 
 		// Always top off textual value
 		m.OutputTextualValue(definition.Key, m.stats[definition.Key].Value)
+
+		// Make Dashboard
+		dashboardItem := new(DashboardCounterDefinition)
+		dashboardItem.ID = definition.Key
+		dashboardItem.BackgroundColor = definition.Dashboard.BackgroundColor
+		dashboardItem.ForegroundColor = definition.Dashboard.ForegroundColor
+		dashboardItem.IconClass = definition.Dashboard.IconClass
+		dashboardItem.Description = definition.Dashboard.Description
+		m.dashboardDefinitions = append(m.dashboardDefinitions, *dashboardItem)
 	}
 }
 

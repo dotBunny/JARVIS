@@ -1,66 +1,11 @@
-
-.widget-viewers a, 
-.widget-crashes a, 
-.widget-coffee a, 
-.widget-builds a, 
-.widget-saves a{
+.panel a,
+.widget-stat a {
     color: #777;
 }
 
-.widget-crashes {
-    border-color: #da751c;
+.widget-stat a:hover {
+    color: #222;
 }
-
-.widget-crashes a:hover {
-    color: #da751c;
-}
-
-.widget-crashes .panel {
-    border-color: #da751c;
-}
-
-.widget-crashes .panel-primary {
-    border-color: #da751c;
-}
-.widget-crashes .panel-heading {
-    background-color: #da751c;
-    border-color: #da751c;
-}
-
-/*
-
-.widget-builds {
-    border-color: #da751c;
-}
-
-.widget-builds a:hover {
-    color: #da751c;
-}
-
-.widget-builds .panel {
-    border-color: #da751c;
-}
-
-.widget-builds .panel-primary {
-    border-color: #da751c;
-}
-.widget-builds .panel-heading {
-    background-color: #da751c;
-    border-color: #da751c;
-}*/
-
-
-
-
-.widget-coffee a:hover {
-    color: #f0ad4e;
-    
-}
-
-.widget-saves a:hover {
-    color: #d9534f
-}
-
 
 .widget-viewers {
     border-color: #6441A4;
@@ -93,4 +38,8 @@
    left: 24px;
     width: 97%;
     position: relative;
+}
+
+.mini-actions a {
+    padding-left: 10px;
 }

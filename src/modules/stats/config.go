@@ -47,6 +47,12 @@ type Stat struct {
 		NotifyMessage      string   `json:"NotifyMessage"`
 		Sounds             []string `json:"Sounds"`
 	} `json:"Set"`
+	Dashboard struct {
+		ForegroundColor string `json:"ForegroundColor"`
+		BackgroundColor string `json:"BackgroundColor"`
+		IconClass       string `json:"IconClass"`
+		Description     string `json:"Description"`
+	} `json:"Dashboard"`
 }
 
 // Initialize the Logging Module
@@ -67,4 +73,12 @@ func (m *Module) loadConfig() {
 			}
 		}
 	}
+}
+
+type DashboardCounterDefinition struct {
+	ID              string `json:"ID"`
+	ForegroundColor string `json:"ForegroundColor"`
+	BackgroundColor string `json:"BackgroundColor"`
+	IconClass       string `json:"IconClass"`
+	Description     string `json:"Description"`
 }

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="JARVIS Dashboard">
+        <meta name="author" content="JARVIS">
+
+        <title>JARVIS</title>
+
+        <link href="content/css/bootstrap.min.css" rel="stylesheet">
+        <link href="content/css/sb-admin.css" rel="stylesheet">
+        <link href="content/css/plugins/morris.css" rel="stylesheet">
+
+        <!-- Custom Fonts -->
+        <link href="content/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <link href="content/css/dashboard.css" rel="stylesheet" type="text/css">
+    </head>
+
+    <body>
+
+        <div id="wrapper">
+            <!-- Navigation -->
+            <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/dashboard.html">JARVIS</a>
+                </div>
+                <!-- Top Menu Items -->
+                <ul class="nav navbar-right top-nav">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i> <b class="caret"></b></a>
+                        <!-- TODO : Add Alerts -->
+                        <ul class="dropdown-menu alert-dropdown">
+                            <li>
+                                <a href="#">Alert Name <span class="label label-default">Alert Badge</span></a>
+                            </li>
+                            <li>
+                                <a href="#">Alert Name <span class="label label-primary">Alert Badge</span></a>
+                            </li>
+                            <li>
+                                <a href="#">Alert Name <span class="label label-success">Alert Badge</span></a>
+                            </li>
+                            <li>
+                                <a href="#">Alert Name <span class="label label-info">Alert Badge</span></a>
+                            </li>
+                            <li>
+                                <a href="#">Alert Name <span class="label label-warning">Alert Badge</span></a>
+                            </li>
+                            <li>
+                                <a href="#">Alert Name <span class="label label-danger">Alert Badge</span></a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="#">View All</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+                <div class="collapse navbar-collapse navbar-ex1-collapse">
+                    <ul class="nav navbar-nav side-nav">
+                        <li>
+                            <a href="/dashboard.html"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+                        </li>
+                        <li class="active">
+                            <a href="/dashboard-stats.html"><i class="fa fa-fw fa-bar-chart"></i>Stats</a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /.navbar-collapse -->
+            </nav>
+
+            <div id="page-wrapper">
+
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h1 class="page-header">
+                                Stats <small>User Defined Counters</small>
+                            </h1>
+                        </div>
+                    </div>
+                    <!-- /.row -->
+
+                    
+                    <div class="row" id="counters">
+
+
+                        
+                    </div>
+                    <!-- /.row -->
+
+                    
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- /#page-wrapper -->
+
+        </div>
+        <!-- /#wrapper -->
+
+        <!-- jQuery -->
+        <script src="content/js/jquery.js"></script>
+
+        <!-- Bootstrap Core JavaScript -->
+        <script src="content/js/bootstrap.min.js"></script>
+
+        <!-- Morris Charts JavaScript -->
+        <script src="content/js/plugins/morris/raphael.min.js"></script>
+        <!--<script src="content/js/plugins/morris/morris.min.js"></script>
+        <script src="content/js/plugins/morris/morris-data.js"></script>-->
+        <script type="application/javascript" src="content/js/jarvis.js" /></script>
+        <script type="application/javascript">
+
+            // Build page
+             var loadHandler = function(response){
+                content = "";
+                for(var item in response)
+                {
+                    var counterBlock =  
+                    '<div class="col-lg-3 col-md-6 widget-stat widget-' + response[item].ID + '" style="border-color: ' + response[item].BackgroundColor + ';">' + 
+                        '<div class="panel panel-over-shadow panel-' + response[item].ID + '" style="border-color: ' + response[item].BackgroundColor + ';">' +
+                            '<div class="panel-heading" style="background-color: ' + response[item].BackgroundColor + '; border-color: ' + response[item].BackgroundColor + ';">' +
+                                '<div class="row">' +
+                                    '<div class="col-xs-3" style="color: ' + response[item].ForegroundColor + ';"><i class="fa ' + response[item].IconClass + ' fa-5x"></i></div>' +
+                                    '<div class="col-xs-9 text-right">' +
+                                        '<div class="huge" id="stats-' + response[item].ID + '" style="color: ' + response[item].ForegroundColor + ';">0</div>' +
+                                        '<div style="color: ' + response[item].ForegroundColor + ';">' + response[item].Description + '</div>'+
+                                    '</div>' +
+                                '</div>' +
+                            '</div>' +
+                            '<div class="panel-footer">' +
+                                '<span class="pull-right mini-actions">' +
+                                    '<a href="#" onClick=\'HitAPI("[[JARVIS.address]]/stats/?mode=increase&key=' + response[item].ID + '");\'><i class="fa fa-plus-circle"></i></a>' +
+                                    '<a href="#" onClick=\'HitAPI("[[JARVIS.address]]/stats/?mode=decrease&key=' + response[item].ID + '");\'><i class="fa fa-minus-circle"></i></a>' +
+                                '</span>' +
+                                '<div class="clearfix"></div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>';
+
+                    content = content + counterBlock;
+                }
+                document.getElementById("counters").innerHTML = content;
+            };
+            _getJSON("[[JARVIS.address]]/data/stats-dashboard.json", loadHandler);
+
+
+            // Only update content
+            var statsHandler = function(response){
+                for(var item in response)
+                {
+                    document.getElementById("stats-" + item).innerHTML = response[item];
+                }
+            };
+            getJSON("[[JARVIS.address]]/data/stats.json", statsHandler, 5);
+        </script>
+    </body>
+</html>
