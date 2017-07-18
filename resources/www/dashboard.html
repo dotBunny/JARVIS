@@ -201,14 +201,6 @@
                     followerContent = followerContent + '<a target="_blank" href="https://www.twitch.tv/' + response.Twitch.LastFollowers[item] +'" class="list-group-item"><i class="fa fa-fw fa-user"></i> ' + response.Twitch.LastFollowers[item] + '</a>';
                 }
                 document.getElementById("twitch-followers").innerHTML = followerContent
-
-                // Viewers
-                var viewerContent = "";
-                for(var item in response.TwitchViewers)
-                {
-                    viewerContent = viewerContent + '<a target="_blank" href="https://www.twitch.tv/' + response.TwitchViewers[item] +'" class="list-group-item"><i class="fa fa-fw fa-user"></i> ' + response.TwitchViewers[item] + '</a>';
-                }
-                document.getElementById("twitch-viewers").innerHTML = viewerContent
                 
                 // Set JIRA Instance
                 jiraInstance = response.Tasks.JIRAAddress;
@@ -241,6 +233,17 @@
                 document.getElementById("todo-list").innerHTML = content;
             };
             getJSON("[[JARVIS.address]]/data/jira.json", jiraHandler, 30);
+
+            var twitchViewerHandler = function(response){
+
+                var viewerContent = "";
+                for(var item in response)
+                {
+                    viewerContent = viewerContent + '<a target="_blank" href="https://www.twitch.tv/' + response[item] +'" class="list-group-item"><i class="fa fa-fw fa-user"></i> ' + response[item] + '</a>';
+                }
+                document.getElementById("twitch-viewers").innerHTML = viewerContent
+            };
+            getJSON("[[JARVIS.address]]/data/twitch-viewers.json", twitchViewerHandler, 10);
         </script>
     </body>
 </html>

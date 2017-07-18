@@ -83,7 +83,10 @@ func (m *Module) pollCurrentlyPlaying(notify bool) {
 			Core.SaveFile([]byte(m.data.CurrentlyPlayingURL), m.outputs.LinkPath)
 
 			if notify {
-				m.j.Discord.GetSession().ChannelMessageSendEmbed(m.j.Discord.GetFeedChannelID(), &discordgo.MessageEmbed{
+
+				var message Core.NotifyMessage
+				message.Discord = true
+				message.DiscordEmbed = &discordgo.MessageEmbed{
 					Type:  "rich",
 					Title: "Now Playing On Spotify",
 					URL:   m.data.CurrentlyPlayingURL,
@@ -96,7 +99,13 @@ func (m *Module) pollCurrentlyPlaying(notify bool) {
 							Value:  m.data.ArtistLine,
 							Inline: true},
 					},
-				})
+				}
+				message.Twitch = true
+				message.Message = "Playing " + m.data.ArtistLine + " - " + m.data.TrackName + " (" + m.data.CurrentlyPlayingURL + ")"
+				message.DiscordForceChannel = m.j.Discord.GetFeedChannelID()
+
+				m.j.Notify.Announce(message)
+
 			}
 
 			// New Artwork

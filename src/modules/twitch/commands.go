@@ -12,6 +12,11 @@ func (m *Module) setupCommands() {
 
 }
 
+func (m *Module) Say(message string) {
+	if len(message) > 0 && m.irc.Connected() {
+		m.SendMessage(m.settings.Channel, message)
+	}
+}
 func (m *Module) commandSay(message *Core.DiscordMessage) {
 	if len(message.Content) > 0 && m.irc.Connected() {
 		m.SendMessage(m.settings.Channel, Core.WrapNicknameForIRC(message.Author)+" "+message.Content)
@@ -23,15 +28,12 @@ func (m *Module) commandTwitch(message *Core.DiscordMessage) {
 	if len(message.Content) > 0 {
 		if message.Content == "start" {
 			m.j.Log.Message("Twitch", "Starting Twitch Polling/IRC")
-			m.j.Discord.GetSession().ChannelMessageSend(message.ChannelID, m.settings.Prefix+"Starting Polling / IRC")
 			m.Start()
 		} else if message.Content == "stop" {
 			m.j.Log.Message("Twitch", "Stopping Twitch Polling/IRC")
-			m.j.Discord.GetSession().ChannelMessageSend(message.ChannelID, m.settings.Prefix+"Stopping Polling / IRC")
 			m.Stop()
 		} else if message.Content == "auth" {
 			m.j.Log.Message("Twitch", "Authenticating with Twitch")
-			m.j.Discord.GetSession().ChannelMessageSend(message.ChannelID, m.settings.Prefix+"Authenticating")
 			m.authenticate()
 		}
 	} else {

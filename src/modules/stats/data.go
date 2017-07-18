@@ -101,7 +101,13 @@ func (m *Module) ChangeData(item string, value int, notify bool) {
 			m.j.Media.PlaySound(m.stats[item].Increase.Sounds[rand.Intn(len(m.stats[item].Increase.Sounds))])
 		}
 
-		m.j.Discord.Announcement(m.j.Config.GetPrefix() + strings.Replace(m.stats[item].Increase.NotifyMessage, "###", fmt.Sprintf("%d", value), -1))
+		var message Core.NotifyMessage
+		message.Discord = true
+		message.DiscordPrefix = m.j.Config.GetPrefix()
+		message.Twitch = true
+		message.Message = strings.Replace(m.stats[item].Increase.NotifyMessage, "###", fmt.Sprintf("%d", value), -1)
+		m.j.Notify.Announce(message)
+
 	} else if decrease && notify && m.stats[item].Decrease.Notify {
 
 		// Check for callback
@@ -114,7 +120,12 @@ func (m *Module) ChangeData(item string, value int, notify bool) {
 			m.j.Media.PlaySound(m.stats[item].Increase.Sounds[rand.Intn(len(m.stats[item].Increase.Sounds))])
 		}
 
-		m.j.Discord.Announcement(m.j.Config.GetPrefix() + strings.Replace(m.stats[item].Decrease.NotifyMessage, "###", fmt.Sprintf("%d", value), -1))
+		var message Core.NotifyMessage
+		message.Discord = true
+		message.DiscordPrefix = m.j.Config.GetPrefix()
+		message.Twitch = true
+		message.Message = strings.Replace(m.stats[item].Decrease.NotifyMessage, "###", fmt.Sprintf("%d", value), -1)
+		m.j.Notify.Announce(message)
 	}
 
 	// Log

@@ -13,15 +13,12 @@ func (m *Module) commandSpotify(message *Core.DiscordMessage) {
 	if len(message.Content) > 0 {
 		if message.Content == "start" {
 			m.j.Log.Message("Spotify", "Starting Spotify Polling")
-			m.j.Discord.GetSession().ChannelMessageSend(message.ChannelID, m.settings.Prefix+"Starting Polling")
 			m.Start()
 		} else if message.Content == "stop" {
 			m.j.Log.Message("Spotify", "Stopping Spotify Polling")
-			m.j.Discord.GetSession().ChannelMessageSend(message.ChannelID, m.settings.Prefix+"Stopping Polling")
 			m.Stop()
 		} else if message.Content == "auth" {
 			m.j.Log.Message("Spotify", "Authenticating with Spotify")
-			m.j.Discord.GetSession().ChannelMessageSend(message.ChannelID, m.settings.Prefix+"Authenticating")
 			m.authenticate()
 		} else if message.Content == "pause" {
 			m.endpointPause(nil, nil)

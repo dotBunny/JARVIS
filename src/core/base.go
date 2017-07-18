@@ -21,6 +21,7 @@ type JARVIS struct {
 	Config    *ConfigCore
 	Discord   *DiscordCore
 	Log       *LogCore
+	Notify    *NotifyCore
 }
 
 // Version Number
@@ -65,6 +66,9 @@ func HireJarvis() *JARVIS {
 	// Initialize Logging Module
 	j.Log.Initialize(j)
 	j.Log.Message("System", "Version: v"+Version)
+
+	// Start notification system system
+	j.Notify.Initialize(j)
 
 	// Start Media
 	j.Media.Initialize(j)

@@ -12,3 +12,7 @@ type DataModifier interface {
 	SetDataValue(string, bool)
 	ShouldUpdate() bool
 }
+
+type TextNotifier interface {
+	Notify(string)
+}

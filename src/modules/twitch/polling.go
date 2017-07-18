@@ -76,7 +76,12 @@ func (m *Module) pollFollowers(notify bool) {
 			m.data.LastFollower = followers.Follows[0].User.DisplayName
 
 			if notify {
-				m.j.Discord.Announcement(m.settings.Prefix + "New Twitch Follower " + followers.Follows[0].User.DisplayName)
+				var message Core.NotifyMessage
+				message.Discord = true
+				message.DiscordPrefix = m.settings.Prefix
+				message.Twitch = false
+				message.Message = "New Twitch Follower " + followers.Follows[0].User.DisplayName
+				m.j.Notify.Announce(message)
 			}
 
 			// TODO: Need to make it so it loads so this doesnt ding

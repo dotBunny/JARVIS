@@ -27,12 +27,21 @@ func (m *Module) SetWorkingOn(message string, notify bool) {
 
 	if notify {
 		if m.UseJIRAForWork {
-			m.j.Discord.Announcement(m.jiraInstance.GetPrefix() + "Now working on " + m.data.WorkingOn)
+			var message Core.NotifyMessage
+			message.Discord = true
+			message.DiscordPrefix = m.jiraInstance.GetPrefix()
+			message.Twitch = true
+			message.Message = "Now working on " + m.data.WorkingOn
 		} else {
-			m.j.Discord.Announcement(m.j.Config.GetPrefix() + "Now working on " + m.data.WorkingOn)
+			var message Core.NotifyMessage
+			message.Discord = true
+			message.DiscordPrefix = m.j.Config.GetPrefix()
+			message.Twitch = true
+			message.Message = "Now working on " + m.data.WorkingOn
+			m.j.Notify.Announce(message)
 		}
 	}
-	m.j.Log.Message("Stats", "Working On: "+m.data.WorkingOn)
+	m.j.Log.Message("Stats", "Working on: "+m.data.WorkingOn)
 }
 
 func (m *Module) setupData() {

@@ -54,9 +54,9 @@ func (m *Module) ParseWebContent(content string, mode string) string {
 			content = strings.Replace(content, "[[JARVIS.stats]]", string(outputJSON), -1)
 		}
 
-		if strings.Contains(content, "[[JARVIS.stats.detailed]]") {
+		if strings.Contains(content, "[[JARVIS.stats.details]]") {
 			outputJSON, _ := json.Marshal(m.dashboardDefinitions)
-			content = strings.Replace(content, "[[JARVIS.stats.detailed]]", string(outputJSON), -1)
+			content = strings.Replace(content, "[[JARVIS.stats.details]]", string(outputJSON), -1)
 		}
 
 	} else {

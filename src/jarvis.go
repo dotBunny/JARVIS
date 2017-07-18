@@ -78,6 +78,10 @@ func onReady() {
 		twitchModule := new(Twitch.Module)
 		twitchModule.Initialize(j, commandModule)
 
+		twitchNotifier := new(Twitch.TwitchNotifier)
+		twitchNotifier.Twitch = twitchModule
+		j.Notify.ConnectTwitch(twitchNotifier)
+
 		// YouTube Module
 		// STILL NOT WORKING
 		// youtubeModule := new(YouTube.Module)

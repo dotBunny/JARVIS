@@ -1,6 +1,5 @@
 {
     "Twitch" : [[JARVIS.twitch]],
-    "TwitchViewers" : [[JARVIS.twitch.viewers]],
     "Spotify" : [[JARVIS.spotify]],
     "Stats" : [[JARVIS.stats]],
     "Tasks" : [[JARVIS.tasks]]
