@@ -93,7 +93,9 @@ func (m *Module) ChangeData(item string, value int, notify bool) {
 
 		// Check for callback
 		if len(m.stats[item].Increase.NotifyCallback) > 0 {
-			m.j.WebServer.TouchEndpoint(m.stats[item].Increase.NotifyCallback)
+			for _, callback := range m.stats[item].Increase.NotifyCallback {
+				m.j.WebServer.TouchEndpoint(callback)
+			}
 		}
 
 		// Legacy Sound Events
@@ -112,7 +114,9 @@ func (m *Module) ChangeData(item string, value int, notify bool) {
 
 		// Check for callback
 		if len(m.stats[item].Decrease.NotifyCallback) > 0 {
-			m.j.WebServer.TouchEndpoint(m.stats[item].Decrease.NotifyCallback)
+			for _, callback := range m.stats[item].Decrease.NotifyCallback {
+				m.j.WebServer.TouchEndpoint(callback)
+			}
 		}
 
 		// Legacy Sound Events

@@ -25,7 +25,7 @@ type Stat struct {
 		CommandDescription string   `json:"CommandDescription"`
 		CommandLevel       int      `json:"CommandLevel"`
 		Notify             bool     `json:"Notify"`
-		NotifyCallback     string   `json:"NotifyCallback"`
+		NotifyCallback     []string `json:"NotifyCallback"`
 		NotifyMessage      string   `json:"NotifyMessage"`
 		Sounds             []string `json:"Sounds"`
 	} `json:"Increase"`
@@ -34,7 +34,7 @@ type Stat struct {
 		CommandDescription string   `json:"CommandDescription"`
 		CommandLevel       int      `json:"CommandLevel"`
 		Notify             bool     `json:"Notify"`
-		NotifyCallback     string   `json:"NotifyCallback"`
+		NotifyCallback     []string `json:"NotifyCallback"`
 		NotifyMessage      string   `json:"NotifyMessage"`
 		Sounds             []string `json:"Sounds"`
 	} `json:"Decrease"`
@@ -43,7 +43,7 @@ type Stat struct {
 		CommandDescription string   `json:"CommandDescription"`
 		CommandLevel       int      `json:"CommandLevel"`
 		Notify             bool     `json:"Notify"`
-		NotifyCallback     string   `json:"NotifyCallback"`
+		NotifyCallback     []string `json:"NotifyCallback"`
 		NotifyMessage      string   `json:"NotifyMessage"`
 		Sounds             []string `json:"Sounds"`
 	} `json:"Set"`
