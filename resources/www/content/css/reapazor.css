@@ -198,3 +198,40 @@ iframe#streamlabs-alertbox
     background: transparent;
     border: none;
 }
+
+iframe#discord-talkers
+{
+    position: absolute;
+    top: 72px;
+    right: 0px;
+    height: 500px;
+    width: 62px;
+    background: transparent;
+    border: none;
+}
+
+div#jira-task-widget
+{
+    border-radius: 25px;
+    background-color: rgba(0,0,0,0.25);
+    padding: 25px;
+    padding-left: 40px;
+    padding-right: 40px;
+    color: #fff;
+    font-family: Oswald;
+    position: absolute;
+    left: 200px;
+    top: 200px;
+}
+
+div#widget-title
+{
+    font-size: 45px;
+}
+
+div#jira-task-widget div p img
+{
+   position: relative;
+   top: 2px;
+   padding-right: 5px;
+}

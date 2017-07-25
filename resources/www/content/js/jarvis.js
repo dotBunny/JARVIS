@@ -26,13 +26,15 @@ function _getJSON(endpointURI, callbackFunction) {
     var xmlhttp = new XMLHttpRequest();
     var responseHandler = callbackFunction;
 
-    xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState == XMLHttpRequest.DONE  && xmlhttp.status == 200 && responseHandler) {
-            responseHandler(JSON.parse(xmlhttp.responseText)); 
+    xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == XMLHttpRequest.DONE && xmlhttp.status == 200 && responseHandler) {
+            responseHandler(JSON.parse(xmlhttp.responseText));
         }
-    }
+    };
+
     xmlhttp.open("GET", endpointURI, true);
     xmlhttp.send();
+    
 }
 
 
