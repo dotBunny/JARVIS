@@ -139,15 +139,15 @@ div.sidebar-chunk span
     text-align: center;
 }
 
-div#crashes { bottom: 371px; }
+div#crashes { bottom: 421px; }
 div#crashes img { left: 7px; }
 div#crashes span { top: 35px; }
 
-div#builds { bottom: 298px; }
+div#builds { bottom: 296px; }
 div#builds img { left: 8px; }
 div#builds span { top: 15px; left: -1px; }
 
-div#coffee { bottom: 243px; }
+div#coffee { bottom: 242px; }
 div#coffee img { left: 8px; }
 div#coffee span { top: 8px; left: -1px; }
 
@@ -158,6 +158,11 @@ div#saves span{ top: 17px; }
 div#viewers { bottom: 155px; }
 div#viewers img { left: 6px; }
 div#viewers span { top: 10px; }
+
+div#swears { bottom: 352px;}
+div#swears img { left: 9px;}
+div#swears span { top: 21px; left: -1px; }
+
 
 div#branding
 {
@@ -176,13 +181,23 @@ div#streamlabs
     height: 1080px;
     width: 1920;
 }
+iframe#streamlabs-jar
+{
+    position: absolute;
+    bottom: 150px;
+    left: -240px;
+    height: 825px;
+    width: 675px;
+    background: transparent;
+    border: none;
+}
 
 iframe#streamlabs-eventlist
 {
     position: absolute;
     bottom: 0px;
     left: 0px;
-    height: 300px;
+    height: 190px;
     width: 400px;
     background: transparent;
     border: none;
