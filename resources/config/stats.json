@@ -1,4 +1,5 @@
-[
+{
+  "Messages": [
   {
     "Key": "Coffee",
     "TextOutput": {
@@ -147,4 +148,5 @@
       "IconClass": "fa-coffee"
     }
   }
-]
+  ]
+}

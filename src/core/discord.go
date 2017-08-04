@@ -30,6 +30,9 @@ type DiscordConfig struct {
 }
 
 func (m *DiscordCore) loadConfig() {
+
+	m.j.Config.LoadConfig("discord.json", "Discord")
+
 	// Create default general settings
 	m.settings = new(DiscordConfig)
 

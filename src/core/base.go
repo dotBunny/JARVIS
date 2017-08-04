@@ -10,13 +10,11 @@ import (
 
 // JARVIS Instance
 type JARVIS struct {
-	applicationPath       string
-	resourcePath          string
-	configPath            string
-	hasOverrideConfigPath bool
-	overrideConfigPath    string
-	startTime             time.Time
-	macBundle             bool
+	applicationPath string
+	resourcePath    string
+	configPath      string
+	startTime       time.Time
+	macBundle       bool
 
 	Media     *MediaCore
 	WebServer *WebServerCore
@@ -37,7 +35,6 @@ func HireJarvis() *JARVIS {
 
 	// Set starting time
 	j.startTime = time.Now()
-	j.hasOverrideConfigPath = false
 
 	// Set the application path, or try too
 	j.SetApplicationPath(os.Args[0])
@@ -59,11 +56,6 @@ func HireJarvis() *JARVIS {
 
 	// Set Config Path
 	j.SetConfigPath(path.Join(j.GetResourcePath(), "config"))
-
-	// Set Override If Exists
-	if len(os.Args) >= 2 {
-		j.SetOverrideConfigPath(os.Args[1])
-	}
 
 	// Load Config
 	j.Config.Initialize(j)
@@ -134,15 +126,4 @@ func (m *JARVIS) SetConfigPath(configPath string) {
 		log.Fatal("[System]\tUnable to access config files. Please correct your path, or leave it empty.")
 	}
 	m.configPath = configPath
-}
-
-//SetOverrideConfigPath to absolute file
-func (m *JARVIS) SetOverrideConfigPath(overrideConfigPath string) {
-	log.Println("[System]\tUsing override configuration file @ " + overrideConfigPath)
-	_, err := os.Stat(overrideConfigPath)
-	if err != nil {
-		log.Fatal("[System]\tUnable to access override config file. Please correct your path, or leave it empty.")
-	}
-	m.overrideConfigPath = overrideConfigPath
-	m.hasOverrideConfigPath = true
 }

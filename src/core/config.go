@@ -49,7 +49,7 @@ func (m *ConfigCore) LoadConfig(fileName string, key string) bool {
 	var errorCheck error
 
 	// Create absolute path to config file
-	var absolutePath = path.Join(m.configPath, fileName)
+	var absolutePath = path.Join(m.j.configPath, fileName)
 
 	// Check existence
 	_, errorCheck = os.Stat(absolutePath)
