@@ -14,20 +14,26 @@ import (
 
 // Module Class
 type Module struct {
-	ticker        *time.Ticker
-	spotifyOAuth  spotify.Authenticator
-	spotifyClient *spotify.Client
-	stateHash     string
-	settings      *Config
-	outputs       *Outputs
-	data          *Data
-	j             *Core.JARVIS
+	canGetTrackData bool
+	warningCount    int
+	errorCount      int
+	ticker          *time.Ticker
+	spotifyOAuth    spotify.Authenticator
+	spotifyClient   *spotify.Client
+	stateHash       string
+	settings        *Config
+	outputs         *Outputs
+	data            *Data
+	j               *Core.JARVIS
 }
 
 // Initialize the Logging Module
 func (m *Module) Initialize(jarvisInstance *Core.JARVIS) {
 	// Assign JARVIS, the module is made we dont to create it like in core!
 	m.j = jarvisInstance
+
+	// Register Status Updator
+	m.j.Status.RegisterUpdator("spotify", m.StatusUpdate)
 
 	// Make sure flag is toggled off
 	m.loadConfig()
@@ -54,6 +60,14 @@ func (m *Module) Initialize(jarvisInstance *Core.JARVIS) {
 	m.j.WebServer.RegisterParser("spotify", m.ParseWebContent)
 
 	m.Start()
+}
+
+func (m *Module) StatusUpdate() (int, int) {
+	if !m.canGetTrackData {
+		return m.warningCount + 1, m.errorCount
+	}
+
+	return m.warningCount, m.errorCount
 }
 
 // IsEnabled for Usage

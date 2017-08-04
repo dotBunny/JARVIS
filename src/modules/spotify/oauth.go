@@ -51,6 +51,7 @@ func (m *Module) authenticate() {
 	// use the client to make calls that require authorization
 	user, err := client.CurrentUser()
 	if err != nil {
+		m.errorCount++
 		m.j.Log.Error("Spotify", err.Error())
 	}
 	m.j.Log.Message("Spotify", "You are logged in as: "+user.ID)
@@ -62,10 +63,12 @@ func (m *Module) authenticate() {
 func (m *Module) callbackAuthenticate(w http.ResponseWriter, r *http.Request) {
 	tok, err := m.spotifyOAuth.Token(m.stateHash, r)
 	if err != nil {
+		m.errorCount++
 		http.Error(w, "Couldn't get token", http.StatusForbidden)
 		log.Fatal(err)
 	}
 	if st := r.FormValue("state"); st != m.stateHash {
+		m.errorCount++
 		http.NotFound(w, r)
 		m.j.Log.Error("Spotify", fmt.Sprintf("State mismatch: %s != %s\n", st, m.stateHash))
 	}

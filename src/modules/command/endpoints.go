@@ -78,12 +78,7 @@ func (m *Module) endpointCommand(w http.ResponseWriter, r *http.Request) {
 	commandInstance.Stderr = &stderr
 	err := commandInstance.Run()
 	if err != nil {
-		fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
-		return
-	}
-	fmt.Println("Result: " + out.String())
-
-	if err != nil {
-		m.j.Log.Error("SYSTEM", err.Error())
+		m.warningCount++
+		m.j.Log.Warning("SYSTEM", fmt.Sprint(err)+": "+stderr.String())
 	}
 }

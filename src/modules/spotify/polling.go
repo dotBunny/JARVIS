@@ -41,9 +41,11 @@ func (m *Module) pollCurrentlyPlaying(notify bool) {
 	state, err := m.spotifyClient.PlayerCurrentlyPlaying()
 
 	if err != nil {
+		m.canGetTrackData = false
 		m.j.Log.Warning("Spotify", "Unable to retrieve currently playing song.")
 	} else {
 
+		m.canGetTrackData = true
 		// Handle Basic Track Information
 		var buffer bytes.Buffer
 		var artistCount = len(state.Item.Artists)

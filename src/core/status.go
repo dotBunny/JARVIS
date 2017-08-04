@@ -5,10 +5,10 @@ import "strings"
 type StatusUpdator func() (int, int)
 
 type StatusCore struct {
-	ErrorCount        int
-	WarningCount      int
-	TotalWarningCount int
-	TotalErrorCount   int
+	ErrorCount        int // Core Error Count
+	WarningCount      int // Core Warning Count
+	TotalWarningCount int // Combined w/ Modules Warning Count
+	TotalErrorCount   int // Combined w/ Modules Error Count
 	updators          map[string]StatusUpdator
 	j                 *JARVIS
 }
@@ -67,4 +67,13 @@ func (m *StatusCore) ForceError() {
 
 func (m *StatusCore) ForceWarning() {
 	m.TotalWarningCount++
+}
+
+func (m *StatusCore) ClearWarnings() {
+	m.WarningCount = 0
+	m.TotalWarningCount = 0
+}
+func (m *StatusCore) ClearErrors() {
+	m.ErrorCount = 0
+	m.TotalErrorCount = 0
 }

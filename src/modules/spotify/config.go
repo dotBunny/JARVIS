@@ -39,6 +39,7 @@ func (m *Module) loadConfig() {
 
 			errorCheck := json.Unmarshal(m.j.Config.GetConfigData("Spotify"), &m.settings)
 			if errorCheck != nil {
+				m.warningCount++
 				m.j.Log.Message("Config", "Unable to properly parse Spotify Config, somethings may be wonky.")
 			}
 		}
