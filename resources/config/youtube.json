@@ -1,0 +1,15 @@
+{
+  "Chat": true,
+  "ChannelID": "UCEF3R66WWgroj4NQeGoR27w",
+  "ChatChannelID": "325241876758396928",
+  "ClientID": "<YOUTUBE_CLIENT_ID>",
+  "ClientSecret": "<YOUTUBE_SECRET>",
+  "Enabled": true,
+  "LastFollowersCount": 10,
+  "LastSubscribersCount": 10,
+  "PollingFrequency": 7,
+  "Prefix": "<:youtube:328598129710596096>",
+  "PadChannelFollowersOutput": 3,
+  "PadChannelViewersOutput": 3,
+  "PadChannelSubscribersOutput ": 3
+}

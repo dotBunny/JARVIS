@@ -12,6 +12,7 @@ type Config struct {
 // Initialize the Logging Module
 func (m *Module) loadConfig() {
 
+	m.j.Config.LoadConfig("tasks.json", "Tasks")
 	// Create default general settings
 	m.settings = new(Config)
 
@@ -21,7 +22,7 @@ func (m *Module) loadConfig() {
 			m.j.Log.Message("Config", "Unable to find \"Tasks\" config section. Using defaults.")
 		} else {
 
-			errorCheck := json.Unmarshal(*m.j.Config.GetConfigData("Tasks"), &m.settings)
+			errorCheck := json.Unmarshal(m.j.Config.GetConfigData("Tasks"), &m.settings)
 			if errorCheck != nil {
 				m.j.Log.Message("Config", "Unable to properly parse Tasks Config, somethings may be wonky.")
 			}

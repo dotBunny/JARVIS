@@ -10,11 +10,13 @@ import (
 
 // JARVIS Instance
 type JARVIS struct {
-	applicationPath string
-	resourcePath    string
-	configPath      string
-	startTime       time.Time
-	macBundle       bool
+	applicationPath       string
+	resourcePath          string
+	configPath            string
+	hasOverrideConfigPath bool
+	overrideConfigPath    string
+	startTime             time.Time
+	macBundle             bool
 
 	Media     *MediaCore
 	WebServer *WebServerCore
@@ -35,15 +37,17 @@ func HireJarvis() *JARVIS {
 
 	// Set starting time
 	j.startTime = time.Now()
+	j.hasOverrideConfigPath = false
 
 	// Set the application path, or try too
 	j.SetApplicationPath(os.Args[0])
 
-	_, besideConfig := os.Stat(path.Join(j.GetApplicationPath(), "jarvis.json"))
+	// Config FOlder
+	_, besideConfig := os.Stat(path.Join(j.GetApplicationPath(), "config"))
 	if besideConfig == nil {
 		j.resourcePath = j.GetApplicationPath()
 	} else {
-		_, macBundleCheck := os.Stat(path.Join(j.GetApplicationPath(), "..", "Resources", "jarvis.json"))
+		_, macBundleCheck := os.Stat(path.Join(j.GetApplicationPath(), "..", "Resources", "config", "general.json"))
 		if macBundleCheck == nil {
 			log.Println("[System]\tMac Bundle Detected")
 			j.macBundle = true
@@ -53,11 +57,12 @@ func HireJarvis() *JARVIS {
 		}
 	}
 
-	// Lets check for a second argument, and use it as our path to the config
+	// Set Config Path
+	j.SetConfigPath(path.Join(j.GetResourcePath(), "config"))
+
+	// Set Override If Exists
 	if len(os.Args) >= 2 {
-		j.SetConfigPath(os.Args[1])
-	} else {
-		j.SetConfigPath(path.Join(j.GetResourcePath(), "jarvis.json"))
+		j.SetOverrideConfigPath(os.Args[1])
 	}
 
 	// Load Config
@@ -123,10 +128,21 @@ func (m *JARVIS) SetApplicationPath(application string) {
 // SetConfigPath to the absoulte file
 func (m *JARVIS) SetConfigPath(configPath string) {
 
-	log.Println("[System]\tUsing configuration @ " + configPath)
+	log.Println("[System]\tUsing configuration files @ " + configPath)
 	_, err := os.Stat(configPath)
 	if err != nil {
-		log.Fatal("[System]\tUnable to access config. Please correct your path, or leave it empty.")
+		log.Fatal("[System]\tUnable to access config files. Please correct your path, or leave it empty.")
 	}
 	m.configPath = configPath
+}
+
+//SetOverrideConfigPath to absolute file
+func (m *JARVIS) SetOverrideConfigPath(overrideConfigPath string) {
+	log.Println("[System]\tUsing override configuration file @ " + overrideConfigPath)
+	_, err := os.Stat(overrideConfigPath)
+	if err != nil {
+		log.Fatal("[System]\tUnable to access override config file. Please correct your path, or leave it empty.")
+	}
+	m.overrideConfigPath = overrideConfigPath
+	m.hasOverrideConfigPath = true
 }

@@ -18,6 +18,7 @@ type Config struct {
 // Initialize the Logging Module
 func (m *Module) loadConfig() {
 	// Create default general settings
+	m.j.Config.LoadConfig("jira.json", "JIRA")
 	m.settings = new(Config)
 	m.settings.Enabled = true
 
@@ -27,7 +28,7 @@ func (m *Module) loadConfig() {
 			m.j.Log.Message("JIRA", "Unable to find \"JIRA\" config section. Using defaults.")
 		} else {
 
-			errorCheck := json.Unmarshal(*m.j.Config.GetConfigData("JIRA"), &m.settings)
+			errorCheck := json.Unmarshal(m.j.Config.GetConfigData("JIRA"), &m.settings)
 			if errorCheck != nil {
 				m.j.Log.Message("Config", "Unable to properly parse JIRA Config, somethings may be wonky.")
 			}

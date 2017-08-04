@@ -1,0 +1,9 @@
+{
+  "ClientID": "<SPOTIFY_CLIENT_ID>",
+  "ClientSecret": "<SPOTIFY_CLIENT_SECRET>",
+  "Enabled": true,
+  "PollingFrequency": 5,
+  "TruncateTrackLength": 50,
+  "TruncateTrackRunes": "...",
+  "Prefix": "<:spotify:326026030265663488>"
+}

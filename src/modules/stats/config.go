@@ -58,6 +58,7 @@ type Stat struct {
 // Initialize the Logging Module
 func (m *Module) loadConfig() {
 
+	m.j.Config.LoadConfig("stats.json", "Stats")
 	// Create default general settings
 	m.settings = new(Config)
 
@@ -67,7 +68,7 @@ func (m *Module) loadConfig() {
 			m.j.Log.Message("Config", "Unable to find \"Stats\" config section. Using defaults.")
 		} else {
 
-			errorCheck := json.Unmarshal(*m.j.Config.GetConfigData("Stats"), &m.settings)
+			errorCheck := json.Unmarshal(m.j.Config.GetConfigData("Stats"), &m.settings)
 			if errorCheck != nil {
 				m.j.Log.Message("Config", "Unable to properly parse Stats Config, somethings may be wonky.")
 			}

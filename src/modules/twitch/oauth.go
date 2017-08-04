@@ -46,15 +46,6 @@ func (m *Module) authenticate() {
 	// for the scopes specified above.
 	url := m.twitchOAuth.AuthCodeURL("state", oauth2.AccessTypeOffline)
 
-	// TODO: Disabled because of being on local machine, this will get added if we go remote?
-	// _, _ = m.j.Discord.GetSession().ChannelMessageSendEmbed(m.j.Discord.GetPrivateChannelID(), &discordgo.MessageEmbed{
-	// 	Type:        "rich",
-	// 	Title:       "Twitch Login Required",
-	// 	URL:         url,
-	// 	Description: "An OAuth2 token is required for the Twitch Module to operate properly. You must login via the provided link, allowing the access requested.",
-	// 	Color:       7005032,
-	// })
-
 	Core.CopyToClipboard(url)
 	open.Run(url)
 

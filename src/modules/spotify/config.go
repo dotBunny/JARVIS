@@ -17,6 +17,9 @@ type Config struct {
 
 // Initialize the Logging Module
 func (m *Module) loadConfig() {
+
+	m.j.Config.LoadConfig("spotify.json", "Spotify")
+
 	// Create default general settings
 	m.settings = new(Config)
 
@@ -34,7 +37,7 @@ func (m *Module) loadConfig() {
 			m.j.Log.Message("Spotify", "Unable to find \"Spotify\" config section. Using defaults.")
 		} else {
 
-			errorCheck := json.Unmarshal(*m.j.Config.GetConfigData("Spotify"), &m.settings)
+			errorCheck := json.Unmarshal(m.j.Config.GetConfigData("Spotify"), &m.settings)
 			if errorCheck != nil {
 				m.j.Log.Message("Config", "Unable to properly parse Spotify Config, somethings may be wonky.")
 			}

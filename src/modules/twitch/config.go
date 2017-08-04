@@ -51,11 +51,12 @@ func (m *Module) loadConfig() {
 
 	// Check Raw Data
 	if m.j.Config.IsInitialized() {
+		m.j.Config.LoadConfig("twitch.json", "Twitch")
 		if !m.j.Config.IsValidKey("Twitch") {
 			m.j.Log.Message("Twitch", "Unable to find \"Twitch\" config section. Using defaults.")
 		} else {
 
-			errorCheck := json.Unmarshal(*m.j.Config.GetConfigData("Twitch"), &m.settings)
+			errorCheck := json.Unmarshal(m.j.Config.GetConfigData("Twitch"), &m.settings)
 			if errorCheck != nil {
 				m.j.Log.Message("Config", "Unable to properly parse Twitch Config, somethings may be wonky.")
 			}

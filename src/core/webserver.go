@@ -88,7 +88,7 @@ func (m *WebServerCore) Initialize(jarvisInstance *JARVIS) {
 			m.j.Log.Message("WebServer", "Unable to find \"WebServer\" config section. Using defaults.")
 		} else {
 
-			errorCheck := json.Unmarshal(*m.j.Config.GetConfigData("WebServer"), &m.settings)
+			errorCheck := json.Unmarshal(m.j.Config.GetConfigData("WebServer"), &m.settings)
 			if errorCheck != nil {
 				m.j.Log.Message("Config", "Unable to properly parse WebServer Config, somethings may be wonky.")
 			}

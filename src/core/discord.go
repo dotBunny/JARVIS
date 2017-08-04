@@ -23,8 +23,6 @@ type DiscordConfig struct {
 	Token                string
 	Username             string
 	ChatChannelID        string
-	PrivateChannelID     string
-	FeedChannelID        string
 	LogChannelID         string
 	Prefix               string
 	AnnouncementChannels []string
@@ -41,8 +39,8 @@ func (m *DiscordCore) loadConfig() {
 	m.settings.RedirectURI = "/discord/callback"
 	m.settings.Token = "You must enter a Token."
 	m.settings.Username = "JARVIS"
-	m.settings.PrivateChannelID = "324983244326043648"
 	m.settings.LogChannelID = "325784977415340043"
+	m.settings.ChatChannelID = "324979047396540418"
 	m.settings.Prefix = ":discord: "
 
 	// TODO Add default annoucnemet channels
@@ -53,7 +51,7 @@ func (m *DiscordCore) loadConfig() {
 			m.j.Log.Message("Discord", "Unable to find \"Discord\" config section. Using defaults.")
 		} else {
 
-			errorCheck := json.Unmarshal(*m.j.Config.GetConfigData("Discord"), &m.settings)
+			errorCheck := json.Unmarshal(m.j.Config.GetConfigData("Discord"), &m.settings)
 			if errorCheck != nil {
 				m.j.Log.Message("Config", "Unable to properly parse Discord Config, somethings may be wonky.")
 			}
@@ -135,16 +133,6 @@ func (m *DiscordCore) Connect() {
 // GetSession of Discord
 func (m *DiscordCore) GetSession() *discordgo.Session {
 	return m.session
-}
-
-// GetFeedChannelID for feed
-func (m *DiscordCore) GetFeedChannelID() string {
-	return m.settings.FeedChannelID
-}
-
-// GetPrivateChannelID for interaction
-func (m *DiscordCore) GetPrivateChannelID() string {
-	return m.settings.PrivateChannelID
 }
 
 // GetChatChannelID for sync

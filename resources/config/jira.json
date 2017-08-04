@@ -1,0 +1,9 @@
+{
+  "BasicAuthUsername": "<JIRA_USERNAME>",
+  "BasicAuthPassword": "<JIRA_PASSWORD>",
+  "Enabled": true,
+  "PollingFrequency": 30,
+  "Prefix": "<:jira:327778220625756160>",
+  "Instance": "https://dotbunny.atlassian.net/",
+  "Query": "project = DETHOL AND status = \"In Progress\" AND resolution = Unresolved ORDER BY priority DESC, updated DESC"
+}

@@ -6,8 +6,6 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/bwmarrin/discordgo"
-
 	Core "../../core"
 )
 
@@ -82,31 +80,31 @@ func (m *Module) pollCurrentlyPlaying(notify bool) {
 			m.data.TrackName = state.Item.Name
 			Core.SaveFile([]byte(m.data.CurrentlyPlayingURL), m.outputs.LinkPath)
 
-			if notify {
+			// if notify {
 
-				var message Core.NotifyMessage
-				message.Discord = true
-				message.DiscordEmbed = &discordgo.MessageEmbed{
-					Type:  "rich",
-					Title: "Now Playing On Spotify",
-					URL:   m.data.CurrentlyPlayingURL,
-					//Description: ,
-					Color:     1947988,
-					Thumbnail: &discordgo.MessageEmbedThumbnail{URL: m.data.TrackThumbnailURL},
-					Fields: []*discordgo.MessageEmbedField{
-						&discordgo.MessageEmbedField{
-							Name:   m.data.TrackName,
-							Value:  m.data.ArtistLine,
-							Inline: true},
-					},
-				}
-				message.Twitch = true
-				message.Message = "Playing " + m.data.ArtistLine + " - " + m.data.TrackName + " (" + m.data.CurrentlyPlayingURL + ")"
-				message.DiscordForceChannel = m.j.Discord.GetFeedChannelID()
+			// 	var message Core.NotifyMessage
+			// 	message.Discord = true
+			// 	message.DiscordEmbed = &discordgo.MessageEmbed{
+			// 		Type:  "rich",
+			// 		Title: "Now Playing On Spotify",
+			// 		URL:   m.data.CurrentlyPlayingURL,
+			// 		//Description: ,
+			// 		Color:     1947988,
+			// 		Thumbnail: &discordgo.MessageEmbedThumbnail{URL: m.data.TrackThumbnailURL},
+			// 		Fields: []*discordgo.MessageEmbedField{
+			// 			&discordgo.MessageEmbedField{
+			// 				Name:   m.data.TrackName,
+			// 				Value:  m.data.ArtistLine,
+			// 				Inline: true},
+			// 		},
+			// 	}
+			// 	message.Twitch = true
+			// 	message.Message = "Playing " + m.data.ArtistLine + " - " + m.data.TrackName + " (" + m.data.CurrentlyPlayingURL + ")"
+			// 	message.DiscordForceChannel = m.j.Discord.GetFeedChannelID()
 
-				m.j.Notify.Announce(message)
+			// 	m.j.Notify.Announce(message)
 
-			}
+			// }
 
 			// New Artwork
 			if len(state.Item.Album.Images) > 0 {
