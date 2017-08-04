@@ -99,6 +99,7 @@ func (m *WebServerCore) Initialize(jarvisInstance *JARVIS) {
 			errorCheck := json.Unmarshal(m.j.Config.GetConfigData("WebServer"), &m.settings)
 			if errorCheck != nil {
 				m.j.Log.Message("Config", "Unable to properly parse WebServer Config, somethings may be wonky.")
+				m.j.Status.ErrorCount++
 			}
 		}
 	}
@@ -167,6 +168,7 @@ func (m *WebServerCore) endpointBase(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		m.j.Log.Warning("WebServer", "Unable to find file: "+filePath)
 		fmt.Fprintf(w, "Content Not Found")
+		m.j.Status.ErrorCount++
 		return
 	}
 
@@ -174,6 +176,7 @@ func (m *WebServerCore) endpointBase(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		m.j.Log.Warning("WebServer", "Unable to read file: "+filePath)
 		fmt.Fprintf(w, "Content Not Readable")
+		m.j.Status.ErrorCount++
 		return
 	}
 
@@ -288,6 +291,7 @@ func (m *WebServerCore) RegisterParser(key string, function WebServerParser) {
 	// Check for command
 	if m.parsers[key] != nil {
 		m.j.Log.Warning("WEB", "Duplicate parser registration for '"+key+"', ignoring latest.")
+		m.j.Status.WarningCount++
 		return
 	}
 	m.parsers[key] = function

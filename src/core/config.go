@@ -112,7 +112,7 @@ func (m *ConfigCore) Initialize(jarvisInstance *JARVIS) {
 		}
 	}
 
-	if m.settings.OutputPath == "<Absolute Path To Where To Store Files>" {
+	if m.settings.OutputPath == "<GENERAL_OUTPUTPATH>" {
 		m.settings.OutputPath = path.Join(m.j.GetResourcePath(), "output")
 	}
 

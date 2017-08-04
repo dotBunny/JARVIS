@@ -10,8 +10,9 @@ import (
 
 // Module Class
 type Module struct {
-	outputs  *Outputs
-	settings *Config
+	settings     *Config
+	errorCount   int
+	warningCount int
 
 	stats                map[string]Stat
 	dashboardDefinitions []DashboardCounterDefinition
@@ -29,7 +30,9 @@ func (m *Module) Initialize(jarvisInstance *Core.JARVIS, commandModule *Command.
 	m.loadConfig()
 	m.j.Log.RegisterChannel("Stats", "red", m.j.Config.GetPrefix())
 
-	m.setupOutputs()
+	// Register Status Updator
+	m.j.Status.RegisterUpdator("stats", m.StatusUpdate)
+
 	m.setupData()
 
 	m.setupEndpoints()
@@ -37,8 +40,12 @@ func (m *Module) Initialize(jarvisInstance *Core.JARVIS, commandModule *Command.
 
 	// Register Parser With Webserver
 	m.j.WebServer.RegisterParser("stats", m.ParseWebContent)
+
 }
 
+func (m *Module) StatusUpdate() (int, int) {
+	return m.warningCount, m.errorCount
+}
 func (m *Module) ParseWebContent(content string, mode string) string {
 
 	if mode == ".json" {

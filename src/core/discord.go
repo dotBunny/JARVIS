@@ -52,11 +52,14 @@ func (m *DiscordCore) loadConfig() {
 	if m.j.Config.IsInitialized() {
 		if !m.j.Config.IsValidKey("Discord") {
 			m.j.Log.Message("Discord", "Unable to find \"Discord\" config section. Using defaults.")
+
+			// TODO Disable at ths point?
 		} else {
 
 			errorCheck := json.Unmarshal(m.j.Config.GetConfigData("Discord"), &m.settings)
 			if errorCheck != nil {
 				m.j.Log.Message("Config", "Unable to properly parse Discord Config, somethings may be wonky.")
+				m.j.Status.ErrorCount++
 			}
 		}
 	}
@@ -105,6 +108,7 @@ func (m *DiscordCore) Connect() {
 	m.session, errorCheck = discordgo.New("Bot " + m.settings.Token)
 	if errorCheck != nil {
 		m.j.Log.Warning("Discord", "Unable to create new Discord session. "+errorCheck.Error())
+		m.j.Status.WarningCount++
 	}
 
 	// Get the account information.
@@ -112,6 +116,7 @@ func (m *DiscordCore) Connect() {
 	m.user, errorCheck = m.session.User("@me")
 	if errorCheck != nil {
 		m.j.Log.Warning("Discord", "Unable to obtain account details, "+errorCheck.Error())
+		m.j.Status.WarningCount++
 	}
 
 	// Store/cache the account ID for later use.
@@ -125,6 +130,7 @@ func (m *DiscordCore) Connect() {
 	errorCheck = m.session.Open()
 	if errorCheck != nil {
 		m.j.Log.Warning("Discord", "Error opening to Discord servers, "+errorCheck.Error())
+		m.j.Status.ErrorCount++
 	} else {
 
 		m.j.Log.Message("Discord", "Connected")
@@ -201,6 +207,7 @@ func (m *DiscordCore) RegisterCommand(command string, function DiscordFunc, desc
 	// Check for command
 	if m.commands[command] != nil {
 		m.j.Log.Warning("Discord", "Duplicate command registration for '"+command+"', ignoring latest.")
+		m.j.Status.WarningCount++
 		return
 	}
 

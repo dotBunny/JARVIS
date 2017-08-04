@@ -16,12 +16,16 @@ type JARVIS struct {
 	startTime       time.Time
 	macBundle       bool
 
+	CoreErrorCount  int
+	CorWarningCount int
+
 	Media     *MediaCore
 	WebServer *WebServerCore
 	Config    *ConfigCore
 	Discord   *DiscordCore
 	Log       *LogCore
 	Notify    *NotifyCore
+	Status    *StatusCore
 }
 
 // Version Number
@@ -63,6 +67,9 @@ func HireJarvis() *JARVIS {
 	// Initialize Logging Module
 	j.Log.Initialize(j)
 	j.Log.Message("System", "Version: v"+Version)
+
+	// Setup Status Tracker
+	j.Status.Initialize(j)
 
 	// Start notification system system
 	j.Notify.Initialize(j)

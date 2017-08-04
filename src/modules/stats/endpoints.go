@@ -24,6 +24,7 @@ func (m *Module) endpointStats(w http.ResponseWriter, r *http.Request) {
 
 		if err != nil {
 			m.j.Log.Warning("STATS", "Invalid value attempting to be parsed: "+value)
+			m.warningCount++
 			return
 		}
 

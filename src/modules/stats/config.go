@@ -71,6 +71,9 @@ func (m *Module) loadConfig() {
 			errorCheck := json.Unmarshal(m.j.Config.GetConfigData("Stats"), &m.settings)
 			if errorCheck != nil {
 				m.j.Log.Message("Config", "Unable to properly parse Stats Config, somethings may be wonky.")
+
+				// Report Problem
+				m.errorCount++
 			}
 		}
 	}
