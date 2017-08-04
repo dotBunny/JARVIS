@@ -16,12 +16,18 @@ import (
 // DiscordFunc for IRC
 type WebServerParser func(string, string) string
 
+type DashboardLink struct {
+	Name string
+	URL  string
+}
+
 // WebServerConfig Settings
 type WebServerConfig struct {
-	Enabled    bool
-	IPAddress  string
-	ListenPort int
-	Prefix     string
+	Enabled        bool
+	IPAddress      string
+	ListenPort     int
+	Prefix         string
+	DashboardLinks []DashboardLink
 }
 
 // WebServerCore facilitates the callback/web related hosting

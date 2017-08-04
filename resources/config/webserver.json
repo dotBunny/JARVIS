@@ -1,0 +1,12 @@
+{
+    "Enabled" : true,
+    "IPAddress" : "localhost",
+    "ListeningPort" : 8080,
+    "Prefix":"<:go:326026030072594432>",
+    "DashboardLinks": [
+        {
+            "Name": "Twitch Dashboard",
+            "URL": "http://twitch.tv/reapazor/dashboard"
+        }
+    ]
+}
