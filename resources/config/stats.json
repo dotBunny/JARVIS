@@ -1,152 +1,205 @@
 {
-  "Messages": [
-  {
-    "Key": "Coffee",
-    "TextOutput": {
-      "Enabled": false,
-      "Prefix": "Coffee #",
-      "Suffix": ""
+  "Definitions": [
+    {
+      "Key": "Coffee",
+      "TextOutput": {
+        "Enabled": false,
+        "Prefix": "Coffee #",
+        "Suffix": ""
+      },
+      "NumericalOutput": {
+        "Enabled": true,
+        "Padding": 0
+      },
+      "Increase": {
+        "Command": "!coffee++",
+        "CommandDescription": "Increase Coffee Count",
+        "CommandLevel": 3,
+        "Notify": true,
+        "NotifyCallback": [
+          "/command/?script=wirecast&arg=layer,1,Coffee"
+        ],
+        "NotifyMessage": "We're on our ### coffee of the day.",
+        "Sounds": []
+      },
+      "Decrease": {
+        "Command": "!coffee--",
+        "CommandDescription": "Decrease Coffee Count",
+        "CommandLevel": 3,
+        "Sounds": []
+      },
+      "Set": {
+        "Command": "!coffee",
+        "CommandDescription": "Set Coffee Count",
+        "CommandLevel": 3
+      },
+      "Dashboard": {
+        "ForegroundColor": "#fff",
+        "BackgroundColor": "#ffe13a",
+        "IconClass": "fa-coffee",
+        "Description": "Coffees"
+      }
     },
-    "NumericalOutput": {
-      "Enabled": true,
-      "Padding": 0
+    {
+      "Key": "Crashes",
+      "TextOutput": {
+        "Enabled": true,
+        "Prefix": "Crash #",
+        "Suffix": ""
+      },
+      "NumericalOutput": {
+        "Enabled": true,
+        "Padding": 0
+      },
+      "Increase": {
+        "Command": "!crash++",
+        "CommandDescription": "Increase Crash Count",
+        "CommandLevel": 3,
+        "Notify": true,
+        "NotifyCallback": [
+          "/command/?script=wirecast&arg=layer,1,Crash"
+        ],
+        "NotifyMessage": "We're on our ### crash of the day.",
+        "Sounds": []
+      },
+      "Decrease": {
+        "Command": "!crash--",
+        "CommandDescription": "Decrease Crash Count",
+        "CommandLevel": 3,
+        "Sounds": []
+      },
+      "Set": {
+        "Command": "!crash",
+        "CommandDescription": "Set Crash Count",
+        "CommandLevel": 3
+      },
+      "Dashboard": {
+        "ForegroundColor": "#fff",
+        "BackgroundColor": "#ff9933",
+        "IconClass": "fa-fire",
+        "Description": "Crashes"
+      }
     },
-    "Increase": {
-      "Command": "!coffee++",
-      "CommandDescription": "Increase Coffee Count",
-      "CommandLevel": 3,
-      "Notify": true,
-      "NotifyCallback": "?script=wirecast&args=layer,1,Coffee",
-      "NotifyMessage": "We're on our ### coffee of the day.",
-      "Sounds": []
+    {
+      "Key": "Saves",
+      "TextOutput": {
+        "Enabled": true,
+        "Prefix": "Save #",
+        "Suffix": ""
+      },
+      "NumericalOutput": {
+        "Enabled": true,
+        "Padding": 0
+      },
+      "Increase": {
+        "Command": "!save++",
+        "CommandDescription": "Increase Save Count",
+        "CommandLevel": 3,
+        "Notify": true,
+        "NotifyCallback": [
+          "/command/?script=wirecast&arg=layer,1,Save"
+        ],
+        "NotifyMessage": "We're on our ### save of the day.",
+        "Sounds": []
+      },
+      "Decrease": {
+        "Command": "!save--",
+        "CommandDescription": "Decrease Save Count",
+        "CommandLevel": 3,
+        "Sounds": []
+      },
+      "Set": {
+        "Command": "!save",
+        "CommandDescription": "Set Save Count",
+        "CommandLevel": 3
+      },
+      "Dashboard": {
+        "ForegroundColor": "#fff",
+        "BackgroundColor": "#d83964",
+        "IconClass": "fa-life-ring",
+        "Description": "Saves"
+      }
     },
-    "Decrease": {
-      "Command": "!coffee--",
-      "CommandDescription": "Decrease Coffee Count",
-      "CommandLevel": 3,
-      "Sounds": []
+    {
+      "Key": "Builds",
+      "TextOutput": {
+        "Enabled": true,
+        "Prefix": "Build #",
+        "Suffix": ""
+      },
+      "NumericalOutput": {
+        "Enabled": true,
+        "Padding": 0
+      },
+      "Increase": {
+        "Command": "!build++",
+        "CommandDescription": "Build!",
+        "CommandLevel": 3,
+        "Notify": true,
+        "NotifyCallback": [
+          "/command/?script=clion",
+          "/command/?script=wirecast&arg=layer,1,Build"
+        ],
+        "NotifyMessage": "We're on our ### build of the day.",
+        "Sounds": []
+      },
+      "Decrease": {
+        "Command": "!build--",
+        "CommandDescription": "Decrease Build Count",
+        "CommandLevel": 3,
+        "Sounds": []
+      },
+      "Set": {
+        "Command": "!build",
+        "CommandDescription": "Set Build Count",
+        "CommandLevel": 3
+      },
+      "Dashboard": {
+        "ForegroundColor": "#fff",
+        "BackgroundColor": "#1d66f0",
+        "IconClass": "fa-cog",
+        "Description": "Builds"
+      }
     },
-    "Set": {
-      "Command": "!coffee",
-      "CommandDescription": "Set Coffee Count",
-      "CommandLevel": 3
-    },
-    "Dashboard": {
-      "ForegroundColor": "#fff",
-      "BackgroundColor": "#000",
-      "IconClass": "fa-coffee"
+    {
+      "Key": "Swears",
+      "TextOutput": {
+        "Enabled": true,
+        "Prefix": "Swear #",
+        "Suffix": ""
+      },
+      "NumericalOutput": {
+        "Enabled": true,
+        "Padding": 0
+      },
+      "Increase": {
+        "Command": "!swear++",
+        "CommandDescription": "Swear!",
+        "CommandLevel": 3,
+        "Notify": true,
+        "NotifyCallback": [
+          "/command/?script=wirecast&arg=layer,1,Swear"
+        ],
+        "NotifyMessage": "I have sworn ### times today. Yup, shame on me.",
+        "Sounds": []
+      },
+      "Decrease": {
+        "Command": "!swear--",
+        "CommandDescription": "Decrease Swear Count",
+        "CommandLevel": 3,
+        "Sounds": []
+      },
+      "Set": {
+        "Command": "!swear",
+        "CommandDescription": "Set Swear Count",
+        "CommandLevel": 3
+      },
+      "Dashboard": {
+        "ForegroundColor": "#fff",
+        "BackgroundColor": "#00ac00",
+        "IconClass": "fa-child",
+        "Description": "Swears"
+      }
     }
-  },
-  {
-    "Key": "Crashes",
-    "TextOutput": {
-      "Enabled": true,
-      "Prefix": "Crash #",
-      "Suffix": ""
-    },
-    "NumericalOutput": {
-      "Enabled": true,
-      "Padding": 0
-    },
-    "Increase": {
-      "Command": "!crash++",
-      "CommandDescription": "Increase Crash Count",
-      "CommandLevel": 3,
-      "Notify": true,
-      "NotifyCallback": "?script=wirecast&args=layer,1,Crash",
-      "NotifyMessage": "We're on our ### crash of the day.",
-      "Sounds": []
-    },
-    "Decrease": {
-      "Command": "!crash--",
-      "CommandDescription": "Decrease Crash Count",
-      "CommandLevel": 3,
-      "Sounds": []
-    },
-    "Set": {
-      "Command": "!crash",
-      "CommandDescription": "Set Crash Count",
-      "CommandLevel": 3
-    },
-    "Dashboard": {
-      "ForegroundColor": "#fff",
-      "BackgroundColor": "#000",
-      "IconClass": "fa-coffee"
-    }
-  },
-  {
-    "Key": "Saves",
-    "TextOutput": {
-      "Enabled": true,
-      "Prefix": "Save #",
-      "Suffix": ""
-    },
-    "NumericalOutput": {
-      "Enabled": true,
-      "Padding": 0
-    },
-    "Increase": {
-      "Command": "!save++",
-      "CommandDescription": "Increase Save Count",
-      "CommandLevel": 3,
-      "Notify": true,
-      "NotifyCallback": "?script=wirecast&args=layer,1,Save",
-      "NotifyMessage": "We're on our ### save of the day.",
-      "Sounds": []
-    },
-    "Decrease": {
-      "Command": "!save--",
-      "CommandDescription": "Decrease Save Count",
-      "CommandLevel": 3,
-      "Sounds": []
-    },
-    "Set": {
-      "Command": "!save",
-      "CommandDescription": "Set Save Count",
-      "CommandLevel": 3
-    },
-    "Dashboard": {
-      "ForegroundColor": "#fff",
-      "BackgroundColor": "#000",
-      "IconClass": "fa-coffee"
-    }
-  },
-  {
-    "Key": "Build",
-    "TextOutput": {
-      "Enabled": true,
-      "Prefix": "Build #",
-      "Suffix": ""
-    },
-    "NumericalOutput": {
-      "Enabled": true,
-      "Padding": 0
-    },
-    "Increase": {
-      "Command": "!build++",
-      "CommandDescription": "Build!",
-      "CommandLevel": 3,
-      "Notify": true,
-      "NotifyCallback": "?script=clion",
-      "NotifyMessage": "We're on our ### build of the day.",
-      "Sounds": []
-    },
-    "Decrease": {
-      "Command": "!build--",
-      "CommandDescription": "Decrease Build Count",
-      "CommandLevel": 3,
-      "Sounds": []
-    },
-    "Set": {
-      "Command": "!build",
-      "CommandDescription": "Set Build Count",
-      "CommandLevel": 3
-    },
-    "Dashboard": {
-      "ForegroundColor": "#fff",
-      "BackgroundColor": "#000",
-      "IconClass": "fa-coffee"
-    }
-  }
   ]
 }

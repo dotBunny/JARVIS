@@ -15,3 +15,4 @@ go get github.com/bwmarrin/discordgo
 go get github.com/jpillora/backoff
 go get google.golang.org/api/youtube/v3
 go get golang.org/x/oauth2/google
+go install github.com/mattn/go-sqlite3

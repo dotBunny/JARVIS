@@ -16,7 +16,7 @@ var (
 
 func (m *Module) authenticate() {
 
-	m.spotifyOAuth = spotify.NewAuthenticator("http://"+m.j.WebServer.GetIPAddress()+":"+m.j.WebServer.GetPort()+"/spotify/callback",
+	m.spotifyOAuth = spotify.NewAuthenticator("http://localhost:"+m.j.WebServer.GetPort()+"/spotify/callback",
 		spotify.ScopeUserReadCurrentlyPlaying,
 		spotify.ScopeUserReadRecentlyPlayed,
 		spotify.ScopeUserModifyPlaybackState)

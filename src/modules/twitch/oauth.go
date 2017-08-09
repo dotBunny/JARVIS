@@ -27,7 +27,7 @@ func (m *Module) authenticate() {
 	m.twitchOAuth = oauth2.Config{
 		ClientID:     m.settings.ClientID,
 		ClientSecret: m.settings.ClientSecret,
-		RedirectURL:  "http://" + m.j.WebServer.GetIPAddress() + ":" + m.j.WebServer.GetPort() + "/twitch/callback",
+		RedirectURL:  "http://localhost:" + m.j.WebServer.GetPort() + "/twitch/callback",
 		Scopes: []string{
 			"channel_check_subscription",
 			"channel_commercial",
