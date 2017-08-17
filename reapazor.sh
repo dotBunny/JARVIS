@@ -1,6 +1,8 @@
 
 #!/bin/bash
 
+# TODO: Make these stop if there is an error
+
 # Define with wildcard because of space
 CONFIG="/Users/reapazor/Dropbox/The*Forgotten*Soul/Stream/Apps/JARVIS/jarvis.csv"
 
