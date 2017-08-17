@@ -32,4 +32,5 @@ else
 
     echo "Clearing Build Files..."
     rm -rf jarvis-build/
+    rm -rf jarvis-build.zip
 fi
