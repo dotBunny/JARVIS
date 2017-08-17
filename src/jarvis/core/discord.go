@@ -107,8 +107,9 @@ func (m *DiscordCore) Connect() {
 	// Create a new Discord session using the provided bot token.
 	m.session, errorCheck = discordgo.New("Bot " + m.settings.Token)
 	if errorCheck != nil {
-		m.j.Log.Warning("Discord", "Unable to create new Discord session. "+errorCheck.Error())
-		m.j.Status.WarningCount++
+		m.j.Log.Error("Discord", "Unable to create new Discord session. "+errorCheck.Error())
+		m.j.Status.ErrorCount++
+		return
 	}
 
 	// Get the account information.

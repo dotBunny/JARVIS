@@ -15,6 +15,7 @@
 
 bin/
 temp/
+jarvis-build/
 jarvis-build.zip
 debug
 launch.json

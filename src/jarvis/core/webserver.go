@@ -35,6 +35,7 @@ type WebServerCore struct {
 	settings *WebServerConfig
 	webPath  string
 	parsers  map[string]WebServerParser
+	proxies  map[string]string
 
 	j *JARVIS
 }
@@ -77,6 +78,7 @@ func (m *WebServerCore) Initialize(jarvisInstance *JARVIS) {
 	// Create default general settings
 	m.settings = new(WebServerConfig)
 	m.parsers = make(map[string]WebServerParser)
+	m.proxies = make(map[string]string)
 	m.RegisterParser("webserver", m.ParseWebContent)
 
 	// Register Log Channel
@@ -116,6 +118,11 @@ func (m *WebServerCore) Initialize(jarvisInstance *JARVIS) {
 	m.RegisterEndpoint("/media/fetch/", m.endpointMediaFetch)
 	m.RegisterEndpoint("/media/fetch", m.endpointMediaFetch)
 
+	m.RegisterEndpoint("/proxy/register", m.endpointRegisterProxy)
+	m.RegisterEndpoint("/proxy/unregister", m.endpointUnregisterProxy)
+	m.RegisterEndpoint("/proxy/register/", m.endpointRegisterProxy)
+	m.RegisterEndpoint("/proxy/unregister/", m.endpointUnregisterProxy)
+
 	// Start Server
 	go http.ListenAndServe(":"+strconv.Itoa(m.settings.ListenPort), nil)
 
@@ -147,6 +154,11 @@ func (m *WebServerCore) RegisterEndpoint(endpoint string, function http.HandlerF
 // TouchEndpoint of our API without returning anyhting
 func (m *WebServerCore) TouchEndpoint(endpoint string) {
 	go http.Get("http://" + m.settings.IPAddress + ":" + strconv.Itoa(m.settings.ListenPort) + endpoint)
+
+	if len(m.proxies[endpoint]) > 0 {
+		go http.Get(m.proxies[endpoint])
+	}
+
 }
 
 func (m *WebServerCore) endpointBase(w http.ResponseWriter, r *http.Request) {
@@ -274,9 +286,28 @@ func (m *WebServerCore) endpointMediaMonitor(w http.ResponseWriter, r *http.Requ
 }
 
 func (m *WebServerCore) endpointMediaFetch(w http.ResponseWriter, r *http.Request) {
-
 	w.Header().Set("Content-Type", "audio/wav")
 	w.Write(m.j.Media.MediaLastData)
+}
+
+func (m *WebServerCore) endpointRegisterProxy(w http.ResponseWriter, r *http.Request) {
+
+	// ID is the callback / value is where to hit
+	var id = r.FormValue("id")
+	var address = r.FormValue("callback")
+
+	if len(m.proxies[id]) > 0 {
+		m.j.Log.Warning("WEB", "Duplicate proxy registration for '"+id+"', ignoring latest.")
+		m.j.Status.WarningCount++
+		return
+	}
+	m.proxies[id] = address
+}
+func (m *WebServerCore) endpointUnregisterProxy(w http.ResponseWriter, r *http.Request) {
+	var id = r.FormValue("id")
+	if len(m.proxies[id]) > 0 {
+		delete(m.proxies, id)
+	}
 }
 
 // OpenDashboard
