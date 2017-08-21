@@ -33,9 +33,7 @@ var (
 )
 
 func main() {
-
 	systray.Run(onReady)
-
 }
 
 func onReady() {
@@ -43,12 +41,15 @@ func onReady() {
 	mDashboard := systray.AddMenuItem("Dashboard", "Show Dashboard")
 	mQuit := systray.AddMenuItem("Quit", "Shutdown JARVIS")
 	go func() {
-		<-mQuit.ClickedCh
-		Shutdown()
-	}()
-	go func() {
-		<-mDashboard.ClickedCh
-		j.WebServer.OpenDashboard()
+		for {
+			select {
+			case <-mQuit.ClickedCh:
+				Shutdown()
+				return
+			case <-mDashboard.ClickedCh:
+				j.WebServer.OpenDashboard()
+			}
+		}
 	}()
 
 	go func() {

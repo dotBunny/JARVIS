@@ -12,6 +12,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/getlantern/systray"
 	"github.com/skratchdot/open-golang/open"
 )
 
@@ -131,6 +132,33 @@ func (m *WebServerCore) Initialize(jarvisInstance *JARVIS) {
 	m.RegisterEndpoint("/proxy/unregister", m.endpointUnregisterProxy)
 	m.RegisterEndpoint("/proxy/register/", m.endpointRegisterProxy)
 	m.RegisterEndpoint("/proxy/unregister/", m.endpointUnregisterProxy)
+
+	// Create Quick Links From Tray
+	if len(m.settings.DashboardLinks) > 0 {
+
+		var maximumLength = 0
+		for _, link := range m.settings.DashboardLinks {
+			if len(link.Name) > maximumLength {
+				maximumLength = len(link.Name)
+			}
+		}
+
+		// Create spacer
+		spacer := systray.AddMenuItem(times("-", maximumLength+3), "")
+		spacer.Disable()
+	}
+
+	for _, link := range m.settings.DashboardLinks {
+		newLink := systray.AddMenuItem(link.Name, link.URL)
+		go func() {
+			for {
+				select {
+				case <-newLink.ClickedCh:
+					open.Run(link.URL)
+				}
+			}
+		}()
+	}
 
 	// Start Server
 	go http.ListenAndServe(":"+strconv.Itoa(m.settings.ListenPort), nil)
