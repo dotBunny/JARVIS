@@ -19,9 +19,10 @@ import (
 type WebServerParser func(string, string, *http.Request) string
 
 type DashboardLink struct {
-	Name string
-	URL  string
-	Icon string
+	Name   string
+	URL    string
+	Icon   string
+	Target string
 }
 
 // WebServerConfig Settings
@@ -353,7 +354,7 @@ func (m *WebServerCore) ParseWebContent(content string, mode string, r *http.Req
 		buffer.WriteString("<li class=\"nav-spacer\"></li>")
 	}
 	for _, link := range m.settings.DashboardLinks {
-		buffer.WriteString("<li><a href=\"" + link.URL + "\"><i class=\"fa fa-fw " + link.Icon + "\"></i> " + link.Name + "</a></li>")
+		buffer.WriteString("<li><a href=\"" + link.URL + "\" target=\"" + link.Target + "\"><i class=\"fa fa-fw " + link.Icon + "\"></i> " + link.Name + "</a></li>")
 	}
 
 	// Quick Links

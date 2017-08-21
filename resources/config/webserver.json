@@ -7,7 +7,8 @@
         {
             "Name": "Twitch Dashboard",
             "URL": "http://twitch.tv/reapazor/dashboard",
-            "Icon": "fa-link"
+            "Icon": "fa-link",
+            "Target": "_blank"
         }
     ]
 }
