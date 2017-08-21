@@ -65,6 +65,12 @@ func (m *Module) pollIssues(notify bool) {
 				m.data.LastIssues = append(m.data.LastIssues, m.GetJSONItem(issue))
 			}
 			m.outputLastIssues()
+		} else if m.data.LastIssues == nil {
+			// Make new data
+			for _, issue := range issues {
+				m.data.LastIssues = append(m.data.LastIssues, m.GetJSONItem(issue))
+			}
+			m.outputLastIssues()
 		}
 	} else {
 		m.data.LastIssues = nil
