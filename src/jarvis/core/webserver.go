@@ -52,7 +52,14 @@ func (m *WebServerCore) GetPagePath() string {
 
 // GetIPAddress server is listening on
 func (m *WebServerCore) GetIPAddress() string {
-	return m.settings.IPAddress
+
+	if m.j.Config.GetProxyStatus() {
+		// If we are the local host (not proxy), then provide localhost as the IP address, otherwise use set
+		return m.settings.IPAddress
+	} else {
+		return "localhost"
+	}
+
 }
 
 // GetPort server is listening on
@@ -153,7 +160,7 @@ func (m *WebServerCore) RegisterEndpoint(endpoint string, function http.HandlerF
 
 // TouchEndpoint of our API without returning anyhting
 func (m *WebServerCore) TouchEndpoint(endpoint string) {
-	go http.Get("http://" + m.settings.IPAddress + ":" + strconv.Itoa(m.settings.ListenPort) + endpoint)
+	go http.Get("http://" + m.GetIPAddress() + ":" + strconv.Itoa(m.settings.ListenPort) + endpoint)
 
 	if len(m.proxies[endpoint]) > 0 {
 		go http.Get(m.proxies[endpoint])
@@ -330,7 +337,7 @@ func (m *WebServerCore) RegisterParser(key string, function WebServerParser) {
 
 // GetBaseURI returns the complete server web address
 func (m *WebServerCore) GetBaseURI() string {
-	return "http://" + m.settings.IPAddress + ":" + strconv.Itoa(m.settings.ListenPort)
+	return "http://" + m.GetIPAddress() + ":" + strconv.Itoa(m.settings.ListenPort)
 }
 
 func (m *WebServerCore) ParseWebContent(content string, mode string) string {

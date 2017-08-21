@@ -12,6 +12,7 @@ import (
 
 // GeneralConfig Settings
 type GeneralConfig struct {
+	IsProxy    bool
 	OutputPath string
 	Prefix     string
 }
@@ -35,6 +36,11 @@ func (m *ConfigCore) GetConfigData(key string) json.RawMessage {
 // GetOutputPath base to use for files
 func (m *ConfigCore) GetOutputPath() string {
 	return m.settings.OutputPath
+}
+
+// GetProxyStatus returns if this is a proxy run
+func (m *ConfigCore) GetProxyStatus() bool {
+	return m.settings.IsProxy
 }
 
 // GetPrefix for Discord
@@ -95,6 +101,9 @@ func (m *ConfigCore) Initialize(jarvisInstance *JARVIS) {
 
 	// Create default general settings
 	m.settings = new(GeneralConfig)
+
+	// Set Proxy to false
+	m.settings.IsProxy = false
 
 	// General Config Defaults
 	m.settings.OutputPath = path.Join(m.j.GetResourcePath(), "output")
