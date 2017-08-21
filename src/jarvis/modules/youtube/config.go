@@ -35,7 +35,7 @@ func (m *Module) loadConfig() {
 	m.settings.LastFollowersCount = 10
 	m.settings.LastSubscribersCount = 10
 	m.settings.PollingFrequency = 7
-	m.settings.Prefix = "<:youtube:328598129710596096> "
+	m.settings.Prefix = "<:youtube:328598129710596096>"
 	m.settings.PadChannelFollowersOutput = 3
 	m.settings.PadChannelViewersOutput = 3
 	m.settings.PadChannelSubscribersOutput = 3

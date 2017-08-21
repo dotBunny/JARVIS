@@ -214,7 +214,7 @@ func (m *Module) pollSubscribers(notify bool) {
 			// 	m.j.
 			// 	m.j.Discord.GetSession().ChannelMessageSend(
 			// 		m.j.Discord.GetChatChannel(),
-			// 		m.settings.Prefix+"New Twitch Subscriber "+m.data.LastSubscriber)
+			// 		m.settings.Prefix+" New Twitch Subscriber "+m.data.LastSubscriber)
 			// }
 
 			// TODO: Need to make it so it loads so this doesnt ding

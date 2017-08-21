@@ -65,7 +65,7 @@ func (m *Module) pollChat() {
 	}
 	m.liveChatPageToken = listResponse.NextPageToken
 	for _, message := range listResponse.Items {
-		_, _ = m.j.Discord.GetSession().ChannelMessageSend(m.j.Discord.GetChatChannelID(), m.settings.Prefix+Core.WrapNicknameForDiscord(message.AuthorDetails.DisplayName)+" "+message.Snippet.DisplayMessage)
+		_, _ = m.j.Discord.GetSession().ChannelMessageSend(m.j.Discord.GetChatChannelID(), m.settings.Prefix+" "+Core.WrapNicknameForDiscord(message.AuthorDetails.DisplayName)+" "+message.Snippet.DisplayMessage)
 	}
 }
 
@@ -105,11 +105,11 @@ func (m *Module) pollChat() {
 // 			if notify {
 // 				m.j.Discord.GetSession().ChannelMessageSend(
 // 					m.j.Discord.GetPrivateChannelID(),
-// 					m.settings.Prefix+"New Twitch Follower "+followers.Follows[0].User.DisplayName)
+// 					m.settings.Prefix+" New Twitch Follower "+followers.Follows[0].User.DisplayName)
 // 			}
 
 // 			// TODO: Need to make it so it loads so this doesnt ding
-// 			m.j.Log.Message("Twitch", "New Twitch Follower "+followers.Follows[0].User.DisplayName)
+// 			m.j.Log.Message("Twitch", " New Twitch Follower "+followers.Follows[0].User.DisplayName)
 
 // 			// Since the last follower has changed, it means that we need to update our last list
 

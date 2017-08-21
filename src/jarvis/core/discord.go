@@ -44,7 +44,7 @@ func (m *DiscordCore) loadConfig() {
 	m.settings.Username = "JARVIS"
 	m.settings.LogChannelID = "325784977415340043"
 	m.settings.ChatChannelID = "324979047396540418"
-	m.settings.Prefix = ":discord: "
+	m.settings.Prefix = ":discord:"
 
 	// TODO Add default annoucnemet channels
 

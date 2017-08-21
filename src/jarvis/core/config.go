@@ -98,7 +98,7 @@ func (m *ConfigCore) Initialize(jarvisInstance *JARVIS) {
 
 	// General Config Defaults
 	m.settings.OutputPath = path.Join(m.j.GetResourcePath(), "output")
-	m.settings.Prefix = ":jarvis: "
+	m.settings.Prefix = ":jarvis:"
 
 	// Check Raw Data
 	if m.dataSource["General"] == nil {

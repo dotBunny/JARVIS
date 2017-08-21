@@ -52,7 +52,7 @@ func (m *Module) handlePing(event *irc.Event) {
 
 func (m *Module) handleMessage(event *irc.Event) {
 	// Only send messages received to the twitch channel
-	_, _ = m.j.Discord.GetSession().ChannelMessageSend(m.settings.ChatChannelID, m.settings.Prefix+Core.WrapNicknameForDiscord(event.Nick)+" "+event.Message())
+	_, _ = m.j.Discord.GetSession().ChannelMessageSend(m.settings.ChatChannelID, m.settings.Prefix+" "+Core.WrapNicknameForDiscord(event.Nick)+" "+event.Message())
 }
 func (m *Module) handleNotice(event *irc.Event) {
 	m.j.Log.Message("Twitch", "NOTICE <"+event.Nick+"> "+event.Message())

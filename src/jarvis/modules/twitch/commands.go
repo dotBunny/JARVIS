@@ -37,6 +37,6 @@ func (m *Module) commandTwitch(message *Core.DiscordMessage) {
 			m.authenticate()
 		}
 	} else {
-		m.j.Discord.GetSession().ChannelMessageSend(message.ChannelID, m.settings.Prefix+"There are currently "+fmt.Sprintf("%d", m.data.ChannelViewers)+" viewers, and "+fmt.Sprintf("%d", m.data.ChannelFollowers)+".")
+		m.j.Discord.GetSession().ChannelMessageSend(message.ChannelID, m.settings.Prefix+" There are currently "+fmt.Sprintf("%d", m.data.ChannelViewers)+" viewers, and "+fmt.Sprintf("%d", m.data.ChannelFollowers)+".")
 	}
 }

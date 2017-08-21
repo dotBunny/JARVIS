@@ -29,7 +29,7 @@ func (m *Module) loadConfig() {
 	m.settings.ClientSecret = "Your secret key needs to be in the config"
 	m.settings.TruncateTrackLength = 85
 	m.settings.TruncateTrackRunes = "..."
-	m.settings.Prefix = ":spotify: "
+	m.settings.Prefix = ":spotify:"
 
 	// Check Raw Data
 	if m.j.Config.IsInitialized() {

@@ -88,7 +88,7 @@ func (m *WebServerCore) Initialize(jarvisInstance *JARVIS) {
 
 	// Web Server Config
 	m.settings.ListenPort = 8080
-	m.settings.Prefix = ":go: "
+	m.settings.Prefix = ":go:"
 
 	// TODO: Get default IP
 
