@@ -33,4 +33,4 @@ mkdir -p bin/jarvis/scripts
 cp -rf resources/scripts bin/jarvis
 
 # Compile Configs
-./bin/jarvis-compiler/jarvis-compiler $1 ./bin/jarvis/config
+./bin/jarvis-compiler/jarvis-compiler "$1" ./bin/jarvis/config

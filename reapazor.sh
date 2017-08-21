@@ -4,7 +4,7 @@
 # TODO: Make these stop if there is an error
 
 # Define with wildcard because of space
-CONFIG="/Users/reapazor/Dropbox/The*Forgotten*Soul/Stream/Apps/JARVIS/jarvis.csv"
+CONFIG="/Users/reapazor/Dropbox/The Forgotten Soul/Stream/Apps/JARVIS/jarvis.csv"
 
 cd "$(dirname "$0")"
 clear
@@ -26,7 +26,7 @@ else
     ./scripts/package.sh DONOTDELETE
 
     echo "Setting Configuration"
-    ./bin/jarvis-compiler/jarvis-compiler "$CONFIG" ./jarvis-build/macOS/JARVIS.app/Contents/Resources/config
+    ./bin/jarvis-compiler/jarvis-compiler "$CONFIG" "./jarvis-build/macOS/JARVIS.app/Contents/Resources/config"
 
     echo "Copying Into Applications..."
     rm -rf /Applications/JARVIS.app
