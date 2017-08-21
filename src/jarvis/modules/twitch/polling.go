@@ -62,7 +62,7 @@ func (m *Module) pollFollowers(notify bool) {
 	followers := &Followers{}
 	errorDecoder := json.NewDecoder(response.Body).Decode(&followers)
 	if errorDecoder != nil {
-		m.j.Log.Error("Twitch", "Error decoding JSON from: "+url+", "+responseError.Error())
+		m.j.Log.Error("Twitch", "Error decoding JSON from: "+url+", "+errorDecoder.Error())
 		return
 	}
 
