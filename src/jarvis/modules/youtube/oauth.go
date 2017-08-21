@@ -28,7 +28,7 @@ func (m *Module) authenticate() {
 		ClientID:     m.settings.ClientID,
 		ClientSecret: m.settings.ClientSecret,
 		Endpoint:     google.Endpoint,
-		RedirectURL:  "http://" + m.j.WebServer.GetIPAddress() + ":" + m.j.WebServer.GetPort() + "/youtube/callback",
+		RedirectURL:  "http://localhost:" + m.j.WebServer.GetPort() + "/youtube/callback",
 		Scopes: []string{
 			"https://www.googleapis.com/auth/youtube",
 			"https://www.googleapis.com/auth/youtube.readonly",

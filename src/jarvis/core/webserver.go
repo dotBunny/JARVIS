@@ -1,9 +1,11 @@
 package core
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"net"
 	"net/http"
 	"os"
 	"path"
@@ -14,11 +16,12 @@ import (
 )
 
 // DiscordFunc for IRC
-type WebServerParser func(string, string) string
+type WebServerParser func(string, string, *http.Request) string
 
 type DashboardLink struct {
 	Name string
 	URL  string
+	Icon string
 }
 
 // WebServerConfig Settings
@@ -56,10 +59,8 @@ func (m *WebServerCore) GetIPAddress() string {
 	if m.j.Config.GetProxyStatus() {
 		// If we are the local host (not proxy), then provide localhost as the IP address, otherwise use set
 		return m.settings.IPAddress
-	} else {
-		return "localhost"
 	}
-
+	return "localhost"
 }
 
 // GetPort server is listening on
@@ -142,12 +143,12 @@ func (m *WebServerCore) IsEnabled() bool {
 }
 
 // ParseContent data as string and replace in variables
-func (m *WebServerCore) ParseContent(originalData []byte, mode string) []byte {
+func (m *WebServerCore) ParseContent(originalData []byte, mode string, r *http.Request) []byte {
 
 	workingContent := string(originalData[:len(originalData)])
 
 	for _, parser := range m.parsers {
-		workingContent = parser(workingContent, mode)
+		workingContent = parser(workingContent, mode, r)
 	}
 
 	return []byte(workingContent)
@@ -268,7 +269,7 @@ func (m *WebServerCore) endpointBase(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if parsableContent {
-		fileData = m.ParseContent(fileData, ext)
+		fileData = m.ParseContent(fileData, ext, r)
 	}
 	w.Header().Set("Content-Length", strconv.Itoa(len(fileData)))
 
@@ -340,6 +341,35 @@ func (m *WebServerCore) GetBaseURI() string {
 	return "http://" + m.GetIPAddress() + ":" + strconv.Itoa(m.settings.ListenPort)
 }
 
-func (m *WebServerCore) ParseWebContent(content string, mode string) string {
+func (m *WebServerCore) GetLocalURI() string {
+	return "http://localhost:" + strconv.Itoa(m.settings.ListenPort)
+}
+
+func (m *WebServerCore) ParseWebContent(content string, mode string, r *http.Request) string {
+
+	var buffer bytes.Buffer
+
+	if len(m.settings.DashboardLinks) > 0 {
+		buffer.WriteString("<li class=\"nav-spacer\"></li>")
+	}
+	for _, link := range m.settings.DashboardLinks {
+		buffer.WriteString("<li><a href=\"" + link.URL + "\"><i class=\"fa fa-fw " + link.Icon + "\"></i> " + link.Name + "</a></li>")
+	}
+
+	// Quick Links
+	content = strings.Replace(content, "[[JARVIS.WebServer.QuickLinks]]", buffer.String(), -1)
+
+	if m.IsLocal(r) {
+		return strings.Replace(content, "[[JARVIS.address]]", m.GetLocalURI(), -1)
+	}
 	return strings.Replace(content, "[[JARVIS.address]]", m.GetBaseURI(), -1)
+}
+
+// IsLocal Call
+func (m *WebServerCore) IsLocal(r *http.Request) bool {
+	ip, _, _ := net.SplitHostPort(r.RemoteAddr)
+	if ip == "::1" {
+		return true
+	}
+	return false
 }

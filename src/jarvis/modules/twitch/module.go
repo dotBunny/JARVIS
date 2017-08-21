@@ -109,7 +109,7 @@ func (m *Module) Stop() {
 	}
 }
 
-func (m *Module) ParseWebContent(content string, mode string) string {
+func (m *Module) ParseWebContent(content string, mode string, r *http.Request) string {
 
 	if mode == ".json" {
 

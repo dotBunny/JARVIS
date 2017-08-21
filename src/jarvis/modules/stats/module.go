@@ -2,6 +2,7 @@ package stats
 
 import (
 	"encoding/json"
+	"net/http"
 	"strings"
 
 	Core "../../core"
@@ -46,7 +47,7 @@ func (m *Module) Initialize(jarvisInstance *Core.JARVIS, commandModule *Command.
 func (m *Module) StatusUpdate() (int, int) {
 	return m.warningCount, m.errorCount
 }
-func (m *Module) ParseWebContent(content string, mode string) string {
+func (m *Module) ParseWebContent(content string, mode string, r *http.Request) string {
 
 	if mode == ".json" {
 

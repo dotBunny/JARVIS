@@ -1,3 +1,9 @@
+
+li.nav-spacer {
+    width: 1px;
+    height: 20px;
+}
+
 .panel a,
 .widget-stat a {
     color: #777;

@@ -6,7 +6,8 @@
     "DashboardLinks": [
         {
             "Name": "Twitch Dashboard",
-            "URL": "http://twitch.tv/reapazor/dashboard"
+            "URL": "http://twitch.tv/reapazor/dashboard",
+            "Icon": "fa-link"
         }
     ]
 }
