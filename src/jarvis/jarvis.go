@@ -11,6 +11,7 @@ import (
 
 	Core "./core"
 
+	Ads "./modules/ads"
 	Command "./modules/command"
 	Spotify "./modules/spotify"
 	Stats "./modules/stats"
@@ -28,6 +29,7 @@ var (
 	tasksModule   *Tasks.Module
 	youtubeModule *YouTube.Module
 	commandModule *Command.Module
+	adModule      *Ads.Module
 
 	quit chan os.Signal
 )
@@ -90,6 +92,9 @@ func onReady() {
 
 		tasksModule := new(Tasks.Module)
 		tasksModule.Initialize(j)
+
+		adModule := new(Ads.Module)
+		adModule.Initialize(j)
 
 		// Ready to rock!
 		j.Log.Message("System", "Ready")

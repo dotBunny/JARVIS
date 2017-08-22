@@ -67,6 +67,20 @@ func RandomString(n int) string {
 	return string(b)
 }
 
+// Return random string from collection
+func RandomFromStrings(strings []string) string {
+	return strings[rand.Intn(len(strings))]
+}
+
+func StringsContains(s []string, e string) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+	return false
+}
+
 // ReadLines grabs the contents of a text file, and allows conditional includes
 func ReadLines(filePath string, parse func(string) (string, bool)) ([]string, error) {
 	inputFile, err := os.Open(filePath)

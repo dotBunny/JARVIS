@@ -1,0 +1,15 @@
+{
+  "Definitions": [
+    {
+      "Key": "Follow",
+      "Channels": [
+        "twitch"
+      ],
+      "Content": [
+        "Like what you see? How about you follow the channel?",
+        "Want to support the cause? Click the follow button!"
+      ],
+      "Interval": 8000
+    }
+  ]
+}

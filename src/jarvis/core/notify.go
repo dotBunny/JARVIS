@@ -3,7 +3,8 @@ package core
 import "github.com/bwmarrin/discordgo"
 
 type NotifyMessage struct {
-	Author              string
+	Author string
+
 	Discord             bool
 	DiscordEmbed        *discordgo.MessageEmbed
 	DiscordPrefix       string
