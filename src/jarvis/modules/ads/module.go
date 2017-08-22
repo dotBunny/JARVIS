@@ -66,14 +66,15 @@ func (m *Module) loop() {
 
 func (m *Module) process(ad Ad) {
 
+	// Create message
 	var message Core.NotifyMessage
 
 	// Only support Twitch currently
 	if Core.StringsContains(ad.Channels, "twitch") {
 		message.Twitch = true
 	}
-
 	message.Message = Core.RandomFromStrings(ad.Content)
 
+	m.j.Log.Message("Ads", "Post ad: "+message.Message)
 	m.j.Notify.Announce(message)
 }
