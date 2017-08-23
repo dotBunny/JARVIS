@@ -17,6 +17,8 @@ go build -o jarvis-build/macOS/JARVIS.app/Contents/MacOS/jarvis ./src/jarvis
 cp -rf resources/www jarvis-build/macOS/JARVIS.app/Contents/Resources/
 cp -rf resources/scripts jarvis-build/macOS/JARVIS.app/Contents/Resources/
 cp -rf resources/config jarvis-build/macOS/JARVIS.app/Contents/Resources/
+# Handle Database
+cp -rf resources/database/db.new.sqlite jarvis-build/macOS/JARVIS.app/Contents/Resources/
 
 # Build For Windows
 mkdir -p jarvis-build/windows
@@ -26,6 +28,7 @@ rm -rf src/jarvis/jarvis.syso
 cp -rf resources/www jarvis-build/windows/
 cp -rf resources/scripts jarvis-build/windows/
 cp -rf resources/config jarvis-build/windows/
+cp -rf resources/database/db.new.sqlite jarvis-build/windows/
 
 # Remove Previous Package
 rm -rf jarvis-build.zip

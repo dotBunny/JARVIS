@@ -28,8 +28,10 @@ else
     echo "Setting Configuration"
     ./bin/jarvis-compiler/jarvis-compiler "$CONFIG" "./jarvis-build/macOS/JARVIS.app/Contents/Resources/config"
 
-    echo "Copying Into Applications..."
+    echo "Replacing Into Applications..."
+    cp -rf /Applications/JARVIS.app/Content/Resources/db.sqlite ./jarvis-build
     rm -rf /Applications/JARVIS.app
+    mv jarvis-build/db.sqlite jarvis-build/macOS/JARVIS.app/Content/Resources/
     cp -rf jarvis-build/macOS/JARVIS.app /Applications
 
     echo "Clearing Build Files..."
