@@ -21,22 +21,16 @@ body {
 div {
 	margin: 0px;
 }
-
-
-
-
-/* div#jarvis-button-icon {
+div#cancel
+{
   position: absolute;
-  top: 10px;
-  left: 10px;
-  width: 30px;
-  height: 30px;
-  background-size: cover;
-  background-image: url("../img/icon-white.png");
-} */
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+}
 
-
-.panel
+div#jarvis
 {
   position: absolute;
   top: 0px;
@@ -44,37 +38,86 @@ div {
   width: 30%;
   right: -30%;
   height: 100%;
-  opacity: 0.8;
-  background-color: #111;
 }
 
-.panel .button
-{
-  width: 50px;
-  height: 50px;
-  position: absolute;
-  left: -50px;
-}
-
-.panel .button:hover 
-{
-  cursor: pointer;
-}
-
-.panel .button .background
+.panel 
 {
   position: absolute;
+  top: 0px;
+  display: block;
   width: 100%;
   height: 100%;
-  top: 0px;
-  left: 0px;
-  background-color: #111;
 }
 
+.background {
+  background-color: #111;
+  opacity: 0.8;
+}
 
-.spotify .button 
+div#controls
 {
+  position: absolute;
+  left: -50px;
   top: 120px;
 }
 
+div#controls .background 
+{
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
 
+div#controls ul 
+{
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
+}
+
+div#controls li
+{
+  display: block;
+  width: 50px;
+  height: 50px;
+  color: #fff;
+}
+
+div#controls li:hover {
+  cursor: pointer;
+}
+
+div#controls li i {
+  position: relative;
+  top: 12px;
+  left: 8px;
+  font-size: 25px;
+  color: #fff;
+}
+
+
+div#controls li i.icon-spotify:hover,
+div#controls li.active i.icon-spotify {
+  color: #1ED760;
+}
+
+div#controls li i.icon-jira:hover,
+div#controls li.active i.icon-jira {
+  color: #2684ff;
+}
+
+div#controls li i.icon-chart-bar:hover,
+div#controls li.active i.icon-chart-bar {
+  color: #d83964;
+}
+
+
+div#panel-stats {
+  background-color:#D8D283;
+}
+div#panel-jira {
+  background-color:#83D883;
+}
+div#panel-spotify {
+  background-color:#9597E7;
+}

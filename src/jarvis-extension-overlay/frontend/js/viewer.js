@@ -1,50 +1,111 @@
-/*
-Copyright 2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-
-Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with the License. A copy of the License is located at
-
-    http://aws.amazon.com/apache2.0/
-
-or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
-*/
-
-/*
-
-  Set Javascript specific to the extension viewer view in this file.
-
-*/
-
 var bIsPanelOpen = false;
+var bIsShowingStatsPanel = false;
+var bIsShowingJIRAPanel = false;
+var bIsShowingSpotifyPanel = false
 
+$("li#button-spotify").on("click", function() {
+  if ( !bIsShowingSpotifyPanel ) 
+  {
+    // Handle Panel
+    if ( !bIsPanelOpen) {
+      $("div#jarvis").animate({right: "0px"});
+      bIsPanelOpen = true;
+    }
 
-
-function panelClose()
-{
-  var amount = -((window.innerWidth/100)*30);
-  $("div#jarvis-panel").animate({right:  String(amount) + "px"});
-  bIsPanelOpen = false;
-}
-
-function panelOpen()
-{
-  $("div#jarvis-panel").animate({right: "0px"});
-  bIsPanelOpen = open;
-
-  // Add close catcher to window
-}
-
-function panelToggle()
-{
-  if ( bIsPanelOpen ) {
-    panelClose();
-  } else { 
-    panelOpen();
+    $(".active").removeClass("active");
+    $(this).addClass("active");
+    bIsShowingSpotifyPanel = true;
+    $("div#panel-spotify").animate({right: "0px"});
+    bIsShowingJIRAPanel = false;
+    $("div#panel-jira").animate({right: String(-((window.innerWidth/100)*30)) + "px"});
+    bIsShowingStatsPanel = false;
+    $("div#panel-stats").animate({right: String(-((window.innerWidth/100)*30)) + "px"});   
+  } 
+  else 
+  {
+    bIsShowingSpotifyPanel = false;
+    closePanel();
   }
-}
-
-$( "div#jarvis-button" ).on( "click", function() {
-  panelToggle();
 });
 
 
+$("li#button-stats").on("click", function() {
+  if ( !bIsShowingStatsPanel ) 
+  {
+    // Handle Panel
+    if ( !bIsPanelOpen) {
+      $("div#jarvis").animate({right: "0px"});
+      bIsPanelOpen = true;
+    }
 
+    $(".active").removeClass("active");
+    $(this).addClass("active");
+    bIsShowingStatsPanel = true;
+    $("div#panel-stats").animate({right: "0px"});
+    bIsShowingSpotifyPanel = false;
+    $("div#panel-spotify").animate({right: String(-((window.innerWidth/100)*30)) + "px"});
+    bIsShowingJIRAPanel = false;
+    $("div#panel-jira").animate({right: String(-((window.innerWidth/100)*30)) + "px"});
+  } 
+  else 
+  {
+    bIsShowingStatsPanel = false;
+    closePanel();
+  }
+});
+
+$("li#button-jira").on("click", function() {
+  if ( !bIsShowingJIRAPanel ) 
+  {
+
+    // Handle Panel
+    if ( !bIsPanelOpen) {
+      $("div#jarvis").animate({right: "0px"});
+      bIsPanelOpen = true;
+    }
+    
+    $(".active").removeClass("active");
+    $(this).addClass("active");
+    bIsShowingJIRAPanel = true;
+    $("div#panel-jira").animate({right: "0px"});
+    bIsShowingSpotifyPanel = false;
+    $("div#panel-spotify").animate({right: String(-((window.innerWidth/100)*30)) + "px"});
+    bIsShowingStatsPanel = false;
+    $("div#panel-stats").animate({right: String(-((window.innerWidth/100)*30)) + "px"});
+    
+  } 
+  else 
+  {
+    bIsShowingJIRAPanel = false;
+    closePanel();
+  }
+});
+
+$("div#cancel").on("click", function() {
+  if ( bIsPanelOpen ) {
+    closePanel();
+  }
+});
+
+
+function closePanel()
+{
+  var amount = String(-((window.innerWidth/100)*30)) + "px";
+
+  
+  $("div#panel-spotify").animate({right: amount});
+  $("div#panel-jira").animate({right: amount});
+  $("div#panel-stats").animate({right: amount});
+
+  $(".active").removeClass("active");
+  
+  $("div#jarvis").animate({right: amount});
+
+  bIsPanelOpen = false;
+  bIsShowingJIRAPanel = false;
+  bIsShowingSpotifyPanel = false;
+  bIsShowingStatsPanel = false;
+}
+
+
+closePanel();

@@ -1,18 +1,4 @@
 <!doctype html>
-<!--
-Copyright 2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-
-Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with the License. A copy of the License is located at
-
-    http://aws.amazon.com/apache2.0/
-
-or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
--->
-<!--
-
-   Use this file as a starting point for your viewer extension view.
-
--->
 <html lang="">
     <head>
         <meta charset="utf-8">
@@ -21,26 +7,23 @@ or in the "license" file accompanying this file. This file is distributed on an 
         <link rel="stylesheet" href="css/fontello.css">
         <link rel="stylesheet" href="css/common.css">
         <link rel="stylesheet" href="css/viewer.css">
+        <title>JARVIS Extension Overlay</title>
     </head>
     <body>
-        <p>This is the viewer page!</p>
-        <div id="panel spotify">
-            <div class="button">
-                <div class="background"></div>
-                <i class="icon-spotify"></i>
+        <div id="cancel"></div>
+        <div id="jarvis">
+            <div class="panel background"></div>
+            <div id="controls">
+                    <div class="background"></div>
+                    <ul>
+                        <li id="button-spotify"><i class="icon-spotify"></i></li>
+                        <li id="button-stats"><i class="icon-chart-bar"></i></li>
+                        <li id="button-jira"><i class="icon-jira"></i></li>
+                    </ul>
             </div>
-        </div>
-        <div id="panel stats">
-            <div class="button">
-                <div id="background"></div>
-                <i id="icon-chart-bar"></i>
-            </div>
-        </div>
-        <div id="panel todo">
-            <div class="button">
-                <div class="background"></div>
-                <div class="icon-jira"></div>
-            </div>
+            <div id="panel-stats" class="panel"></div>
+            <div id="panel-jira" class="panel"></div>
+            <div id="panel-spotify" class="panel"></div>
         </div>
         <script src="https://extension-files.twitch.tv/helper/v1/twitch-ext.min.js"></script>
         <script src="js/jquery-3.2.1.min.js"></script>
