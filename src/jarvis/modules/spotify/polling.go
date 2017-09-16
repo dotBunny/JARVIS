@@ -3,6 +3,7 @@ package spotify
 import (
 	"bufio"
 	"bytes"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -79,6 +80,9 @@ func (m *Module) pollCurrentlyPlaying(notify bool) {
 			// Get/Save Currently Playing URL
 			m.data.CurrentlyPlayingURL = state.Item.ExternalURLs["spotify"]
 			m.data.TrackThumbnailURL = state.Item.Album.Images[0].URL
+
+			fmt.Printf(m.data.TrackThumbnailURL)
+
 			m.data.TrackName = state.Item.Name
 			Core.SaveFile([]byte(m.data.CurrentlyPlayingURL), m.outputs.LinkPath)
 

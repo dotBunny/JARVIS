@@ -1,4 +1,5 @@
 {
   "OutputPath": "<GENERAL_OUTPUTPATH>",
-  "Prefix": "<:jarvis:326026030458601472>"
+  "Prefix": "<:jarvis:326026030458601472>",
+  "Forge": true
 }

@@ -3,6 +3,10 @@ var bIsShowingStatsPanel = false;
 var bIsShowingJIRAPanel = false;
 var bIsShowingSpotifyPanel = false
 
+
+var pollingHandle;
+
+
 $("li#button-spotify").on("click", function() {
   if ( !bIsShowingSpotifyPanel ) 
   {
@@ -10,6 +14,9 @@ $("li#button-spotify").on("click", function() {
     if ( !bIsPanelOpen) {
       $("div#jarvis").animate({right: "0px"});
       bIsPanelOpen = true;
+      poll();
+      clearInterval(pollingHandle);
+      pollingHandle = setInterval(function () {poll(); }, 30000);
     }
 
     $(".active").removeClass("active");
@@ -36,6 +43,9 @@ $("li#button-stats").on("click", function() {
     if ( !bIsPanelOpen) {
       $("div#jarvis").animate({right: "0px"});
       bIsPanelOpen = true;
+      poll();
+      clearInterval(pollingHandle);
+      pollingHandle = setInterval(function () {poll(); }, 30000);
     }
 
     $(".active").removeClass("active");
@@ -62,6 +72,9 @@ $("li#button-jira").on("click", function() {
     if ( !bIsPanelOpen) {
       $("div#jarvis").animate({right: "0px"});
       bIsPanelOpen = true;
+      poll();
+      clearInterval(pollingHandle);
+      pollingHandle = setInterval(function () {poll(); }, 30000);
     }
     
     $(".active").removeClass("active");
@@ -105,7 +118,45 @@ function closePanel()
   bIsShowingJIRAPanel = false;
   bIsShowingSpotifyPanel = false;
   bIsShowingStatsPanel = false;
+
+  clearInterval(pollingHandle);
+  pollingHandle = setInterval(function () {poll(); }, 300000);
 }
 
 
+
+function poll() {
+  $.getJSON( "https://api.dotbunny.com/v1/JARVIS/Poll", function( data ) {
+  
+  console.log(data);
+  // var items = [];
+  // $.each( data, function( key, val ) {
+  //   items.push( "<li id='" + key + "'>" + val + "</li>" );
+  // });
+ 
+  // $( "<ul/>", {
+  //   "class": "my-new-list",
+  //   html: items.join( "" )
+  // }).appendTo( "body" );
+  });
+}
+
+function updateSquares()
+{
+  var squareWidth = ($(".square-container").width() / 3) - 5;
+
+  $(".square").each(function(index) {
+    $(this).css("height", squareWidth + 5);
+    $(this).css("width", squareWidth);
+  });
+}
+
+$( window ).resize(function() {
+  updateSquares();
+});
+
+// Startup
+poll();
 closePanel();
+updateSquares();
+

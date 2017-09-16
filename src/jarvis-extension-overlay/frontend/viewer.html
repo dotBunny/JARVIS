@@ -21,13 +21,64 @@
                         <li id="button-jira"><i class="icon-jira"></i></li>
                     </ul>
             </div>
-            <div id="panel-stats" class="panel"></div>
-            <div id="panel-jira" class="panel"></div>
-            <div id="panel-spotify" class="panel"></div>
+            <div id="panel-stats" class="panel">
+                <div class="panel-container square-container">
+                    <ul>
+                        <li class="square">
+                            <i class="icon-coffee"></i>
+                            <p class="square count">10</p>
+                            <p class="description">Coffee</p>
+                        </li>          
+                    </ul>
+                    <p id="jarvis-powered">Powered by JARVIS</p>
+                </div>
+            </div>
+            <div id="panel-jira" class="panel">
+                <div class="panel-container">
+                    <h2>In-Progress</h2>
+                    <ul>
+                        <li>
+                            <img src="img/task-new.png" />
+                            <p>Transition to positive space random numbers used</p>
+                        </li>
+                        <li>
+                            <img src="img/task-new.png" />
+                            <p>Transition all previous systems to use FUIntPoints</p>
+                        </li>
+                        <li>
+                            <img src="img/task-new.png" />
+                            <p>Turn Terrain System To Use FUINTs For Base Points (Speed)</p>
+                        </li>
+                        <li>
+                            <img src="img/task-task.png" />
+                            <p>Create Tests for Voronoi Diagram Logic</p>
+                        </li>
+                        <li>
+                            <img src="img/task-new.png" />
+                            <p>Update Circle Point Generators TO Reflect Positive Space</p>
+                        </li>
+                        <li>
+                            <img src="img/task-improvement.png" />
+                            <p>Add Category Sorting To Unreal Details Panel</p>
+                        </li>
+                    </ul>
+                    <p id="jira-powered">Powered by JIRA</p>
+                </div>          
+            </div>
+            <div id="panel-spotify" class="panel">
+                <div class="panel-container">
+                    <a id="spotify-link" href="#link" target="_new">
+                        <img id="spotify-thumbnail" src="https://i.scdn.co/image/4635c155a2b95ed66c42270b1fe7fdb117375532" width="100%" />
+                        <p id="spotify-track">Drip</p>
+                        <p id="spotify-artist">Swizzymack</p>
+                        <p id="spotify-powered">Powered by Spotify</p>
+                    </a>
+                </div>
+            </div>
         </div>
         <script src="https://extension-files.twitch.tv/helper/v1/twitch-ext.min.js"></script>
         <script src="js/jquery-3.2.1.min.js"></script>
         <script src="js/common.js"></script>
-        <script src="js/viewer.js"></script>
+        <script defer src="js/viewer.js"></script>
     </body>
 </html>

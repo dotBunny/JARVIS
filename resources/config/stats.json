@@ -2,6 +2,7 @@
   "Definitions": [
     {
       "Key": "Coffee",
+      "ForgeRowID": 1,
       "TextOutput": {
         "Enabled": false,
         "Prefix": "Coffee #",
@@ -42,6 +43,7 @@
     },
     {
       "Key": "Crashes",
+      "ForgeRowID": 2,
       "TextOutput": {
         "Enabled": true,
         "Prefix": "Crash #",
@@ -82,6 +84,7 @@
     },
     {
       "Key": "Saves",
+      "ForgeRowID": 3,
       "TextOutput": {
         "Enabled": true,
         "Prefix": "Save #",
@@ -122,6 +125,7 @@
     },
     {
       "Key": "Builds",
+      "ForgeRowID": 4,
       "TextOutput": {
         "Enabled": true,
         "Prefix": "Build #",
@@ -163,6 +167,7 @@
     },
     {
       "Key": "Swears",
+      "ForgeRowID": 5,
       "TextOutput": {
         "Enabled": true,
         "Prefix": "Swear #",

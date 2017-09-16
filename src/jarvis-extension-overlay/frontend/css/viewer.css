@@ -18,7 +18,7 @@ body {
   font: 12px arial, sans-serif;
   overflow: hidden;
 }
-div {
+div, p {
 	margin: 0px;
 }
 div#cancel
@@ -47,6 +47,21 @@ div#jarvis
   display: block;
   width: 100%;
   height: 100%;
+}
+
+.panel h1
+{
+  font-size: 2rem;
+  width: 100%;
+  text-align: center;
+  background-color: #111;
+  color: #fff;
+  margin-top: 0px;
+  height: 3rem;
+  padding-top: 0.25rem;
+  text-transform: uppercase;
+  font-family: "Open Sans";
+  opacity: 0.8;
 }
 
 .background {
@@ -91,7 +106,7 @@ div#controls li i {
   position: relative;
   top: 12px;
   left: 8px;
-  font-size: 25px;
+  font-size: 1.5rem;
   color: #fff;
 }
 
@@ -103,7 +118,7 @@ div#controls li.active i.icon-spotify {
 
 div#controls li i.icon-jira:hover,
 div#controls li.active i.icon-jira {
-  color: #2684ff;
+  color: #0052CC;
 }
 
 div#controls li i.icon-chart-bar:hover,
@@ -112,12 +127,163 @@ div#controls li.active i.icon-chart-bar {
 }
 
 
+.panel-container
+{
+  padding: 1.5rem;
+  height: 100%;
+}
+
+
+div#panel-spotify {
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#404040+0,181818+100 */
+  background: #404040; /* Old browsers */
+  background: -moz-linear-gradient(top, #404040 0%, #181818 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(top, #404040 0%,#181818 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom, #404040 0%,#181818 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#404040', endColorstr='#181818',GradientType=0 ); /* IE6-9 */
+  color: #fff;
+}
+
+div#panel-spotify a,
+div#panel-spotify a:hover {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+div#panel-spotify .panel-container {
+  border-left-width: 5px;
+  border-left-color: #1ED760;
+  border-left-style: solid;
+}
+div#panel-spotify img {
+  border-color: #1ED760;
+  border-width: 1px;
+  border-style: dashed;
+}
+
+p#spotify-artist {
+  margin-top: 0.2rem;
+  font-size: 0.8rem;
+  color: #b3b3b3;
+  
+}
+p#spotify-track {
+  margin-top: 1rem;
+}
+p#spotify-powered {
+  position: absolute;
+  width: 85%;
+  text-align: center;
+  bottom: 0.5rem;
+  font-size: 0.5rem;
+  color: #1ED760;
+  text-transform: uppercase;
+}
+
+
+
 div#panel-stats {
-  background-color:#D8D283;
+  background-color:rgba(0,0,0,0.8);
+  color: rgba(255,255,255,1);
+}
+
+div#panel-stats .panel-container {
+  border-left-width: 5px;
+  border-left-color: #d83964;
+  border-left-style: solid;
+}
+div#panel-stats ul {
+  margin: 0px;
+  padding: 0px;
+}
+
+div#panel-stats li {
+  list-style: none;
+  display:inline-block;
+}
+div#panel-stats li i {
+  font-size: 5rem;
+  margin-top: 1.5rem;
+  text-align: center;
+  width: 100%;
+  display: block;
+}
+div#panel-stats li p.count {
+  float: left;
+}
+div#panel-stats li p.description {
+  position: relative;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+}
+
+
+
+p#jarvis-powered {
+  position: absolute;
+  width: 85%;
+  text-align: center;
+  bottom: 0.5rem;
+  font-size: 0.5rem;
+  color: #d83964;
+  text-transform: uppercase;
+}
+
+
+div#panel-jira .panel-container {
+  border-left-width: 5px;
+  border-left-color: #0052CC;
+  border-left-style: solid;
 }
 div#panel-jira {
-  background-color:#83D883;
+  background: #F4F5F7;
+  color: #253858;
 }
-div#panel-spotify {
-  background-color:#9597E7;
+
+div#panel-jira h2 {
+  font-size: 1.5rem;
+  letter-spacing: 0;
+  line-height: 1.6rem;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  font-style: normal;
+  margin-top: 0px;
+}
+p#jira-powered {
+  position: absolute;
+  width: 85%;
+  text-align: center;
+  bottom: 0.5rem;
+  font-size: 0.5rem;
+  color: #0052CC;
+  text-transform: uppercase;
+}
+
+div#panel-jira ul {
+  padding: 0px;
+  margin: 0px;
+}
+
+div#panel-jira li {
+  display: block;
+  background-color: #fff;
+  padding: 1.25rem;
+  border-radius: 0.25rem;
+  margin-top: 1rem;
+}
+div#panel-jira li:first { 
+  margin-top: 0px;
+}
+
+div#panel-jira li p {
+  margin-left: 1rem;
+  line-height: 1rem;
+  display: flex;
+}
+div#panel-jira li img {
+  max-height: 1rem;
+  margin-right: 0.5rem;
+  float: left;
 }
