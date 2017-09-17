@@ -22,15 +22,9 @@
                     </ul>
             </div>
             <div id="panel-stats" class="panel">
-                <div class="panel-container square-container">
-                    <ul>
-                        <li class="square">
-                            <i class="icon-coffee"></i>
-                            <p class="square count">10</p>
-                            <p class="description">Coffee</p>
-                        </li>          
-                    </ul>
-                    <p id="jarvis-powered">Powered by JARVIS</p>
+                <div class="panel-container">
+                    <canvas id="myChart" width="400" height="400"></canvas>
+                    <p id="jarvis-powered">Powered by Chart.js</p>
                 </div>
             </div>
             <div id="panel-jira" class="panel">
@@ -78,6 +72,7 @@
         </div>
         <script src="https://extension-files.twitch.tv/helper/v1/twitch-ext.min.js"></script>
         <script src="js/jquery-3.2.1.min.js"></script>
+        <script src="js/Chart.min.js"></script>
         <script src="js/common.js"></script>
         <script defer src="js/viewer.js"></script>
     </body>

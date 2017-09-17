@@ -18,6 +18,11 @@ body {
   font: 12px arial, sans-serif;
   overflow: hidden;
 }
+
+
+
+
+
 div, p {
 	margin: 0px;
 }
@@ -203,20 +208,31 @@ div#panel-stats li {
   display:inline-block;
 }
 div#panel-stats li i {
+  float: left;
   font-size: 5rem;
-  margin-top: 1.5rem;
   text-align: center;
   width: 100%;
   display: block;
+  opacity: 0.2;
 }
 div#panel-stats li p.count {
   float: left;
+  position: absolute;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 143px;
+  font-size: 3rem;
+  font-weight: bold;
 }
 div#panel-stats li p.description {
   position: relative;
   bottom: 0px;
   left: 0px;
   width: 100%;
+  text-align: center;
+  /* opacity: 0.5; */
+  opacity: 1;
+  top: -5px;
 }
 
 
