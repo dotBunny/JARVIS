@@ -8,6 +8,7 @@ var spotifyThumbnail;
 var spotifyTrack;
 var spotifyArtist;
 var jiraList;
+var jiraLatestID;
 var statsChart = document.getElementById("stats").getContext('2d');
 var createdChart = false;
 var statsChartObject;
@@ -130,9 +131,8 @@ function closePanel(animate = true)
 
 function poll() {
   $.getJSON("https://api.dotbunny.com/v1/JARVIS/Poll", function (data) {
-  
-    console.log(data);
-    console.log($(spotifyLink));
+    
+
     // Is a different track
     if ($(spotifyLink).attr('href') != data['spotify']['CurrentlyPlayingURL']) {
       $(spotifyLink).attr('href', data['spotify']['CurrentlyPlayingURL']);
@@ -144,33 +144,78 @@ function poll() {
     }
 
 
+    // Process JIRA
+    if ( data['tasks']['Mode'] == "JIRA") 
+    {
+      var items = Array();
+
+      console.log(data);
+      if ( data['tasks']['List'][0]['ID'] != jiraLatestID ) {
+
+        jiraLatestID = data['tasks']['List'][0]['ID'];
+        // Clear out the list
+        $(jiraList).empty();
+
+        var itemCount = data['tasks']['List'].length;
+        for (var i = 0; i < itemCount; i++) 
+        {
+          var item = '<li>';
+          switch(data['tasks']['List'][i]['Type'])
+          {
+            case "bug":
+              item += '<img src="img/task-bug.png" />';
+              break;
+            case "epic":
+              item += '<img src="img/task-epic.png" />';
+              break;
+            case "improvement":
+              item += '<img src="img/task-improvement.png" />';
+              break;
+            case "task":
+              item += '<img src="img/task-task.png" />';
+              break;
+            case "new":
+            default:
+              item += '<img src="img/task-new.png" />';
+              break;
+          }
+
+          item += '<p>' + data['tasks']['List'][i]['Title'];
+          item += '</p></li>';
+
+          $(jiraList).append(item);
+        }
+      }
+
+      
+    }
+
     // Process Stats Array
+    var newDataObject = {};   
     
+    newDataObject["data"] = Array();
+    newDataObject["backgroundColor"] = Array();
+    newDataObject["borderColor"] = Array();
+    newDataObject["borderWidth"] = 1;
+    
+    Object.keys(data['stats']).forEach(function (index) {
+      newDataObject["data"].push(data['stats'][index]['CurrentValue']);
+      newDataObject["backgroundColor"].push(hexToRgbA(data['stats'][index]['Color'], "0.2"));
+      newDataObject["borderColor"].push(hexToRgbA(data['stats'][index]['Color'], "1"));
+    });
     
 
 
-    if (createdChart) {
-
+    if (createdChart) {  
+      statsChartObject.data.datasets[0] = newDataObject;
+      statsChartObject.update(0);  
     } else {
 
-      var newDataObject = {};   
-   //   newDataObject["label"] = "";
-      newDataObject["data"] = Array();
-      newDataObject["backgroundColor"] = Array();
-      newDataObject["borderColor"] = Array();
-      newDataObject["borderWidth"] = 1;
-      
-      Object.keys(data['stats']).forEach(function (index) {
-        newDataObject["data"].push(data['stats'][index]['CurrentValue']);
-        newDataObject["backgroundColor"].push(hexToRgbA(data['stats'][index]['Color']));
-        newDataObject["borderColor"].push(hexToRgbA(data['stats'][index]['Color']));
-      });
-      console.log(newDataObject);
       statsChartObject = new Chart(statsChart, {
         type: 'horizontalBar',
         data: {
           labels: Object.keys(data['stats']),
-          dataset: [{ newDataObject }]
+          datasets: [newDataObject]
         },
         options: {
             legend: {
@@ -190,8 +235,6 @@ function poll() {
       });
       createdChart = true;  
     }
-
-
   });
 }
 
@@ -241,7 +284,7 @@ $( document ).ready(function() {
   jiraList = $('div#panel-jira ul');
 });
 
-function hexToRgbA(hex){
+function hexToRgbA(hex, opacity){
   var c;
   if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
       c= hex.substring(1).split('');
@@ -249,7 +292,7 @@ function hexToRgbA(hex){
           c= [c[0], c[0], c[1], c[1], c[2], c[2]];
       }
       c= '0x'+c.join('');
-      return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+',1)';
+      return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+',' + opacity +')';
   }
   throw new Error('Bad Hex');
 }
