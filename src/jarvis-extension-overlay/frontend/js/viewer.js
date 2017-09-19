@@ -3,7 +3,20 @@ var bIsShowingStatsPanel = false;
 var bIsShowingJIRAPanel = false;
 var bIsShowingSpotifyPanel = false
 
+var spotifyLink;
+var spotifyThumbnail;
+var spotifyTrack;
+var spotifyArtist;
+var jiraList;
+var statsChart = document.getElementById("stats").getContext('2d');
+var createdChart = false;
+var statsChartObject;
+
 var pollingHandle;
+
+
+
+
 
 // Icon 
 $("li#button-spotify").on("click", function() {
@@ -116,18 +129,69 @@ function closePanel(animate = true)
 
 
 function poll() {
-  $.getJSON( "https://api.dotbunny.com/v1/JARVIS/Poll", function( data ) {
+  $.getJSON("https://api.dotbunny.com/v1/JARVIS/Poll", function (data) {
   
-  console.log(data);
-  // var items = [];
-  // $.each( data, function( key, val ) {
-  //   items.push( "<li id='" + key + "'>" + val + "</li>" );
-  // });
- 
-  // $( "<ul/>", {
-  //   "class": "my-new-list",
-  //   html: items.join( "" )
-  // }).appendTo( "body" );
+    console.log(data);
+    console.log($(spotifyLink));
+    // Is a different track
+    if ($(spotifyLink).attr('href') != data['spotify']['CurrentlyPlayingURL']) {
+      $(spotifyLink).attr('href', data['spotify']['CurrentlyPlayingURL']);
+
+      $(spotifyArtist).html(data['spotify']['ArtistLine']);
+      $(spotifyTrack).html(data['spotify']['TrackName']);
+
+      $(spotifyThumbnail).attr('src', data['spotify']['TrackThumbnailURL']);
+    }
+
+
+    // Process Stats Array
+    
+    
+
+
+    if (createdChart) {
+
+    } else {
+
+      var newDataObject = {};   
+   //   newDataObject["label"] = "";
+      newDataObject["data"] = Array();
+      newDataObject["backgroundColor"] = Array();
+      newDataObject["borderColor"] = Array();
+      newDataObject["borderWidth"] = 1;
+      
+      Object.keys(data['stats']).forEach(function (index) {
+        newDataObject["data"].push(data['stats'][index]['CurrentValue']);
+        newDataObject["backgroundColor"].push(hexToRgbA(data['stats'][index]['Color']));
+        newDataObject["borderColor"].push(hexToRgbA(data['stats'][index]['Color']));
+      });
+      console.log(newDataObject);
+      statsChartObject = new Chart(statsChart, {
+        type: 'horizontalBar',
+        data: {
+          labels: Object.keys(data['stats']),
+          dataset: [{ newDataObject }]
+        },
+        options: {
+            legend: {
+              display: false
+            },
+            tooltips: {
+              enabled: false
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+      });
+      createdChart = true;  
+    }
+
+
   });
 }
 
@@ -154,6 +218,9 @@ $( window ).resize(function() {
   updateSquares();
 });
 
+
+
+
 // Startup
 poll();
 closePanel();
@@ -161,46 +228,28 @@ updateSquares();
 
 
 
-var ctx = document.getElementById("myChart").getContext('2d');
-var myChart = new Chart(ctx, {
-    type: 'horizontalBar',
-    data: {
-        labels: ["Crashes", "Saves", "Swears", "Coffee", "Builds", "Orange"],
-        datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255,99,132,1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        legend: {
-          display: false
-        },
-        tooltips: {
-          enabled: false
-        },
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero:true
-                }
-            }]
-        }
-    }
+
+$( document ).ready(function() {
+  
+  // Spotify References
+  spotifyLink = $('div#panel-spotify a#spotify-link');
+  spotifyThumbnail = $('div#panel-spotify img#spotify-thumbnail');
+  spotifyTrack = $('div#panel-spotify p#spotify-track');
+  spotifyArtist = $('div#panel-spotify p#spotify-artist');
+
+  // JIRA References
+  jiraList = $('div#panel-jira ul');
 });
+
+function hexToRgbA(hex){
+  var c;
+  if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+      c= hex.substring(1).split('');
+      if(c.length== 3){
+          c= [c[0], c[0], c[1], c[1], c[2], c[2]];
+      }
+      c= '0x'+c.join('');
+      return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+',1)';
+  }
+  throw new Error('Bad Hex');
+}
