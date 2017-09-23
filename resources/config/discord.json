@@ -3,17 +3,14 @@
   "ClientSecret": "<DISCORD_CLIENT_SECRET>",
   "Token": "<DISCORD_BOT_TOKEN>",
   "Username": "JARVIS#1070",
-  "ChatChannelID": "324979047396540418",
-  "LogChannelID": "325784977415340043",
-  "Prefix": "<:discord:326026030735294465>",
+  "LogChannelID": "361150774346252289",
+  "Prefix": "<:discord:361232970696097793>",
   "AnnouncementChannels": [
-    "342347574415589386",
-    "342348376127569920"
+    "269980511512952833"
   ],
   "Permissions": {
     "Moderator": [
-      "140261803526455296",
-      "183222333215997952"
+      "140261803526455296"
     ],
     "Admin": [
       "140261803526455296"

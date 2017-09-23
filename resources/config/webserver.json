@@ -1,8 +1,8 @@
 {
     "Enabled" : true,
-    "IPAddress" : "192.168.1.250",
+    "IPAddress" : "<JARVIS_SERVER_IP>",
     "ListeningPort" : 8080,
-    "Prefix":"<:go:326026030072594432>",
+    "Prefix":"<:go:361234227527942144>",
     "DashboardLinks": [
         {
             "Name": "Twitch Dashboard",

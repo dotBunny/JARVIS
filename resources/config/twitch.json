@@ -2,7 +2,7 @@
   "Channel": "#reapazor",
   "ChannelID": "21139969",
   "Chat": true,
-  "ChatChannelID": "342347574415589386",
+  "ChatChannelID": "361155905284210688",
   "ChatOAuth": "<TWITCH_CHAT_OUTH>",
   "ChatUsername": "mod_jarvis",
   "ClientID": "<TWITCH_CLIENT_ID>",
@@ -11,7 +11,7 @@
   "LastFollowersCount": 10,
   "LastSubscribersCount": 10,
   "PollingFrequency": 7,
-  "Prefix": "<:twitch:326026029946765324>",
+  "Prefix": "<:twitch:361234105771229185>",
   "PadChannelFollowersOutput": 3,
   "PadChannelViewersOutput": 3,
   "PadChannelSubscribersOutput ": 3
