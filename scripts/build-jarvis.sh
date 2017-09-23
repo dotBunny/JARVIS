@@ -34,7 +34,6 @@ cp -rf resources/scripts bin/jarvis
 
 # Handle Database
 rm -rf bin/jarvis/db.new.sqlite
-cp -rf resources/database/db.new.sqlite bin/jarvis
 
 # Compile Configs
 ./bin/jarvis-compiler/jarvis-compiler "$1" ./bin/jarvis/config

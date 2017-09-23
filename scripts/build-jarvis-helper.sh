@@ -2,8 +2,12 @@
 cd "$(dirname "$0")"
 clear
 
-rm -rf ./bin
-mkdir ./bin
+# Go back a folder
+cd ..
+
+
+rm -rf ./bin/helper
+mkdir ./bin/helper
 
 # Make For macOS
 mkdir -p temp/macOS
