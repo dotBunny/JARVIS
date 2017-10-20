@@ -1,6 +1,9 @@
 # JARVIS: Streamer's Butler
 A digital assistant comprised of features from a **streamer's wishlist** 
 
+***Project depreciated for [JARVIS.NET](https://github.com/dotBunny/JARVIS.NET)***
+
+
 ## Credits
 This couldn't of been made without all of the awesome developers out there making their work availble to the public. 
   
